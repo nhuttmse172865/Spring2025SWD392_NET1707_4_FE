@@ -7,13 +7,21 @@ import TherapistLayout from "./layouts/TherapistLayout";
 import ManagerLayout from "./layouts/ManagerLayout";
 import HomePage from "./pages/HomePage";
 import Login from "./pages/Login/Login";
+import MainLayout from "./pages/HomePage";
+import HomePageForm from "./components/forms/HomePageForm/HomePageForm";
+import Service from "./pages/Service/Service";
 
 const App = () => {
   return (
     <Router>
-      <Routes>
-       <Route path="/login" element={<Login />} />
-        <Route path="/" element={<HomePage />} />
+    <Routes>
+      <Route path="/" element={<MainLayout />} >
+         <Route path="/login" element={<Login />} />
+         <Route index element={<HomePageForm />} />
+         <Route path="/service" element={<Service />} />
+      </Route>
+   
+        
         <Route path="/admin" element={<AdminLayout />} />
         <Route path="/customer" element={<CustomerLayout />} />
         <Route path="/staff" element={<StaffLayout />} />

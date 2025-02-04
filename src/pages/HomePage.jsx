@@ -1,18 +1,22 @@
 
+import { Outlet } from "react-router-dom";
 import HomePageForm from "../components/forms/HomePageForm/HomePageForm";
+import HomePageHeader from "../components/headers/HomepageHeader/HomePageHeader";
 import '../styles/layout.scss'; 
+import HomePageFooter from "../components/footers/HomePageFooter/HomePageFooter";
 
 
-const AdminLayout = () => {
+const MainLayout = () => {
   return (
-    <div className="layout">
-      <div className="body">
-        <main className="content">
-          <HomePageForm />
-        </main>
-      </div>
-    </div>
+  <>
+    <HomePageHeader/>
+    <main>
+      <Outlet />
+     
+    </main>
+    <HomePageFooter/>
+  </>
   );
 };
 
-export default AdminLayout;
+export default MainLayout;
