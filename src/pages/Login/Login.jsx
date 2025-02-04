@@ -12,7 +12,8 @@ const Login = () => {
     
   return (
  <>
-    <div class={`container ${isSignUpActive ? 'right-panel-active' : ''}`}  id="container">
+  <div className="loginpage">
+  <div class={`container ${isSignUpActive ? 'right-panel-active' : ''}`}  id="container">
         <div class="form-container sign-up-container">
             <form action="#">
                 <h1>Create Account</h1>
@@ -74,6 +75,7 @@ const Login = () => {
             
         </div>
     </div>
+  </div>
 
     
 
