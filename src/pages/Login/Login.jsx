@@ -1,7 +1,9 @@
 import React, { useState } from 'react';
 import './Login.scss'
+import { useNavigate } from 'react-router-dom';
 const Login = () => {
     const [isSignUpActive, setIsSignUpActive] = useState(false);
+    const navigate = useNavigate();
     const handleSignUpClick = () => {
         setIsSignUpActive(true);
       };
@@ -60,13 +62,21 @@ const Login = () => {
             </form>
         </div>
         <div class="overlay-container" id="overlayCon">
+        
             <div class="overlay">
+           
                 <div class="overlay-panel overlay-left">
+                <div>
+            <button className='btn-back' onClick={() => navigate('/')}>Back to HomePage</button>
+        </div>
                     <h1>Welcome Back!</h1>
                     <p>Sign in to continue your skin care journey</p>
                     <button onClick={handleSignInClick} >Sign In</button>
                 </div>
                 <div class="overlay-panel overlay-right">
+                <div>
+                <button className='btn-back' onClick={() => navigate('/')}>Back to HomePage</button>
+        </div>
                     <h1>Hello, Friend!</h1>
                     <p>Beautiful skin is not only about cosmetics, but also about knowledge. Sign up now for a personal consultation!</p>
                     <button onClick={handleSignUpClick}>Sign Up</button>

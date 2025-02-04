@@ -3,6 +3,7 @@ import React, { useState } from 'react';
 import { Search, User, Heart, ShoppingCart } from 'lucide-react';
 import './HomePageHeader.scss';
 import FPT from '/AssetsHomePage/FPT.jpg';
+import { Link } from 'react-router-dom';
 
 const HomePageHeader = ({ scrollToSection }) => {
 
@@ -54,31 +55,11 @@ const HomePageHeader = ({ scrollToSection }) => {
             <li className="nav-item" onClick={() => scrollToSection('aboutUs')}>
               About
             </li>
-            <li
-              className="nav-item has-dropdown"
-              onMouseEnter={handleMouseEnter}
-              onMouseLeave={handleMouseLeave}
-            >
-              Service
-              {isDropdownOpen && (
-                <div className="dropdown-menu">
-                  <div className="dropdown-content">
-                    <div className="dropdown-item" onClick={() => scrollToSection('facialTreatment')}>
-                      Facial Treatment
-                    </div>
-                    <div className="dropdown-item" onClick={() => scrollToSection('bodyTreatment')}>
-                      Body Treatment
-                    </div>
-                    <div className="dropdown-item" onClick={() => scrollToSection('massage')}>
-                      Massage
-                    </div>
-                    <div className="dropdown-item" onClick={() => scrollToSection('laser')}>
-                      Laser
-                    </div>
-                  </div>
-                </div>
-              )}
-            </li>
+           <Link  className="nav-item has-dropdown" to="/service" onMouseEnter={handleMouseEnter} onMouseLeave={handleMouseLeave}>
+            Service
+           </Link>
+              
+            
             <li className="nav-item" onClick={() => scrollToSection('priceService')}>
               Price
             </li>

@@ -369,7 +369,7 @@ const HomePageForm = () => {
 
   return (
     <div className="home-page-container">
-      <HomePageHeader scrollToSection={scrollToSection} />
+      
       <div className="home-page-body">
         {/* About Us Section with Scroll Animation */}
         <motion.section
@@ -509,9 +509,9 @@ const HomePageForm = () => {
 
 
       </div>
-      <div ref={supportRef}>
+      {/* <div ref={supportRef}>
         <HomePageFooter />
-      </div>
+      </div> */}
     </div>
   );
 };

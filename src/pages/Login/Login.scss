@@ -244,7 +244,14 @@ p{
 .container.right-panel-active .overlay-right {
     transform: translateX(20%);
 }
-
+.btn-back{
+    margin-bottom: 12px;
+    background-color: var(--grad-clr1);
+}
+.btn-back:hover{
+    background-color: #fff;
+    color: var(--grad-clr1);
+}
 
 
 
