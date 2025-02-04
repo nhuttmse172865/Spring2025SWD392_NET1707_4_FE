@@ -6,12 +6,13 @@
   }
   
   .header {
+    display: flex;
     background-color: #333;
     color: white;
     padding: 10px 20px;
     text-align: center;
     font-size: 24px;
-    height: 10%;
+    height: 20%;
     border-bottom: 2px solid #000; /* Khung dưới header */
   }
   
@@ -21,7 +22,6 @@
     padding: 10px 20px;
     text-align: center;
     font-size: 14px;
-    height: 10%;
     border-top: 2px solid #000; /* Khung trên footer */
   }
   
@@ -29,13 +29,12 @@
     display: flex;
     flex: 1;
     flex-direction: row;
-    height: calc(100vh - 10%); /* Phần còn lại sau khi trừ chiều cao của header và footer */
+    height: calc(100vh - 15%); /* Phần còn lại sau khi trừ chiều cao của header và footer */
     border-top: 2px solid #000; /* Khung trên body */
   }
   
   .content {
     flex: 1;
-    padding: 20px;
     overflow-y: auto;
     border-right: 2px solid #000; /* Khung bên phải content */
   }

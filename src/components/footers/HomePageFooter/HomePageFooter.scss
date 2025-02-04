@@ -1,0 +1,259 @@
+// .footer {
+//     background-color: #130a31;
+//     padding: 30px 0;
+//     font-family: Arial, sans-serif;
+  
+//     .footer__container {
+//       max-width: 90%;
+//       margin: 0 auto;
+//       padding: 0 20px;
+//       display: flex;
+//       justify-content: space-between;
+//       flex-wrap: wrap;
+//     }
+  
+
+  
+//     /* Quick Links Section */
+//     .footer__links {
+//       flex: 1;
+//       max-width: 200px;
+//       margin-bottom: 20px;
+  
+//       h3 {
+//         font-size: 18px;
+//         color: #faf7f7;
+//         margin-bottom: 15px;
+//       }
+  
+//       ul {
+//         list-style-type: none;
+//         padding: 0;
+  
+//         li {
+//           font-size: 14px;
+//           color: #ece8e8;
+//           margin-bottom: 10px;
+  
+//           i {
+//             margin-right: 10px;
+//             color: #0073e6;
+//           }
+  
+//           a {
+//             color: #f1e7e7;
+//             text-decoration: none;
+//             transition: color 0.3s ease;
+  
+//             &:hover {
+//               color: #0073e6;
+//             }
+//           }
+//         }
+//       }
+//     }
+  
+//     /* Contact Details Section */
+//     .footer__contact {
+//       flex: 1;
+//       max-width: 300px;
+//       margin-bottom: 20px;
+  
+//       h3 {
+//         font-size: 18px;
+//         color: #ffffff;
+//         margin-bottom: 15px;
+//       }
+  
+//       .contact-info {
+//         font-size: 14px;
+//         color: #ffffff;
+  
+//         p {
+//           margin-bottom: 10px;
+//         }
+  
+//         i {
+//           margin-right: 10px;
+//           color: #0073e6;
+//         }
+//       }
+//     }
+  
+//     /* Work Hours Section */
+//     .footer__hours {
+//       flex: 1;
+//       max-width: 250px;
+//       margin-bottom: 20px;
+  
+//       h3 {
+//         font-size: 18px;
+//         color: #ffffff;
+//         margin-bottom: 15px;
+//       }
+  
+//       .hours-info {
+//         .schedule-row {
+//           display: flex;
+//           justify-content: space-between;
+//           font-size: 14px;
+//           color: #ffffff;
+//           margin-bottom: 10px;
+  
+//           .days {
+//             font-weight: bold;
+//           }
+  
+//           .hours {
+//             color: #ffffff;
+//           }
+//         }
+//       }
+//     }
+  
+//     /* Responsive Layout */
+//     @media screen and (max-width: 768px) {
+//       .footer__container {
+//         flex-direction: column;
+//         align-items: center;
+//       }
+  
+//       .footer__brand,
+//       .footer__links,
+//       .footer__contact,
+//       .footer__hours {
+//         max-width: 100%;
+//         margin-right: 0;
+//       }
+//     }
+//   }
+  
+
+
+.footer {
+  background-color: #1a1a2e;
+  font-family: Arial, sans-serif;
+  position: relative; /* Đảm bảo footer luôn ở dưới */
+  margin-top: auto; /* Footer sẽ luôn ở cuối cùng */
+
+  .footer__container {
+    max-width: 90%;
+    margin: 0 auto;
+    padding: 0 20px;
+    display: flex;
+    justify-content: space-between;
+    flex-wrap: wrap;
+  }
+
+  /* Quick Links Section */
+  .footer__links {
+    flex: 1;
+    max-width: 200px;
+
+    h3 {
+      font-size: 18px;
+      color: #faf7f7;
+      margin-bottom: 15px;
+    }
+
+    ul {
+      list-style-type: none;
+      padding: 0;
+
+      li {
+        font-size: 14px;
+        color: #ece8e8;
+        margin-bottom: 10px;
+
+        i {
+          margin-right: 10px;
+          color: #0073e6;
+        }
+
+        a {
+          color: #f1e7e7;
+          text-decoration: none;
+          transition: color 0.3s ease;
+
+          &:hover {
+            color: #0073e6;
+          }
+        }
+      }
+    }
+  }
+
+  /* Contact Details Section */
+  .footer__contact {
+    flex: 1;
+    max-width: 300px;
+    margin-bottom: 20px;
+
+    h3 {
+      font-size: 18px;
+      color: #ffffff;
+      margin-bottom: 15px;
+    }
+
+    .contact-info {
+      font-size: 14px;
+      color: #ffffff;
+
+      p {
+        margin-bottom: 10px;
+      }
+
+      i {
+        margin-right: 10px;
+        color: #0073e6;
+      }
+    }
+  }
+
+  /* Work Hours Section */
+  .footer__hours {
+    flex: 1;
+    max-width: 250px;
+    margin-bottom: 20px;
+
+    h3 {
+      font-size: 18px;
+      color: #ffffff;
+      margin-bottom: 15px;
+    }
+
+    .hours-info {
+      .schedule-row {
+        display: flex;
+        justify-content: space-between;
+        font-size: 14px;
+        color: #ffffff;
+        margin-bottom: 10px;
+
+        .days {
+          font-weight: bold;
+        }
+
+        .hours {
+          color: #ffffff;
+        }
+      }
+    }
+  }
+
+  /* Responsive Layout */
+  @media screen and (max-width: 768px) {
+    .footer__container {
+      flex-direction: column;
+      align-items: center;
+    }
+
+    .footer__brand,
+    .footer__links,
+    .footer__contact,
+    .footer__hours {
+      max-width: 100%;
+      margin-right: 0;
+    }
+  }
+}
