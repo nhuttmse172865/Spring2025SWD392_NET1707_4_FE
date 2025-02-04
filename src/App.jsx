@@ -6,11 +6,13 @@ import StaffLayout from "./layouts/StaffLayout";
 import TherapistLayout from "./layouts/TherapistLayout";
 import ManagerLayout from "./layouts/ManagerLayout";
 import HomePage from "./pages/HomePage";
+import Login from "./pages/Login/Login";
 
 const App = () => {
   return (
     <Router>
       <Routes>
+       <Route path="/login" element={<Login />} />
         <Route path="/" element={<HomePage />} />
         <Route path="/admin" element={<AdminLayout />} />
         <Route path="/customer" element={<CustomerLayout />} />
