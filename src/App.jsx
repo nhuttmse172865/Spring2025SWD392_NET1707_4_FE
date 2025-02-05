@@ -10,18 +10,19 @@ import Login from "./pages/Login/Login";
 import MainLayout from "./pages/HomePage";
 import HomePageForm from "./components/forms/HomePageForm/HomePageForm";
 import Service from "./pages/Service/Service";
+import HomePageLayout from "./pages/HomePageLayout";
+
 
 const App = () => {
   return (
     <Router>
-    <Routes>
-      <Route path="/" element={<MainLayout />} >
-         <Route path="/login" element={<Login />} />
-         <Route index element={<HomePageForm />} />
-         <Route path="/service" element={<Service />} />
-      </Route>
-   
-        
+      <Routes>
+        <Route element={<MainLayout />} >
+          <Route path="/login" element={<Login />} />
+          <Route path="/service" element={<Service />} />
+        </Route>
+
+        <Route path="/" element={<HomePageLayout />} />
         <Route path="/admin" element={<AdminLayout />} />
         <Route path="/customer" element={<CustomerLayout />} />
         <Route path="/staff" element={<StaffLayout />} />

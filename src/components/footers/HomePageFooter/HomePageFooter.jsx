@@ -1,5 +1,9 @@
 import React, { useRef } from 'react';
 import './HomePageFooter.scss';
+import visa from '/AssetsHomePage/visa.png';
+import mastercard from '/AssetsHomePage/mastercard.jpg';
+import other from '/AssetsHomePage/other.jpg';
+
 
 
 const HomePageFooter = () => {
@@ -7,64 +11,67 @@ const HomePageFooter = () => {
 
   const supportRef = useRef(null);
 
-  
-
-  const quickLinks = [
-    { text: 'Home', path: '/' },
-    { text: 'About Us', path: '/about' },
-    { text: 'Services', path: '/services' },
-    { text: 'Pricing', path: '/pricing' },
-    { text: 'Contact', path: '/contact' }
-  ];
-
-  const workHours = [
-    { days: 'Mon - Wed', hours: '09.00 AM - 20.00 PM' },
-    { days: 'Thu - Fri', hours: '09.00 AM - 20.00 PM' },
-    { days: 'Saturday', hours: '09.00 AM - 18.00 PM' },
-    { days: 'Sunday', hours: '09.00 AM - 15.00 PM' }
-  ];
-
   return (
     <footer className="footer">
-      <div className="footer__container">
-        {/* Quick Links Section */}
-        <div className="footer__links">
-          <h3>Quick Links</h3>
-          <ul>
-            {quickLinks.map((link, index) => (
-              <li key={index}>
-                <i className="fas fa-chevron-right"></i>
-                <a href={link.path}>{link.text}</a>
-              </li>
-            ))}
-          </ul>
+      <div className="social-icons">
+        <a href="#" className="social-link facebook"><i className="fab fa-facebook-f"></i></a>
+        <a href="#" className="social-link youtube"><i className="fab fa-youtube"></i></a>
+        <a href="#" className="social-link twitter"><i className="fab fa-twitter"></i></a>
+        <a href="#" className="social-link pinterest"><i className="fab fa-pinterest"></i></a>
+        <a href="#" className="social-link instagram"><i className="fab fa-instagram"></i></a>
+      </div>
+
+      <div className="footer-content">
+        <div className="contact-info">
+          <h3>Thông tin liên hệ</h3>
+          <p>Ngày cấp: 13/05/2024 - Nơi cấp: Sở kế hoạch và đầu tư TPHCM</p>
+          <p className="address">Địa chỉ: 70 Lữ Gia, Phường 15, Quận 11, TP.HCM</p>
+          <p className="phone">Điện thoại: 1900 6750</p>
+          <p className="email">Email: support@sapo.vn</p>
         </div>
 
-        {/* Contact Details Section */}
-        <div className="footer__contact">
-          <h3>Contact Details</h3>
-          <div className="contact-info">
-            <p><i className="fas fa-map-marker-alt"></i> Jl. Raya Kuta No.70, Bali</p>
-            <p><i className="fas fa-map-marker-alt"></i> Jl. Kemang Raya No. 3, Jakarta</p>
-            <p><i className="fas fa-envelope"></i> support@domain.com</p>
-            <p><i className="fas fa-phone"></i> (+021) 251 552</p>
+        <div className="footer-links">
+          <div className="link-column">
+            <h3>Hướng dẫn</h3>
+            <ul>
+              <li><a href="#">Hướng dẫn mua hàng</a></li>
+              <li><a href="#">Hướng dẫn thanh toán</a></li>
+              <li><a href="#">Hướng dẫn giao nhận</a></li>
+              <li><a href="#">Điều khoản dịch vụ</a></li>
+              <li><a href="#">Câu hỏi thường gặp</a></li>
+            </ul>
           </div>
-        </div>
 
-        {/* Work Hours Section */}
-        <div className="footer__hours">
-          <h3>Work Hours</h3>
-          <div className="hours-info">
-            {workHours.map((schedule, index) => (
-              <div key={index} className="schedule-row">
-                <span className="days">{schedule.days} :</span>
-                <span className="hours">{schedule.hours}</span>
+          <div className="link-column">
+            <h3>Chính sách</h3>
+            <ul>
+              <li><a href="#">Chính sách thành viên</a></li>
+              <li><a href="#">Chính sách thanh toán</a></li>
+              <li><a href="#">Chính sách vận chuyển và giao nhận</a></li>
+              <li><a href="#">Bảo mật thông tin cá nhân</a></li>
+            </ul>
+          </div>
+
+          <div className="newsletter">
+            <h3>Nhận tin khuyến mãi</h3>
+            <div className="subscribe-form">
+              <input type="email" placeholder="Nhập email nhận tin khuyến mãi" />
+              <button type="submit">ĐĂNG KÝ</button>
+            </div>
+            
+            <div className="payment-section">
+              <h3>Thanh toán</h3>
+              <div className="payment-methods">
+                <img src={visa} alt="Visa" />
+                <img src={mastercard} alt="Mastercard" />
+                <img src={other} alt="Other payment methods" />
               </div>
-            ))}
+            </div>
           </div>
         </div>
       </div>
-    </footer>
+
+  </footer>
   );
 };
 export default HomePageFooter;
