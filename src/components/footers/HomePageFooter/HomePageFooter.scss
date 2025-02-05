@@ -1,259 +1,202 @@
-// .footer {
-//     background-color: #130a31;
-//     padding: 30px 0;
-//     font-family: Arial, sans-serif;
-  
-//     .footer__container {
-//       max-width: 90%;
-//       margin: 0 auto;
-//       padding: 0 20px;
-//       display: flex;
-//       justify-content: space-between;
-//       flex-wrap: wrap;
-//     }
-  
-
-  
-//     /* Quick Links Section */
-//     .footer__links {
-//       flex: 1;
-//       max-width: 200px;
-//       margin-bottom: 20px;
-  
-//       h3 {
-//         font-size: 18px;
-//         color: #faf7f7;
-//         margin-bottom: 15px;
-//       }
-  
-//       ul {
-//         list-style-type: none;
-//         padding: 0;
-  
-//         li {
-//           font-size: 14px;
-//           color: #ece8e8;
-//           margin-bottom: 10px;
-  
-//           i {
-//             margin-right: 10px;
-//             color: #0073e6;
-//           }
-  
-//           a {
-//             color: #f1e7e7;
-//             text-decoration: none;
-//             transition: color 0.3s ease;
-  
-//             &:hover {
-//               color: #0073e6;
-//             }
-//           }
-//         }
-//       }
-//     }
-  
-//     /* Contact Details Section */
-//     .footer__contact {
-//       flex: 1;
-//       max-width: 300px;
-//       margin-bottom: 20px;
-  
-//       h3 {
-//         font-size: 18px;
-//         color: #ffffff;
-//         margin-bottom: 15px;
-//       }
-  
-//       .contact-info {
-//         font-size: 14px;
-//         color: #ffffff;
-  
-//         p {
-//           margin-bottom: 10px;
-//         }
-  
-//         i {
-//           margin-right: 10px;
-//           color: #0073e6;
-//         }
-//       }
-//     }
-  
-//     /* Work Hours Section */
-//     .footer__hours {
-//       flex: 1;
-//       max-width: 250px;
-//       margin-bottom: 20px;
-  
-//       h3 {
-//         font-size: 18px;
-//         color: #ffffff;
-//         margin-bottom: 15px;
-//       }
-  
-//       .hours-info {
-//         .schedule-row {
-//           display: flex;
-//           justify-content: space-between;
-//           font-size: 14px;
-//           color: #ffffff;
-//           margin-bottom: 10px;
-  
-//           .days {
-//             font-weight: bold;
-//           }
-  
-//           .hours {
-//             color: #ffffff;
-//           }
-//         }
-//       }
-//     }
-  
-//     /* Responsive Layout */
-//     @media screen and (max-width: 768px) {
-//       .footer__container {
-//         flex-direction: column;
-//         align-items: center;
-//       }
-  
-//       .footer__brand,
-//       .footer__links,
-//       .footer__contact,
-//       .footer__hours {
-//         max-width: 100%;
-//         margin-right: 0;
-//       }
-//     }
-//   }
-  
 
 
+
+// Footer.scss
 .footer {
-  background-color: #1a1a2e;
+  background-color: #1a2942;
+  color: #ffffff;
+  padding: 40px 0;
   font-family: Arial, sans-serif;
-  position: relative; /* Đảm bảo footer luôn ở dưới */
-  margin-top: auto; /* Footer sẽ luôn ở cuối cùng */
 
-  .footer__container {
-    max-width: 90%;
+  .container {
+    max-width: 1200px;
     margin: 0 auto;
-    padding: 0 20px;
-    display: flex;
-    justify-content: space-between;
-    flex-wrap: wrap;
+    padding: 0 15px;
   }
 
-  /* Quick Links Section */
-  .footer__links {
-    flex: 1;
-    max-width: 200px;
+  .social-icons {
+    display: flex;
+    justify-content: center;
+    gap: 35px;
+    margin-bottom: 30px;
 
+    .social-link {
+      width: 35px;
+      height: 35px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #fff;
+      transition: opacity 0.3s;
+
+      &:hover {
+        opacity: 0.8;
+      }
+
+      &.facebook { background-color: #3b5998; }
+      &.youtube { background-color: #ff0000; }
+      &.twitter { background-color: #1da1f2; }
+      &.pinterest { background-color: #bd081c; }
+      &.instagram { background-color: #c13584; }
+    }
+  }
+
+  .footer-content {
+    display: grid;
+    grid-template-columns: 1fr 2fr;
+    gap: 40px;
+
+    @media (max-width: 768px) {
+      grid-template-columns: 1fr;
+    }
+  }
+
+  .contact-info {
     h3 {
+      color: #ff6b6b;
+      margin-bottom: 20px;
       font-size: 18px;
-      color: #faf7f7;
-      margin-bottom: 15px;
+    }
+
+    p {
+      margin-bottom: 10px;
+      font-size: 14px;
+      line-height: 1.6;
+      font-weight: bold;
+    }
+
+    .address, .phone, .email {
+      position: relative;
+      padding-left: 25px;
+
+      &:before {
+        position: absolute;
+        left: 0;
+        top: 50%;
+        transform: translateY(-50%);
+      }
+    }
+  }
+
+  .footer-links {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 30px;
+
+    @media (max-width: 992px) {
+      grid-template-columns: repeat(2, 1fr);
+    }
+
+    @media (max-width: 576px) {
+      grid-template-columns: 1fr;
+    }
+  }
+
+  .link-column {
+    h3 {
+      color: #ff6b6b;
+      margin-bottom: 25px;
+      font-size: 18px;
     }
 
     ul {
-      list-style-type: none;
+      list-style: none;
       padding: 0;
+      margin: 0;
+
 
       li {
-        font-size: 14px;
-        color: #ece8e8;
-        margin-bottom: 10px;
-
-        i {
-          margin-right: 10px;
-          color: #0073e6;
-        }
+        margin-bottom: 25px;
 
         a {
-          color: #f1e7e7;
+          color: #ffffff;
           text-decoration: none;
-          transition: color 0.3s ease;
+          font-size: 14px;
+          transition: color 0.3s;
 
           &:hover {
-            color: #0073e6;
+            color: #ff6b6b;
           }
         }
       }
     }
   }
 
-  /* Contact Details Section */
-  .footer__contact {
-    flex: 1;
-    max-width: 300px;
-    margin-bottom: 20px;
-
+  .newsletter {
     h3 {
+      color: #ff6b6b;
+      margin-bottom: 20px;
       font-size: 18px;
-      color: #ffffff;
-      margin-bottom: 15px;
     }
 
-    .contact-info {
-      font-size: 14px;
-      color: #ffffff;
-
-      p {
-        margin-bottom: 10px;
-      }
-
-      i {
-        margin-right: 10px;
-        color: #0073e6;
-      }
-    }
-  }
-
-  /* Work Hours Section */
-  .footer__hours {
-    flex: 1;
-    max-width: 250px;
-    margin-bottom: 20px;
-
-    h3 {
-      font-size: 18px;
-      color: #ffffff;
-      margin-bottom: 15px;
-    }
-
-    .hours-info {
-      .schedule-row {
-        display: flex;
-        justify-content: space-between;
-        font-size: 14px;
+    .subscribe-form {
+      display: flex;
+      margin-bottom: 30px;
+      width: 100%;
+    
+      input {
+        flex: 1;
+        padding: 10px 15px;
+        border: 1px solid rgba(255, 255, 255, 0.3);
+        background: transparent;
         color: #ffffff;
-        margin-bottom: 10px;
-
-        .days {
-          font-weight: bold;
+        border-radius: 4px 0 0 4px;
+        font-size: 14px;
+        height: 42px;
+        margin: 0; /* Remove any default margins */
+        display: block; /* Ensure block display */
+        box-sizing: border-box; /* Include padding and border in element's total width */
+    
+        &::placeholder {
+          color: rgba(255, 255, 255, 0.5);
         }
-
-        .hours {
-          color: #ffffff;
+    
+        &:focus {
+          outline: none;
+          border-color: rgba(255, 255, 255, 0.5);
+        }
+      }
+    
+      button {
+        padding: 10px 20px;
+        background-color: #ff6b6b;
+        border: 1px solid #ff6b6b;
+        color: #ffffff;
+        border-radius: 0 4px 4px 0;
+        cursor: pointer;
+        font-weight: 600;
+        height: 42px;
+        margin: 0; /* Remove any default margins */
+        white-space: nowrap;
+        display: block; /* Ensure block display */
+        box-sizing: border-box; /* Include padding and border in element's total width */
+        margin-left: -1px; /* Offset the border overlap */
+    
+        &:hover {
+          background-color: darken(#ff6b6b, 10%);
         }
       }
     }
   }
 
-  /* Responsive Layout */
-  @media screen and (max-width: 768px) {
-    .footer__container {
-      flex-direction: column;
-      align-items: center;
+  .payment-section {
+    h3 {
+      color: #ff6b6b;
+      margin-bottom: 15px;
+      font-size: 18px;
     }
 
-    .footer__brand,
-    .footer__links,
-    .footer__contact,
-    .footer__hours {
-      max-width: 100%;
-      margin-right: 0;
+    .payment-methods {
+      display: flex;
+      gap: 10px;
+      justify-content: center;
+      
+      img {
+        height: 30px;
+        width: auto;
+        border-radius: 10%;
+      }
     }
   }
 }
