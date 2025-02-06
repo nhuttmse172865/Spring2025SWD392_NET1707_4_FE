@@ -1,0 +1,32 @@
+.search-common {
+  position: relative;
+  max-width: 350px;
+  min-width: 300px;
+  border: 1px solid var(--color-title-10);
+  height: 40px;
+  border-radius: 0.375rem;
+  transition: ease-in 0.5s;
+}
+.search-common > img {
+  position: absolute;
+  right: 15px;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 20px;
+  height: 20px;
+  cursor: pointer;
+}
+.search-common > input {
+  width: 100%;
+  height: 100%;
+  transition: ease 1s;
+  outline: none;
+  background-color: transparent;
+  border: none;
+  padding: 0 40px 0 15px;
+  color: var(--color-title-70);
+  font-size: 14px;
+}
+.search-common > input::placeholder{
+    font-size: 13px;
+}

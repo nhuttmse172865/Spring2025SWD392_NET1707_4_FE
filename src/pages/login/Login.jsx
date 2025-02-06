@@ -1,11 +1,14 @@
 import React from 'react'
 import './Login.css'
-import Header from '../../customer/home/header/Header'
+import Header from '../../components/customer/header/Header'
 
 const Login = () => {
   return (
     <div>
-        <Header />
+        <Header isShowButtonLogin={false} isShowSearch={false} />
+        <div className='login-page-container'>
+
+        </div>
     </div>
   )
 }

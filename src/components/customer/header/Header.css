@@ -17,9 +17,11 @@
     color: var(--color-title-50);
     font-weight: 500;
     cursor: pointer;
+    transition: ease-in 0.3s;
 }
 .header-customer > ul > li:hover{
     color: var(--color-title-80);
+    transition: ease-in 0.3s;
 }
 .header-logo{
     width: 100px;
@@ -35,4 +37,5 @@
     width: 40%;
     display: flex;
     justify-content: flex-end;
+    column-gap: 40px;
 }

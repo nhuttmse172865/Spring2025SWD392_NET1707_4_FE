@@ -1,9 +1,10 @@
-import React from "react";
+import React, { useState } from "react";
 import "./Header.css";
-import ElevatedButton from "../../../common/button/elevated/ElevatedButton";
-import IMAGES from "../../../../constants/images";
+import ElevatedButton from "../../common/button/elevated/ElevatedButton";
+import IMAGES from "../../../constants/images";
+import Search from "../../common/search/Search";
 
-const Header = () => {
+const Header = ({isShowSearch = true, isShowButtonLogin = true}) => {
   return (
     <div className="header-container">
       <div className="container mx-auto header-customer">
@@ -19,7 +20,8 @@ const Header = () => {
           <img src={IMAGES.logo} alt="" />
         </div>
         <div>
-           <ElevatedButton text="Login" />
+          {isShowSearch && <Search />} 
+          {isShowButtonLogin &&  <ElevatedButton text="Login" />}
         </div>
       </div>
     </div>
