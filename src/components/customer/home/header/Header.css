@@ -1,0 +1,38 @@
+.header-customer{
+    display: flex;
+    height: 70px;
+    align-items: center;
+    justify-content: space-between;
+    position: relative;
+}
+.header-customer > ul {
+    display: flex;
+    justify-content: flex-start;
+    column-gap: 40px;
+    padding-inline-start: 0px;
+    width: 40%;
+}
+.header-customer > ul > li{
+    font-size: 14px;
+    color: var(--color-title-50);
+    font-weight: 500;
+    cursor: pointer;
+}
+.header-customer > ul > li:hover{
+    color: var(--color-title-80);
+}
+.header-logo{
+    width: 100px;
+    height: 100px;
+    border-radius: 50%;
+    overflow: hidden;
+    top:calc(100% + 15px);
+    position: relative;
+    transform: translateY(-50%);
+    z-index: 1000;
+}
+.header-customer > div:last-child{
+    width: 40%;
+    display: flex;
+    justify-content: flex-end;
+}

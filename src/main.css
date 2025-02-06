@@ -1,0 +1,28 @@
+@import "tailwindcss";
+@theme {
+    --font-title: "Playfair Display", serif;
+    --default-font-family: "Poppins";
+    --color-title-100: rgba(48,13,30,1);
+    --color-title-90: rgba(48,13,30,0.9);
+    --color-title-80: rgba(48,13,30,0.8);
+    --color-title-70: rgba(48,13,30,0.7);
+    --color-title-60: rgba(48,13,30,0.6);
+    --color-title-50: rgba(48,13,30,0.5);
+    --color-title-40: rgba(48,13,30,0.4);
+    --color-title-30: rgba(48,13,30,0.3);
+    --color-title-20: rgba(48,13,30,0.2);
+    --color-title-10: rgba(48,13,30,0.1);
+    --color-primary-100: rgba(255,79,157,1);
+    --color-primary-90: rgba(255,79,157,0.9);
+    --color-primary-80: rgba(255,79,157,0.8);
+    --color-primary-70: rgba(255,79,157,0.7);
+    --color-primary-60: rgba(255,79,157,0.6);
+    --color-primary-50: rgba(255,79,157,0.5);
+    --color-primary-40: rgba(255,79,157,0.4);
+    --color-primary-30: rgba(255,79,157,0.3);
+    --color-primary-20: rgba(255,79,157,0.2);
+    --color-primary-10: rgba(255,79,157,0.1);
+}
+*{
+    font-family: 'Poppins';
+}
