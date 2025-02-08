@@ -23,6 +23,20 @@
     --color-primary-20: rgba(255,79,157,0.2);
     --color-primary-10: rgba(255,79,157,0.1);
 }
-*{
-    font-family: 'Poppins';
+input{
+    outline: none;
+    background-color: transparent;
+    padding-block: 0px;
+    padding-inline: 0px;
+    padding: .375rem .75rem
+}
+input::placeholder{
+    font-size: 13px;
+    color: var(--color-title-30);
+}
+input:focus{
+    border-color: var(--color-primary-100);
+}
+.font-family-playfair-display{
+    font-family: "Playfair Display", serif;
 }
