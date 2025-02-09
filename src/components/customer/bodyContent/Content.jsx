@@ -1,34 +1,62 @@
 
-import React from 'react';
+import React, { useState } from 'react';
 import './Content.css';
+import { CheckCircle } from "lucide-react";
 import IMAGES from "../../../constants/images";
 
 const Content = () => {
+  const doctors = [
+    {
+      id: 1,
+      name: 'Emely jonson',
+      role: 'Chuyên viên massage',
+      description: 'Chuyên gia với hơn 5 năm kinh nghiệm trong lĩnh vực massage trị liệu. Được đào tạo chuyên sâu về các phương pháp massage.'
+    },
+    {
+      id: 2,
+      name: 'Lola Jonson',
+      role: 'Chuyên viên chăm sóc da',
+      description: 'Chuyên gia thẩm mỹ với kinh nghiệm trong việc điều trị các vấn đề về da. Thành thạo nhiều kỹ thuật chăm sóc da tiên tiến.'
+    },
+    {
+      id: 3,
+      name: 'Rose Marian',
+      role: 'Chuyên viên chăm sóc da',
+      description: 'Chuyên gia với chứng chỉ quốc tế về thẩm mỹ và chăm sóc da. Có kinh nghiệm trong việc điều trị mọi loại da.'
+    },
+    {
+      id: 4,
+      name: 'Rose Marian',
+      role: 'Chuyên viên chăm sóc da',
+      description: 'Chuyên gia thẩm mỹ với nhiều năm kinh nghiệm trong lĩnh vực chăm sóc da cao cấp. Thành thạo các kỹ thuật điều trị da hiện đại.'
+    }
+  ];
+
 
   const services = [
     {
-      icon: "👩",
+      icon: <CheckCircle color="white" size={24} />,
       title: "Caring for Your Skin"
     },
     {
-      icon: "💆‍♀️",
-      title: " Intensive Treatment"
+      icon: <CheckCircle color="white" size={24} />,
+      title: "Intensive Treatment"
     },
     {
-      icon: "🧴",
-      title: " Specialized Treatment Products"
+      icon: <CheckCircle color="white" size={24} />,
+      title: "Specialized Treatment Products"
     },
     {
-      icon: "🔍",
+      icon: <CheckCircle color="white" size={24} />,
       title: "Free Skin Examination and Consultation"
     },
     {
-      icon: "🏥",
-      title: " Modern Equipment"
+      icon: <CheckCircle color="white" size={24} />,
+      title: "Modern Equipment"
     },
     {
-      icon: "👩‍⚕️",
-      title: " Experienced Technicians"
+      icon: <CheckCircle color="white" size={24} />,
+      title: "Experienced Technicians"
     }
   ];
   return (
@@ -96,7 +124,7 @@ const Content = () => {
             </h2>
 
             <p className="about-description">
-              The quality or aggregate of qualities in a person or thing that gives pleasure to the senses or pleasurably exalts the mind or spirit: loveliness. A woman of great physical beauty exploring the natural beauty of the island, where the golden rays of the sun gently kiss the shimmering waves of the ocean. The scent of blooming flowers fills the air, creating an atmosphere of serenity and charm. Beauty is not just about appearances; it is the essence of confidence, kindness, and grace. It radiates from within, shining through every smile, every act of compassion, and every expression of joy. True beauty lies in embracing oneself, appreciating the wonders of nature, and finding harmony in the simple yet profound moments of life.
+              The quality or aggregate of qualities in a person or thing that gives pleasure to the senses or pleasurably exalts the mind or spirit: loveliness. A woman of great physical beauty exploring the natural beauty of the island, where the golden rays of the sun gently kiss the shimmering waves of the ocean. The scent of blooming flowers fills the air, creating an atmosphere of serenity and charm. Beauty is not just about appearances; it is the essence of confidence, kindness, and grace. It radiates from within, shining through every smile, every act of compassion, and every expression of joy.
             </p>
 
             <button className="learn-more-btn">
@@ -122,8 +150,9 @@ const Content = () => {
             </h2>
 
             <p className="services-description">
-              At SkinCare Spa, we provide our valued customers with intensive skin care and treatment procedures.
-              Additionally, we always listen to our customers' needs, no matter how small, to enhance service quality and deliver the best therapeutic results.
+              At SkinCare Spa, we provide our valued customers with intensive skin care and treatment procedures tailored to their unique needs. Our expert team uses advanced techniques and high-quality products to ensure optimal results for every skin type.
+
+              Additionally, we always listen to our customers' needs to enhance service quality and deliver the best therapeutic results.
             </p>
 
             <div className="services-grid">
@@ -135,6 +164,31 @@ const Content = () => {
               ))}
             </div>
           </div>
+        </div>
+      </section>
+      <section className="therapist-infor">
+        <h2 className="therapist-title">
+        Skincare Spa Expert Team
+        </h2>
+        <div className="doctor-container">
+          {doctors.map((doctor) => (
+            <div key={doctor.id} className="doctor-card">
+              <div className="doctor-card-inner">
+                <div className="doctor-card-front">
+                  <div className="doctor-image">
+                    <img src={IMAGES.skinBackground1}  alt={doctor.name} />
+                  </div>
+                  <h3 className="doctor-name">{doctor.name}</h3>
+                  <p className="doctor-role">{doctor.role}</p>
+                </div>
+                <div className="doctor-card-back">
+                  <h3 className="doctor-name">{doctor.name}</h3>
+                  <p className="doctor-description">{doctor.description}</p>
+                  <button className="doctor-button">Xem thêm</button>
+                </div>
+              </div>
+            </div>
+          ))}
         </div>
       </section>
 
