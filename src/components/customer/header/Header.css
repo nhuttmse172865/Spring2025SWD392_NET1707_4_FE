@@ -1,4 +1,4 @@
-.header-customer{
+/* .header-customer{
     display: flex;
     height: 70px;
     align-items: center;
@@ -38,4 +38,152 @@
     display: flex;
     justify-content: flex-end;
     column-gap: 40px;
+} */
+
+
+
+
+
+/* ✅ Header chính */
+.header-customer {
+    display: flex;
+    height: 70px;
+    align-items: center;
+    justify-content: space-between;
+    position: relative;
+    padding: 0 20px;
+}
+
+/* ✅ Danh sách menu */
+.header-customer > ul {
+    display: flex;
+    justify-content: flex-start;
+    column-gap: 40px;
+    padding-inline-start: 0px;
+    width: 40%;
+}
+
+.header-customer > ul > li {
+    font-size: 14px;
+    color: var(--color-title-50);
+    font-weight: 500;
+    cursor: pointer;
+    transition: ease-in 0.3s;
+}
+
+.header-customer > ul > li:hover {
+    color: var(--color-title-80);
+    transition: ease-in 0.3s;
+}
+
+/* ✅ Logo */
+.header-logo {
+    width: 100px;
+    height: 100px;
+    border-radius: 50%;
+    overflow: hidden;
+    top: calc(100% + 15px);
+    position: relative;
+    transform: translateY(-50%);
+    z-index: 1000;
+}
+
+/* ✅ Phần bên phải */
+.header-customer > div:last-child {
+    width: 40%;
+    display: flex;
+    justify-content: flex-end;
+    column-gap: 40px;
+}
+
+/* 📌 📌 📌 RESPONSIVE CHO CÁC THIẾT BỊ 📌 📌 📌 */
+
+/* ✅ Tablet (768px - 1023px) */
+@media (max-width: 1023px) {
+    .header-customer {
+        flex-direction: row;
+        height: 60px;
+        padding: 0 15px;
+    }
+
+    .header-customer > ul {
+        width: 50%;
+        column-gap: 20px;
+    }
+
+    .header-customer > ul > li {
+        font-size: 13px;
+    }
+
+    .header-logo {
+        width: 80px;
+        height: 80px;
+    }
+
+    .header-customer > div:last-child {
+        width: 50%;
+        column-gap: 20px;
+    }
+}
+
+/* ✅ Mobile lớn (480px - 767px) */
+@media (max-width: 767px) {
+    .header-customer {
+        flex-direction: column;
+        height: auto;
+        align-items: center;
+        padding: 10px 0;
+    }
+
+    .header-logo {
+        width: 70px;
+        height: 70px;
+    }
+
+    .header-customer > ul {
+        width: 100%;
+        justify-content: center;
+        column-gap: 15px;
+    }
+
+    .header-customer > ul > li {
+        font-size: 12px;
+    }
+
+    .header-customer > div:last-child {
+        width: 100%;
+        justify-content: center;
+        column-gap: 15px;
+    }
+}
+
+/* ✅ Mobile nhỏ (<480px) */
+@media (max-width: 480px) {
+    .header-customer {
+        flex-direction: column;
+        height: auto;
+        padding: 10px 0;
+        text-align: center;
+    }
+
+    .header-logo {
+        width: 60px;
+        height: 60px;
+    }
+
+    .header-customer > ul {
+        flex-direction: column;
+        align-items: center;
+        row-gap: 10px;
+    }
+
+    .header-customer > ul > li {
+        font-size: 12px;
+    }
+
+    .header-customer > div:last-child {
+        flex-direction: column;
+        align-items: center;
+        row-gap: 10px;
+    }
 }
