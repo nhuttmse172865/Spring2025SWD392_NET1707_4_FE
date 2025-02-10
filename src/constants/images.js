@@ -1,3 +1,4 @@
+
 import logo from '../assets/images/logo.png'
 import bannerLogin from '../assets/images/banner_login.png'
 import skinBackground from '../assets/images/skin.jpg'
@@ -9,20 +10,17 @@ import visa from '../assets/images/visa.png'
 import otherCard from '../assets/images/other.jpg'
 import mastercard from '../assets/images/mastercard.jpg'
 
-
 const IMAGES = {
-    logo: logo,
-    bannerLogin: bannerLogin,
-    skinBackground: skinBackground,
-    skinBackground1: skinBackground1,
-    skinBackground2: skinBackground2,
-    skinBackground3: skinBackground3,
-    decoration :decoration,
-    visa:visa,
-    otherCard:otherCard,
-    mastercard:mastercard
+  logo,
+  bannerLogin,
+  skinBackground,
+  skinBackground1,
+  skinBackground2,
+  skinBackground3,
+  decoration,
+  visa,
+  otherCard,
+  mastercard
+};
 
-
-}
-
-export default IMAGES
+export default IMAGES;
