@@ -57,7 +57,7 @@ const LoginForm = () => {
       </div>
       <div className="login-other-button ease-in duration-300">
         <img src={ICONS.google} alt="" />
-        <span>Sign in with Google</span>
+        <span className="text-[15px]">Sign in with Google</span>
       </div>
       <p
         className="text-[15px] text-(--color-title-50)"

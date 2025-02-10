@@ -10,7 +10,7 @@ const Header = ({isShowSearch = true, isShowButtonLogin = true}) => {
       <div className="container mx-auto header-customer">
         <ul className="font-primary">
           <li>Home</li>
-          <li>Our Services</li>
+          <li>Services</li>
           <li>Price</li>
           <li>Booking</li>
           <li>Blog</li>
@@ -21,7 +21,7 @@ const Header = ({isShowSearch = true, isShowButtonLogin = true}) => {
         </div>
         <div>
           {isShowSearch && <Search />} 
-          {isShowButtonLogin &&  <ElevatedButton text="Login" />}
+          {isShowButtonLogin &&  <ElevatedButton text="Login" rounded=".375rem"/>}
         </div>
       </div>
     </div>

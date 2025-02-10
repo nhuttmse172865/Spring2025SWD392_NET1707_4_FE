@@ -1,9 +1,9 @@
-import logo from '../assets/images/logo.png'
-import bannerLogin from '../assets/images/banner_login.png'
+import logo from "../assets/images/logo.png";
+import bannerLogin from "../assets/images/banner_login.png";
 
 const IMAGES = {
-    logo: logo,
-    bannerLogin: bannerLogin
-}
+  logo,
+  bannerLogin,
+};
 
-export default IMAGES
+export default IMAGES;
