@@ -1,0 +1,31 @@
+.customer-container {
+    display: flex;
+    flex-direction: column;
+    height: 100vh; 
+  
+    .header {
+      flex: 15%;
+      background-color: #f8f9fa; 
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+  
+    .content {
+      flex: 65%;
+      margin-top: 50px;
+      background-color: #ffffff;
+      overflow-y: auto; 
+      padding: 50px;
+    }
+  
+    .footer {
+      flex: 20%;
+      background-color: #343a40; 
+      color: white;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+  }
+  
