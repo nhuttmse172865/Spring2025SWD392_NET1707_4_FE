@@ -6,7 +6,7 @@ const Customer = () => {
   return (
     <div className="header-container">
       <Header />
-      <div className="content-container">
+      <div className="content-container container mx-auto" >
         <Content />
       </div>
       <div className="footer-container">
