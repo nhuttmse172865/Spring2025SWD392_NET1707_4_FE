@@ -1,5 +1,6 @@
 import { BrowserRouter, Route, Routes } from "react-router-dom"
 import Login from "./pages/login/Login"
+import DashboadStaff from "./pages/staff/DashboadStaff"
 
 
 function App() {
@@ -14,7 +15,8 @@ function App() {
         <Route path="/admin/" element="">
 
         </Route>
-        <Route path="/staff/" element="">
+        <Route path="/staff/" element={<DashboadStaff />}>
+        
 
         </Route>
         <Route path="/therapist/" element="">
