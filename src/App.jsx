@@ -4,6 +4,8 @@ import Customer from "./pages/customer/Customer";
 import Manager from "./layouts/manager";
 import Dashboard from "./pages/manager/dashboard/Dashboard";
 import COMPONENT_PATH_HELPER from "./helpers/ComponentPathHelper";
+import CustomerService from "./pages/customer/customerService/CustomerService"
+import Content from "./components/customer/outletContent/Content"
 
 function App() {
   return (
@@ -16,6 +18,9 @@ function App() {
             {COMPONENT_PATH_HELPER.listRouteNavigationManager.map((item, index) => (
                 <Route key={index} path={item.path} element={item.component} />
             ))}
+        </Route>
+        <Route path="/customer-service" element={<CustomerService />}>
+          <Route index element={<Content />} />
         </Route>
         <Route path="/admin/" element=""></Route>
         <Route path="/staff/" element=""></Route>
