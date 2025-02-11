@@ -1,9 +1,12 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import "./Menu.css";
-import NAVIGATION from "../../../../constants/navigationManger";
 import ICONS from "../../../../constants/icons";
+import NAVIGATION from "../../../../constants/navigationManger";
+import { useNavigate } from "react-router-dom";
+import useMapPath from "../../../../hook/useMapPath";
 
 const Menu = () => {
+  const navigate = useNavigate();
   const [itemActive, setItemActive] = useState({
     indexMenu: null,
     indexItem: null,
@@ -17,8 +20,19 @@ const Menu = () => {
   const handleOnclickItem = (
     indexMenu,
     indexItem,
-    indexSubItem
+    indexSubItem,
+    item,
+    subItem = null
   ) => {
+    if (subItem) {
+      navigate(item.path + subItem.path);
+    } else {
+      if (Array.isArray(item.subItems) && item.subItems.length > 0) {
+        navigate(item.path + item.subItems[0].path);
+      } else {
+        navigate(item.path);
+      }
+    }
     setItemActive({
       indexMenu: indexMenu,
       indexItem: indexItem,
@@ -33,6 +47,15 @@ const Menu = () => {
     setItemHover({ indexMenu: null, indexItem: null });
   };
 
+  useEffect(() => {
+    const item = useMapPath(location.pathname)
+    setItemActive({
+      indexMenu: item.indexMenu,
+      indexItem: item.indexItem,
+      indexSubItem: item.indexSubItem,
+    });
+  }, []);
+
   return (
     <div className="manager-list-navigation">
       {NAVIGATION.LIST_NAVIGATION_MANAGER.map((itemMenu, indexMenu) => (
@@ -43,7 +66,7 @@ const Menu = () => {
               {itemMenu.data.map((item, index) => (
                 <li key={index}>
                   <div
-                    onClick={() => handleOnclickItem(indexMenu, index, 0)}
+                    onClick={() => handleOnclickItem(indexMenu, index, 0, item)}
                     onMouseEnter={() => handleHoverItem(indexMenu, index)}
                     onMouseLeave={() => handleLeaveItem()}
                     className="manager-navigation-menu-item hover:bg-(--color-primary-10) hover:text-(--color-primary-100) ease duration-300"
@@ -113,7 +136,9 @@ const Menu = () => {
                             handleOnclickItem(
                               indexMenu,
                               index,
-                              indexSubItem
+                              indexSubItem,
+                              item,
+                              subItem
                             )
                           }
                           className={

@@ -9,7 +9,7 @@ const Manager = () => {
       <div className="min-w-[250px] max-w-[300px] h-full">
         <Navigation />
       </div>
-      <div className="w-full" >
+      <div className="w-full pr-6" >
         <Header />
         <Outlet />
       </div>
