@@ -1,0 +1,95 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap');
+.record-booking-container{
+  padding: 15px;
+  background-color: #fff5f7;
+  min-height: 100vh;
+  font-family: 'Poppins', sans-serif;
+}
+.title-booking{
+  text-align: center;
+    font-size: 24px;
+    font-weight: bold;
+    color: #d63384;
+    margin-bottom: 40px;
+
+  
+}
+.booking-list{
+  display:flex;
+  flex-direction: column;
+  gap:15px;
+}
+.booking-item{
+  display:flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px;
+  border: 1px solid #f8a4c7;
+  border-radius: 10px;
+  background: white;
+  transition: box-shadow 0.3s ease-in-out, transform 0.2s ease-in-out;
+}
+.booking-item:hover{
+  box-shadow: 0px 4px 12px rgba(255, 105, 180, 0.3);
+  transform: translateY(-2px);
+}
+.booking-info{
+  color: #d63384;
+}
+.booking-name {
+  font-size: 18px;
+  font-weight: bold;
+  color: #777;
+}
+.booking-time {
+  font-size: 14px;
+  color: #a05283; 
+}
+
+
+
+
+
+.record-button {
+  align-items: center;
+  background-color: #ff69b4; 
+  color: #fff;
+  padding: 12px;
+  border: none;
+  border-radius: 5px;
+  font-size: 16px;
+  font-weight: 600;
+  cursor: pointer;
+  
+  transition: background-color 0.3s ease, transform 0.2s ease;
+}
+
+.record-button:hover {
+  background-color: #e04c8a;
+  transform: scale(1.05);
+}
+
+.custom-modal .ant-modal-title {
+  color: #d63384;
+  font-size: 20px;
+  font-weight: bold;
+}
+
+
+.custom-modal label {
+  display: block;
+  margin-top: 10px;
+  font-weight: bold;
+  color: #b3005e;
+}
+
+
+.custom-modal .ant-btn-primary {
+  background-color: #ff69b4 !important;
+  border-color: #ff69b4 !important;
+}
+
+.custom-modal .ant-btn-primary:hover {
+  background-color: #d63384 !important;
+  border-color: #d63384 !important;
+}
