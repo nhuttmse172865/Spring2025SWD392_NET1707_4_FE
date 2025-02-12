@@ -1,0 +1,137 @@
+.checkin-header{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+    width: 100%;
+}
+.qr-icon{
+    font-size: 38px;
+    color: #333;
+    cursor: pointer;
+}
+.header-actions {
+    display: flex;
+    align-items: center; 
+    gap: 30px; 
+    margin-left: 50px;
+  }
+.checkin-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 20px;
+  font-family: 'Poppins', sans-serif;
+  background-color: #fff5f7;
+}
+
+.checkin-title {
+  font-size: 24px;
+  font-weight: bold;
+  margin-bottom: 20px;
+  color: #ff5ca4;
+}
+
+
+.checkin-table {
+  width: 100%;
+  border-collapse: collapse;
+  background-color: #fff;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+.checkin-table th,
+.checkin-table td {
+  padding: 12px 16px;
+  text-align: left;
+  border-bottom: 1px solid #ffd1dc;
+  text-align: center;
+}
+
+.checkin-table th {
+    background-color: #ff5ca4; 
+  font-weight: bold;
+  color: #fff;
+}
+
+.checkin-table tbody tr:hover {
+    background-color: #fff0f6;
+}
+
+
+
+.checkout-button {
+    width: 50%;
+    background-color: #ff5ca4;
+    color: #fff;
+    padding: 12px;
+    border: none;
+    border-radius: 5px;
+    font-size: 16px;
+    font-weight: 600;
+    cursor: pointer;
+    margin-top: 15px;
+}
+
+.checkout-button:hover {
+    background-color: #e04c8a;
+}
+.btn-checkin{
+    width: 70%;
+    background-color: #ff5ca4;
+    color: #fff;
+    padding: 5px;
+    border: none;
+    border-radius: 5px;
+    font-size: 16px;
+    font-weight: 600;
+    cursor: pointer;
+    margin-top: 5px;
+}
+.btn-checkin:hover{
+    background-color: #e04c8a;
+}
+@media (max-width: 768px) {
+  .checkin-header {
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 10px;
+  }
+
+  .qr-icon {
+      font-size: 28px;
+  }
+
+  .header-actions {
+      flex-direction: column;
+      margin-left: 0;
+      gap: 15px;
+  }
+
+  .checkin-container {
+      padding: 15px;
+  }
+
+  .checkin-title {
+      font-size: 20px;
+      text-align: center;
+  }
+
+  .checkin-table {
+      font-size: 14px;
+  }
+
+  .checkin-table th, 
+  .checkin-table td {
+      padding: 8px;
+      font-size: 12px;
+  }
+
+  .checkout-button, 
+  .btn-checkin {
+      width: 100%;
+      font-size: 14px;
+      padding: 10px;
+  }
+}

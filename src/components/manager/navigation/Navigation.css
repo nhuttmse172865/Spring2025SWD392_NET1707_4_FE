@@ -1,0 +1,12 @@
+.manager-navigation{
+    border-radius:1.5rem;
+    position: relative;
+    overflow: hidden;
+}
+
+.manager-navigation-logo > img {
+    width: 100px;
+    position: relative;
+    left: 50%;
+    transform: translateX(-50%);
+}

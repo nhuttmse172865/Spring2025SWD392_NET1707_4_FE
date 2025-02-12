@@ -32,12 +32,24 @@ const LoginContent = () => {
   });
   return (
     <div
-      className="h-full overflow-hidden"
-      style={{ width: `${widthContainer - 28}px`, borderTopLeftRadius: "50px" }}
+      className="relative"
+      style={{
+        width: `${widthContainer - 28}px`,
+        borderTopLeftRadius: "50px",
+        height: `calc(100vh - 70px)`,
+        overflow: "hidden"
+      }}
     >
-      <img src={IMAGES.bannerLogin} className="min-h-full min-w-full" />
-
-      <div className="absolute bottom-0 w-[700px] bg-(--color-primary-100) pb-20 pl-10 pt-10 pr-10" style={{borderTopRightRadius: "50px"}}>
+      <div className="h-full w-full relative">
+        <img
+          src={IMAGES.bannerLogin}
+          className="min-h-full min-w-full object-cover"
+        />
+      </div>
+      <div
+        className="absolute bottom-0 w-[700px] bg-(--color-primary-100) pb-20 pl-10 pt-10 pr-10"
+        style={{ borderTopRightRadius: "50px" }}
+      >
         <h1 className="font-family-playfair-display text-5xl text-white font-semibold">
           Discover The Secrets Of Beauty
         </h1>
