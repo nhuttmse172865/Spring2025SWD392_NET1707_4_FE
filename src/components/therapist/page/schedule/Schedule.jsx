@@ -25,6 +25,42 @@ const Schedule = () => {
       endTime: '15:00',
       status: 'Cancelled',
     },
+    {
+      key: '3',
+      date: '2025-02-16',
+      startTime: '14:00',
+      endTime: '15:00',
+      status: 'Cancelled',
+    },
+    {
+      key: '3',
+      date: '2025-02-16',
+      startTime: '14:00',
+      endTime: '15:00',
+      status: 'Cancelled',
+    },
+
+    {
+      key: '3',
+      date: '2025-02-16',
+      startTime: '14:00',
+      endTime: '15:00',
+      status: 'Cancelled',
+    },
+    {
+      key: '3',
+      date: '2025-02-16',
+      startTime: '14:00',
+      endTime: '15:00',
+      status: 'Cancelled',
+    },
+    {
+      key: '3',
+      date: '2025-02-16',
+      startTime: '14:00',
+      endTime: '15:00',
+      status: 'Cancelled',
+    },
   ]);
 
   const columns = [

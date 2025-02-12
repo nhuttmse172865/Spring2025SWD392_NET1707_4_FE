@@ -40,8 +40,10 @@ const RecordBooking = () => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
   return (
+    <>
+    <h2 className="title-booking">Booking</h2>
     <div className="record-booking-container">
-      <h1 className="title-booking">BOOKING</h1>
+     
       <div className="booking-list">
         {bookings.map((booking) => (
           <div className="booking-item" key={booking.id}>
@@ -93,7 +95,9 @@ const RecordBooking = () => {
         />
       </Modal>
     </div>
+    </>
   );
+  
 };
 
 export default RecordBooking;
