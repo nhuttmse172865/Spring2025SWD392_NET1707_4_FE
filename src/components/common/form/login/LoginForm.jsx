@@ -2,14 +2,20 @@ import React, { useState } from "react";
 import ElevatedButton from "../../button/elevated/ElevatedButton";
 import "./LoginForm.css";
 import ICONS from "../../../../constants/icons";
+import { useNavigate } from "react-router-dom";
 
 const LoginForm = () => {
- 
-  const [emailInCorrect,setEmailInCorrect] = useState(false)
-  const [passwordInCorrect,setPasswordInCorrect] = useState(false)
+  const navigate = useNavigate();
 
-  const classInputEmail = `h-12 border-input-form-login text-(--color-title-100) text-[15px] ${emailInCorrect && "error"}`;
-  const classInputPassword = `h-12 border-input-form-login text-(--color-title-100) text-[15px] ${passwordInCorrect && "error"}`;
+  const [emailInCorrect, setEmailInCorrect] = useState(false);
+  const [passwordInCorrect, setPasswordInCorrect] = useState(false);
+
+  const classInputEmail = `h-12 border-input-form-login text-(--color-title-100) text-[15px] ${
+    emailInCorrect && "error"
+  }`;
+  const classInputPassword = `h-12 border-input-form-login text-(--color-title-100) text-[15px] ${
+    passwordInCorrect && "error"
+  }`;
 
   return (
     <div className="grid items-center login-form-content max-w-[350px]">
@@ -32,7 +38,11 @@ const LoginForm = () => {
             type="text"
             placeholder="Example@gmail.com"
           />
-          {emailInCorrect && <p className="text-[13px] mt-0.5 text-red-400">Email address is not registered!</p>}
+          {emailInCorrect && (
+            <p className="text-[13px] mt-0.5 text-red-400">
+              Email address is not registered!
+            </p>
+          )}
         </div>
         <div className="grid mb-7">
           <label className="text-[15px] mb-0.5 text-(--color-title-60)">
@@ -43,7 +53,11 @@ const LoginForm = () => {
             type="password"
             placeholder="Password"
           />
-           {passwordInCorrect && <p className="text-[13px] mt-0.5 text-red-400">Password is incorrect!</p>}
+          {passwordInCorrect && (
+            <p className="text-[13px] mt-0.5 text-red-400">
+              Password is incorrect!
+            </p>
+          )}
           <p className="text-[14px] mt-2 text-end text-(--color-title-50) cursor-pointer hover:text-(--color-title-70) ease-in duration-300">
             Forgot password ?
           </p>
@@ -59,10 +73,14 @@ const LoginForm = () => {
         <img src={ICONS.google} alt="" />
         <span className="text-[15px]">Sign in with Google</span>
       </div>
-      <p
-        className="text-[15px] text-(--color-title-50)"
-      >
-        Don't have an account? <span className="text-(--color-primary-80) hover:text-(--color-primary-100) ease-in duration-300 font-semibold cursor-pointer">Sign up</span>
+      <p className="text-[15px] text-(--color-title-50)">
+        Don't have an account?{" "}
+        <span
+          onClick={() => navigate("/registrations")}
+          className="text-(--color-primary-80) hover:text-(--color-primary-100) ease-in duration-300 font-semibold cursor-pointer"
+        >
+          Sign up
+        </span>
       </p>
     </div>
   );

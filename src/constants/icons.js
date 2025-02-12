@@ -21,6 +21,7 @@ import filter from "../assets/images/manager/filter.png";
 import update from "../assets/images/manager/update.png";
 import close from "../assets/images/manager/close.png"
 import updateWhite from "../assets/images/manager/update-white.png"
+import qr from "../assets/images/staff/qr.png";
 
 const ICONS = {
   search,
@@ -46,6 +47,7 @@ const ICONS = {
   update,
   close,
   updateWhite
+  qr,
 };
 
 export default ICONS;
