@@ -20,6 +20,7 @@ import notificationActive from "../assets/images/manager/notification-active.png
 import filter from "../assets/images/manager/filter.png";
 import update from "../assets/images/manager/update.png";
 import close from "../assets/images/manager/close.png"
+import updateWhite from "../assets/images/manager/update-white.png"
 
 const ICONS = {
   search,
@@ -43,7 +44,8 @@ const ICONS = {
   notificationActive,
   filter,
   update,
-  close
+  close,
+  updateWhite
 };
 
 export default ICONS;
