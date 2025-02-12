@@ -1,0 +1,22 @@
+.service-navigation {
+  position: relative;
+  overflow: hidden;
+}
+
+.service-navigation-logo>img {
+  width: 100px;
+  position: relative;
+  left: 50%;
+  transform: translateX(-50%);
+}
+
+.mt-1.pb-5.h-full.relative.overflow-y-auto {
+  overflow-x: hidden; 
+  &::-webkit-scrollbar {
+    width: 1px; 
+    height: 0px; 
+  }
+  &::-webkit-scrollbar-thumb {
+    background: #ff4f9d;
+  }
+}

@@ -4,12 +4,15 @@ import Customer from "./pages/customer/Customer";
 
 import Manager from "./layouts/manager";
 import Dashboard from "./pages/manager/dashboard/Dashboard";
-import COMPONENT_PATH_HELPER from "./helpers/ComponentPathHelper";import Staff from "./components/staff/page/Staff"
+import COMPONENT_PATH_HELPER from "./helpers/ComponentPathHelper";
+import Staff from "./components/staff/page/Staff"
 import CheckIn from "./components/staff/page/checkin/CheckIn"
 import CheckOut from "./components/staff/page/checkout/CheckOut"
 import Therapist from "./components/therapist/page/Therapist"
 import RecordBooking from "./components/therapist/page/RecordBooking/RecordBooking"
 import Schedule from "./components/therapist/page/schedule/Schedule"
+import CustomerService from "./pages/customer/customerService/CustomerService"
+import Content from "./components/customer/outletContent/Content"
 
 
 function App() {
@@ -26,16 +29,17 @@ function App() {
             ))}
         </Route>
         <Route path="/admin/" element="">
-
         </Route>
         <Route path="/staff" element={<Staff />}>
-        <Route path="checkin" element={<CheckIn />} />
-        <Route path="checkout" element={<CheckOut />} />
+          <Route path="checkin" element={<CheckIn />} />
+          <Route path="checkout" element={<CheckOut />} />
         </Route>
         <Route path="/therapist" element={<Therapist />}>
-        <Route path="schedule" element={<Schedule />} />
-        <Route path="record" element={<RecordBooking />} />
-        
+          <Route path="schedule" element={<Schedule />} />
+          <Route path="record" element={<RecordBooking />} />
+        </Route>
+        <Route path="/customer-service" element={<CustomerService />}>
+          <Route index element={<Content />} />
         </Route>
       </Routes>
     </BrowserRouter>

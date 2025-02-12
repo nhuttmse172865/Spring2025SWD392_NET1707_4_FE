@@ -3,14 +3,20 @@ import "./Header.css";
 import ElevatedButton from "../../common/button/elevated/ElevatedButton";
 import IMAGES from "../../../constants/images";
 import Search from "../../common/search/Search";
+import { useNavigate } from "react-router-dom";
 
-const Header = ({isShowSearch = true, isShowButtonLogin = true}) => {
+const Header = ({ isShowSearch = true, isShowButtonLogin = true }) => {
+  const navigate = useNavigate();
   return (
     <div className="header-container">
       <div className="container mx-auto header-customer">
         <ul className="font-primary">
-          <li>Home</li>
-          <li>Services</li>
+          <li onClick={() => navigate("/")} style={{ cursor: "pointer" }}>
+            Home
+          </li>
+          <li onClick={() => navigate("/customer-service")} style={{ cursor: "pointer" }}>
+            Services
+          </li>
           <li>Price</li>
           <li>Booking</li>
           <li>Blog</li>
@@ -20,8 +26,8 @@ const Header = ({isShowSearch = true, isShowButtonLogin = true}) => {
           <img src={IMAGES.logo} alt="" />
         </div>
         <div>
-          {isShowSearch && <Search />} 
-          {isShowButtonLogin &&  <ElevatedButton text="Login" width="150px" rounded=".375rem"/>}
+          {isShowSearch && <Search />}
+          {isShowButtonLogin && <ElevatedButton text="Login" width="150px" rounded=".375rem" />}
         </div>
       </div>
     </div>
