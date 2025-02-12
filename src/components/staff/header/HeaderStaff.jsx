@@ -3,16 +3,16 @@ import ICONS from "../../../constants/icons";
 import { useLocation } from "react-router-dom";
 import useMapPath from "../../../hook/useMapPath";
 
-const Header = () => {
+const HeaderStaff = () => {
   const location = useLocation()
   const [isHaveMessage, setIsHaveMessage] = useState(true);
   const [isHaveNotification, setIsHaveNotification] = useState(true);
   const [title,setTitle] = useState()
 
-  useEffect(() => {
-    const item = useMapPath(location.pathname)
-    setTitle(item.title)
-  },[location.pathname])
+//   useEffect(() => {
+//     const item = useMapPath(location.pathname)
+//     setTitle(item.title)
+//   },[location.pathname])
 
   return (
     <div className="h-[60px] flex items-center pl-5 pr-10 justify-between bg-white rounded-3xl mt-2.5">
@@ -48,4 +48,4 @@ const Header = () => {
   );
 };
 
-export default Header;
+export default HeaderStaff;

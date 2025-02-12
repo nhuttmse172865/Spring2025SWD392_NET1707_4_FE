@@ -21,7 +21,7 @@ const Header = ({isShowSearch = true, isShowButtonLogin = true}) => {
         </div>
         <div>
           {isShowSearch && <Search />} 
-          {isShowButtonLogin &&  <ElevatedButton text="Login" rounded=".375rem"/>}
+          {isShowButtonLogin &&  <ElevatedButton text="Login" width="150px" rounded=".375rem"/>}
         </div>
       </div>
     </div>

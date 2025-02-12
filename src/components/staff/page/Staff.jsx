@@ -4,6 +4,7 @@ import React from "react";
 import { Outlet } from "react-router-dom";
 import NavigationStaff from "../navigation/Navigation";
 import Header from "../../manager/header/Header";
+import HeaderStaff from "../header/HeaderStaff";
 
 const Staff = () => {
   return (
@@ -12,7 +13,7 @@ const Staff = () => {
         <NavigationStaff />
       </div>
       <div className="flex-1 flex flex-col overflow-hidden" >
-      <Header />
+      <HeaderStaff/>
         <div className="flex-1 overflow-y-auto pe-4">
           <Outlet />
         </div>

@@ -1,8 +1,10 @@
-import { BrowserRouter, Route, Routes } from "react-router-dom"
-import Login from "./pages/login/Login"
+import { BrowserRouter, Route, Routes } from "react-router-dom";
+import Login from "./pages/login/Login";
+import Customer from "./pages/customer/Customer";
 
-import Manager from "./layouts/manager"
-import Staff from "./components/staff/page/Staff"
+import Manager from "./layouts/manager";
+import Dashboard from "./pages/manager/dashboard/Dashboard";
+import COMPONENT_PATH_HELPER from "./helpers/ComponentPathHelper";import Staff from "./components/staff/page/Staff"
 import CheckIn from "./components/staff/page/checkin/CheckIn"
 import CheckOut from "./components/staff/page/checkout/CheckOut"
 import Therapist from "./components/therapist/page/Therapist"
@@ -11,14 +13,17 @@ import Schedule from "./components/therapist/page/schedule/Schedule"
 
 
 function App() {
-  return (  
-   <BrowserRouter>
+  return (
+    <BrowserRouter>
       <Routes>
       
-        <Route path="/" element="" />
+        <Route path="/" element={<Customer />} />
         <Route path="/login" element={<Login />} />
-        <Route path="/manager/" element={<Manager />} >
-        
+        <Route path="/manager/" element={<Manager />}>
+            <Route index element={<Dashboard />} />
+            {COMPONENT_PATH_HELPER.listRouteNavigationManager.map((item, index) => (
+                <Route key={index} path={item.path} element={item.component} />
+            ))}
         </Route>
         <Route path="/admin/" element="">
 
@@ -33,8 +38,8 @@ function App() {
         
         </Route>
       </Routes>
-   </BrowserRouter>
-  )
+    </BrowserRouter>
+  );
 }
 
-export default App
+export default App;

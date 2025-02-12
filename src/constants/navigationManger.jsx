@@ -1,9 +1,17 @@
+import React from "react";
+import Dashboard from "../pages/manager/dashboard/Dashboard";
 import ICONS from "./icons";
+import Category from "../pages/manager/services/category/Category";
+import SkinType from "../pages/manager/services/skinType/SkinType";
+import { IssueSkin } from "../pages/manager/services/issueSkin/IssueSkin";
 
 const COMPONENTS = {
-  DASHBOARD: "Dasboard",
+  DASHBOARD: <Dashboard />,
   SETTINGS: "Settings",
   SERVICES: "Services",
+  CATEGORY: <Category />,
+  SKIN_TYPE: <SkinType />,
+  ISSUE_SKIN: <IssueSkin />
 };
 
 const LIST_NAVIGATION_MANAGER = [
@@ -25,8 +33,8 @@ const LIST_NAVIGATION_MANAGER = [
         iconActive: ICONS.appointmentActive,
         sortNumber: 1,
         subItems: [],
-        component: "",
-        path: "menu-schedule",
+        component: null,
+        path: "menu-appointment",
       },
       {
         nameMenu: "Services",
@@ -36,26 +44,26 @@ const LIST_NAVIGATION_MANAGER = [
         subItems: [
           {
             name: "Services",
-            component: "",
+            component: COMPONENTS.SERVICES,
             path: "/",
           },
           {
             name: "Category",
-            component: "",
+            component: COMPONENTS.CATEGORY,
             path: "/category",
           },
           {
             name: "Skin Type",
-            component: "",
+            component: COMPONENTS.SKIN_TYPE,
             path: "/skin-type",
           },
           {
             name: "Issue Skin",
-            component: "",
+            component: COMPONENTS.ISSUE_SKIN,
             path: "/issue-skin",
           },
         ],
-        component: COMPONENTS.SERVICES,
+        component:null,
         path: "menu-services",
       },
       {

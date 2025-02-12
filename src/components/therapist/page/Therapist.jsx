@@ -2,6 +2,7 @@ import React from 'react'
 import NavigationThera from '../navigation/NavigationThera'
 import Header from '../../manager/header/Header'
 import { Outlet } from 'react-router-dom'
+import HeaderTherapist from '../header/HeaderTherapist'
 
 const Therapist = () => {
   return (
@@ -11,7 +12,7 @@ const Therapist = () => {
         <NavigationThera />
       </div>
       <div className='flex-1 flex flex-col overflow-hidden bg-white'>
-      <Header />
+      <HeaderTherapist />
       <div className="flex-1 overflow-y-auto p-4 bg-white">
           <Outlet />
         </div>

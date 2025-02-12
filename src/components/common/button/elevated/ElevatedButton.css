@@ -1,9 +1,0 @@
-.text-elevated-button{
-    font-size: 15px;
-    font-weight: 400;
-}
-.login-form-content{
-    position: relative;
-    top:50%;
-    transform: translateY(-50%);
-}
