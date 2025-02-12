@@ -20,7 +20,7 @@ import notificationActive from "../assets/images/manager/notification-active.png
 import filter from "../assets/images/manager/filter.png";
 import update from "../assets/images/manager/update.png";
 import close from "../assets/images/manager/close.png"
-
+import qr from "../assets/images/staff/qr.png";
 const ICONS = {
   search,
   google,
@@ -43,7 +43,9 @@ const ICONS = {
   notificationActive,
   filter,
   update,
-  close
+  close,
+  qr,
+
 };
 
 export default ICONS;
