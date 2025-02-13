@@ -4,8 +4,9 @@ import ElevatedButton from "../../common/button/elevated/ElevatedButton";
 import IMAGES from "../../../constants/images";
 import Search from "../../common/search/Search";
 import { useNavigate } from "react-router-dom";
+import HeaderVerified from "./verified/HeaderVerified";
 
-const Header = ({ isShowSearch = true, isShowButtonLogin = true }) => {
+const Header = ({ isShowSearch = false, isShowButtonLogin = false, isVerified = false }) => {
   const navigate = useNavigate();
   return (
     <div className="header-container">
@@ -25,9 +26,10 @@ const Header = ({ isShowSearch = true, isShowButtonLogin = true }) => {
         <div className="header-logo">
           <img src={IMAGES.logo} alt="" />
         </div>
-        <div>
+        <div className="items-center">
           {isShowSearch && <Search />}
-          {isShowButtonLogin && <ElevatedButton text="Login" width="150px" rounded=".375rem" />}
+          {isShowButtonLogin && <ElevatedButton handleOnclick={() => navigate("/login")} text="Login" width="150px" height="40px" rounded=".375rem" />}
+          {isVerified && <HeaderVerified />}
         </div>
       </div>
     </div>
