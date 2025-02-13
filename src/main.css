@@ -1,72 +1,83 @@
 @import "tailwindcss";
 @theme {
-    --font-title: "Playfair Display", serif;
-    --default-font-family: "Poppins";
-    --color-title-100: rgba(48,13,30,1);
-    --color-title-90: rgba(48,13,30,0.9);
-    --color-title-80: rgba(48,13,30,0.8);
-    --color-title-70: rgba(48,13,30,0.7);
-    --color-title-60: rgba(48,13,30,0.6);
-    --color-title-50: rgba(48,13,30,0.5);
-    --color-title-40: rgba(48,13,30,0.4);
-    --color-title-30: rgba(48,13,30,0.3);
-    --color-title-20: rgba(48,13,30,0.2);
-    --color-title-10: rgba(48,13,30,0.1);
-    --color-primary-100: rgba(255,79,157,1);
-    --color-primary-90: rgba(255,79,157,0.9);
-    --color-primary-80: rgba(255,79,157,0.8);
-    --color-primary-70: rgba(255,79,157,0.7);
-    --color-primary-60: rgba(255,79,157,0.6);
-    --color-primary-50: rgba(255,79,157,0.5);
-    --color-primary-40: rgba(255,79,157,0.4);
-    --color-primary-30: rgba(255,79,157,0.3);
-    --color-primary-20: rgba(255,79,157,0.2);
-    --color-primary-10: rgba(255,79,157,0.1);
+  --font-title: "Playfair Display", serif;
+  --default-font-family: "Poppins";
+  --color-title-100: rgba(48, 13, 30, 1);
+  --color-title-90: rgba(48, 13, 30, 0.9);
+  --color-title-80: rgba(48, 13, 30, 0.8);
+  --color-title-70: rgba(48, 13, 30, 0.7);
+  --color-title-60: rgba(48, 13, 30, 0.6);
+  --color-title-50: rgba(48, 13, 30, 0.5);
+  --color-title-40: rgba(48, 13, 30, 0.4);
+  --color-title-30: rgba(48, 13, 30, 0.3);
+  --color-title-20: rgba(48, 13, 30, 0.2);
+  --color-title-10: rgba(48, 13, 30, 0.1);
+  --color-primary-100: rgba(255, 79, 157, 1);
+  --color-primary-90: rgba(255, 79, 157, 0.9);
+  --color-primary-80: rgba(255, 79, 157, 0.8);
+  --color-primary-70: rgba(255, 79, 157, 0.7);
+  --color-primary-60: rgba(255, 79, 157, 0.6);
+  --color-primary-50: rgba(255, 79, 157, 0.5);
+  --color-primary-40: rgba(255, 79, 157, 0.4);
+  --color-primary-30: rgba(255, 79, 157, 0.3);
+  --color-primary-20: rgba(255, 79, 157, 0.2);
+  --color-primary-10: rgba(255, 79, 157, 0.1);
 }
-input, textarea{
-    outline: none;
-    background-color: transparent;
-    padding-block: 0px;
-    padding-inline: 0px;
-    padding: .375rem .75rem
+input,
+textarea {
+  outline: none;
+  background-color: transparent;
+  padding-block: 0px;
+  padding-inline: 0px;
+  padding: 0.375rem 0.75rem;
 }
-input::placeholder, textarea::placeholder{
-    font-size: 14px;
-    color: var(--color-title-40);
-    font-family: 'Poppins';
+input::placeholder,
+textarea::placeholder {
+  font-size: 14px;
+  color: var(--color-title-40);
+  font-family: "Poppins";
 }
-input:focus, textarea:focus{
-    border-color: var(--color-primary-100);
+input:focus,
+textarea:focus {
+  border-color: var(--color-primary-100);
 }
-input[type=number]::-webkit-inner-spin-button,
-input[type=number]::-webkit-outer-spin-button {
-	margin: 0;
-	-webkit-appearance: none;
+input[type="number"]::-webkit-inner-spin-button,
+input[type="number"]::-webkit-outer-spin-button {
+  margin: 0;
+  -webkit-appearance: none;
 }
-.font-family-playfair-display{
-    font-family: "Playfair Display", serif;
+.font-family-playfair-display {
+  font-family: "Playfair Display", serif;
 }
-*::-webkit-scrollbar{
-    width: 2px;
-    
+*::-webkit-scrollbar {
+  width: 2px;
 }
-*::-webkit-scrollbar-thumb{
-   background-color: var(--color-primary-100);
-   border-radius: 50px;
+*::-webkit-scrollbar-thumb {
+  background-color: var(--color-primary-100);
+  border-radius: 50px;
 }
 @keyframes fade-in {
-    from{
-        opacity: 0;
-    }
-    to {
-        opacity: 1;
-    }
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
 }
 @keyframes fade-out {
-    from{
-        opacity: 1;
-    }
-    to {
-        opacity: 0;
-    }
+  from {
+    opacity: 1;
+  }
+  to {
+    opacity: 0;
+  }
+}
+* {
+  -moz-user-select: none !important;
+  -webkit-touch-callout: none !important;
+  -webkit-user-select: none !important;
+  -khtml-user-select: none !important;
+  -moz-user-select: none !important;
+  -ms-user-select: none !important;
+  user-select: none !important;
 }

@@ -1,7 +1,7 @@
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 import Login from "./pages/login/Login";
 import Customer from "./pages/customer/Customer";
-
+import CustomerLayout from './layouts/customer/Customer'
 import Manager from "./layouts/manager";
 import Dashboard from "./pages/manager/dashboard/Dashboard";
 import COMPONENT_PATH_HELPER from "./helpers/ComponentPathHelper";
@@ -22,12 +22,17 @@ function App() {
   return (
     <BrowserRouter>
       <Routes>
-        <Route path="/" element={<Customer />} />
+        <Route path="/" element={<CustomerLayout />}>
+          <Route index element={<Customer />} />
+          <Route path="customer-service" element={<CustomerService />}>
+            <Route index element={<Content />} />
+          </Route>
+        </Route>
         <Route path="/login" element={<Login />} />
         <Route path="/registrations/" element={<Register />}>
-          <Route index element={<RegisterForm /> }/>
-          <Route path="email/" element={<RegisterEmail /> }/>
-          <Route  path="confirm-email" element={<ConfirmEmail />} />
+          <Route index element={<RegisterForm />} />
+          <Route path="email/" element={<RegisterEmail />} />
+          <Route path="confirm-email" element={<ConfirmEmail />} />
         </Route>
         <Route path="/manager/" element={<Manager />}>
           <Route index element={<Dashboard />} />
@@ -45,9 +50,6 @@ function App() {
         <Route path="/therapist" element={<Therapist />}>
           <Route path="schedule" element={<Schedule />} />
           <Route path="record" element={<RecordBooking />} />
-        </Route>
-        <Route path="/customer-service" element={<CustomerService />}>
-          <Route index element={<Content />} />
         </Route>
       </Routes>
     </BrowserRouter>
