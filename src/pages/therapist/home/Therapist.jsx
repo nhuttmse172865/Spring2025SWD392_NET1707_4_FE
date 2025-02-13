@@ -1,8 +1,8 @@
 import React from 'react'
-import NavigationThera from '../navigation/NavigationThera'
-import Header from '../../manager/header/Header'
+import NavigationThera from '../../../components/therapist/navigation/NavigationThera'
+import Header from '../../../components/manager/header/Header'
 import { Outlet } from 'react-router-dom'
-import HeaderTherapist from '../header/HeaderTherapist'
+import HeaderTherapist from '../../../components/therapist/header/HeaderTherapist'
 
 const Therapist = () => {
   return (

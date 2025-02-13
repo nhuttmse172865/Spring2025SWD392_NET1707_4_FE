@@ -2,9 +2,9 @@ import React from "react";
 
 
 import { Outlet } from "react-router-dom";
-import NavigationStaff from "../navigation/Navigation";
-import Header from "../../manager/header/Header";
-import HeaderStaff from "../header/HeaderStaff";
+import NavigationStaff from "../../../components/staff/navigation/Navigation";
+
+import HeaderStaff from "../../../components/staff/header/HeaderStaff";
 
 const Staff = () => {
   return (

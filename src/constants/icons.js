@@ -21,6 +21,8 @@ import filter from "../assets/images/manager/filter.png";
 import update from "../assets/images/manager/update.png";
 import close from "../assets/images/manager/close.png"
 import qr from "../assets/images/staff/qr.png";
+import SquarePen from "../assets/images/staff/square-pen.png";
+import SquareWhite from "../assets/images/staff/squarewhite.png";
 const ICONS = {
   search,
   google,
@@ -45,6 +47,9 @@ const ICONS = {
   update,
   close,
   qr,
+  SquarePen,
+  SquareWhite
+  
 
 };
 

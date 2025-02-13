@@ -4,12 +4,13 @@ import Customer from "./pages/customer/Customer";
 
 import Manager from "./layouts/manager";
 import Dashboard from "./pages/manager/dashboard/Dashboard";
-import COMPONENT_PATH_HELPER from "./helpers/ComponentPathHelper";import Staff from "./components/staff/page/Staff"
-import CheckIn from "./components/staff/page/checkin/CheckIn"
-import CheckOut from "./components/staff/page/checkout/CheckOut"
-import Therapist from "./components/therapist/page/Therapist"
-import RecordBooking from "./components/therapist/page/RecordBooking/RecordBooking"
-import Schedule from "./components/therapist/page/schedule/Schedule"
+import COMPONENT_PATH_HELPER from "./helpers/ComponentPathHelper";import Staff from "./pages/staff/home/Staff"
+import CheckIn from "./pages/staff/checkin/CheckIn"
+import CheckOut from "./pages/staff/checkout/CheckOut"
+import Therapist from "./pages/therapist/home/Therapist"
+import RecordBooking from "./pages/therapist/RecordBooking/RecordBooking"
+import Schedule from "./pages/therapist/schedule/Schedule"
+import ChangeSchedule from "./pages/therapist/schedule/ChangeShedule";
 
 
 function App() {
@@ -35,6 +36,7 @@ function App() {
         <Route path="/therapist" element={<Therapist />}>
         <Route path="schedule" element={<Schedule />} />
         <Route path="record" element={<RecordBooking />} />
+        <Route path="changeSchedule" element={<ChangeSchedule />} />
         
         </Route>
       </Routes>

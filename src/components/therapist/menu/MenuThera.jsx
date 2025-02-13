@@ -17,6 +17,8 @@ const MenuThera = () => {
       navigate("/therapist/schedule");
     }else if (name === "Record result") {
       navigate("/therapist/record");
+    }else if (name === "Change working schedule ") {
+      navigate("/therapist/changeSchedule");
     }
   };
 
@@ -32,6 +34,7 @@ const MenuThera = () => {
     { name: "Dashboard", icon: ICONS.dashboard, iconActive: ICONS.dashboardActive },
     { name: "Schedule", icon: ICONS.schedule, iconActive: ICONS.scheduleActive },
     { name: "Record result", icon: ICONS.appointment, iconActive: ICONS.appointmentActive },
+    { name: "Change working schedule ", icon: ICONS.update, iconActive: ICONS.update },
   ];
 
   return (
