@@ -46,7 +46,7 @@ const ICONS = {
   filter,
   update,
   close,
-  updateWhite
+  updateWhite,
   qr,
 };
 
