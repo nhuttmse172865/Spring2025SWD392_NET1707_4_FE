@@ -17,6 +17,9 @@ import Register from "./pages/customer/register/Register";
 import RegisterForm from "./components/common/form/register/RegisterForm";
 import RegisterEmail from "./components/common/form/register/email/RegisterEmail";
 import ConfirmEmail from "./components/common/form/register/email/confirm/ConfirmEmail";
+import CustomerDetail from "./layouts/customer/customerDetail/CustomerDetail";
+import Appointments from "./pages/customer/customerDetail/appointment/Appointments";
+import Account from "./pages/customer/customerDetail/account/Account";
 
 function App() {
   return (
@@ -26,6 +29,11 @@ function App() {
           <Route index element={<Customer />} />
           <Route path="customer-service" element={<CustomerService />}>
             <Route index element={<Content />} />
+          </Route>
+          <Route path="customer-detail/" element={<CustomerDetail />} >
+              <Route index element={<Account />}/>
+              <Route path="account" element={<Account />}/>
+              <Route path="appointments" element={<Appointments />} />
           </Route>
         </Route>
         <Route path="/login" element={<Login />} />
