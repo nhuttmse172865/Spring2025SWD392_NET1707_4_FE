@@ -1,7 +1,7 @@
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 import Login from "./pages/login/Login";
 import Customer from "./pages/customer/Customer";
-import CustomerLayout from './layouts/customer/Customer'
+import CustomerLayout from "./layouts/customer/Customer";
 import Manager from "./layouts/manager";
 import Dashboard from "./pages/manager/dashboard/Dashboard";
 import COMPONENT_PATH_HELPER from "./helpers/ComponentPathHelper";
@@ -20,6 +20,8 @@ import ConfirmEmail from "./components/common/form/register/email/confirm/Confir
 import CustomerDetail from "./layouts/customer/customerDetail/CustomerDetail";
 import Appointments from "./pages/customer/customerDetail/appointment/Appointments";
 import Account from "./pages/customer/customerDetail/account/Account";
+import CustomerContact from "./pages/customer/customerContact/CustomerContact";
+import Booking from "./pages/customer/customerBooking/Booking";
 
 function App() {
   return (
@@ -30,11 +32,13 @@ function App() {
           <Route path="customer-service" element={<CustomerService />}>
             <Route index element={<Content />} />
           </Route>
-          <Route path="customer-detail/" element={<CustomerDetail />} >
-              <Route index element={<Account />}/>
-              <Route path="account" element={<Account />}/>
-              <Route path="appointments" element={<Appointments />} />
+          <Route path="customer-detail/" element={<CustomerDetail />}>
+            <Route index element={<Account />} />
+            <Route path="account" element={<Account />} />
+            <Route path="appointments" element={<Appointments />} />
           </Route>
+          <Route path="/booking" element={<Booking />} />
+          <Route path="/contact" element={<CustomerContact />} />
         </Route>
         <Route path="/login" element={<Login />} />
         <Route path="/registrations/" element={<Register />}>
