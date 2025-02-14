@@ -1,21 +1,27 @@
 import React, { useEffect, useState } from "react";
 import ICONS from "../../../constants/icons";
 import { useLocation } from "react-router-dom";
-import useMapPath from "../../../hook/useMapPath";
+
 
 const HeaderStaff = () => {
   const location = useLocation()
   const [isHaveMessage, setIsHaveMessage] = useState(true);
   const [isHaveNotification, setIsHaveNotification] = useState(true);
   const [title,setTitle] = useState()
-
-//   useEffect(() => {
-//     const item = useMapPath(location.pathname)
-//     setTitle(item.title)
-//   },[location.pathname])
+  const useMapPath = (pathname) => {
+    const map = {
+      "/staff": { title: "Dashboard" },
+      "/staff/checkin": { title: "CheckIn" },
+    };
+    return map[pathname] || { title: "" };
+  };
+  useEffect(() => {
+    const item = useMapPath(location.pathname)
+    setTitle(item?.title);
+  },[location.pathname])
 
   return (
-    <div className="h-[60px] flex items-center pl-5 pr-10 justify-between bg-white rounded-3xl mt-2.5">
+    <div className="h-[60px]  flex items-center pl-5 pr-30 justify-between bg-white rounded-3xl mt-2.5">
       <h6 className="text-[16px] font-medium text-[rgba(0,0,0,0.7)]">
         {title}
       </h6>

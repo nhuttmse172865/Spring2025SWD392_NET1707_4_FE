@@ -29,7 +29,7 @@ const ChangeSchedule = () => {
 
   return (
     <div className="schedule-container">
-      <h1 className="schedule-title">Doctor's Working Schedule</h1>
+      {/* <h1 className="schedule-title">Doctor's Working Schedule</h1> */}
       <Calendar fullscreen={false} onSelect={onSelectDate} />
 
     

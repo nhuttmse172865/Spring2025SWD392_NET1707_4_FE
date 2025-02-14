@@ -5,7 +5,7 @@
   
   .schedule-container {
     max-width: 1200px;
-    margin: 20px auto;
+    margin:40px auto;
     background: white;
     padding: 20px;
     border-radius: 12px;
@@ -22,7 +22,7 @@
   
   
   .save-button {
-    background: #20c997 !important;
+    background: #ff85b3 !important;
     border: none;
     color: white;
     width: 100%;
@@ -34,20 +34,63 @@
   }
   
   .save-button:hover {
-    background: #17a589 !important;
+    background: #d63384  !important;
   }
   
 
   .schedule-modal .ant-modal-content {
     border-radius: 12px;
     padding: 20px;
+    background: #fff0f6;
+  }
+  .schedule-modal .ant-modal-header {
+    background: #ff85b3;
+    color: white;
+    text-align: center;
+    border-radius: 12px 12px 0 0;
+  }
+  .schedule-modal .ant-modal-title {
+    color: white !important;
   }
   
   
-  .schedule-date {
-    background: #f8f9fa;
-    border: none;
+  .schedule-date,
+  .ant-input,
+  .ant-select-selector {
+    background: #ffe6f2 !important;
+    border: 1px solid #ff85b3 !important;
     font-weight: bold;
-    color: #495057;
+    color: #d63384 !important;
   }
+  .ant-select-selection-item {
+    color: #d63384 !important;
+  }
+  .ant-picker-calendar {
+   
+    border-radius: 12px;
+  }
+  .ant-picker-cell-inner {
+    color: #d63384 !important;
+  }
+  .ant-picker-cell-selected .ant-picker-cell-inner {
+    background: #ff85b3 !important;
+    color: white !important;
+  }
+  .ant-picker-panel {
+    border-radius: 12px !important;
+  }
+  .schedule-container,
+.schedule-modal .ant-modal-content {
+  animation: fadeIn 0.4s ease-in-out;
+}
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
   

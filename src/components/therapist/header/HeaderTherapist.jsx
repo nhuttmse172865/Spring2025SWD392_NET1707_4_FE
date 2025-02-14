@@ -8,11 +8,20 @@ const HeaderTherapist = () => {
   const [isHaveMessage, setIsHaveMessage] = useState(true);
   const [isHaveNotification, setIsHaveNotification] = useState(true);
   const [title,setTitle] = useState()
-
-//   useEffect(() => {
-//     const item = useMapPath(location.pathname)
-//     setTitle(item.title)
-//   },[location.pathname])
+  const useMapPath = (pathname) => {
+    const map = {
+      "/therapist": { title: "Dashboard" },
+      "/therapist/schedule": { title: "Schedule" },
+      "/therapist/record": { title: "Record result" },
+      "/therapist/changeSchedule": { title: "Change Working Schedule" },
+    };
+    return map[pathname] || { title: "" };
+  };
+  
+  useEffect(() => {
+    const item = useMapPath(location.pathname)
+    setTitle(item.title);
+  },[location.pathname])
 
   return (
     <div className="h-[60px] flex items-center pl-5 pr-10 justify-between bg-white rounded-3xl mt-2.5">

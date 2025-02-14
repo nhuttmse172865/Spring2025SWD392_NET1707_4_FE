@@ -14,14 +14,15 @@
     display: flex;
     align-items: center; 
     gap: 30px; 
-    margin-left: 50px;
+    
+    left: 50%;
   }
 .checkin-container {
   max-width: 1200px;
   margin: 0 auto;
   padding: 20px;
   font-family: 'Poppins', sans-serif;
-  background-color: #fff5f7;
+  /* background-color: #fff5f7; */
 }
 
 .checkin-title {

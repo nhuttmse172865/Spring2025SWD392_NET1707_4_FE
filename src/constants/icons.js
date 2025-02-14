@@ -20,9 +20,13 @@ import notificationActive from "../assets/images/manager/notification-active.png
 import filter from "../assets/images/manager/filter.png";
 import update from "../assets/images/manager/update.png";
 import close from "../assets/images/manager/close.png"
+import updateWhite from "../assets/images/manager/update-white.png"
 import qr from "../assets/images/staff/qr.png";
 import SquarePen from "../assets/images/staff/square-pen.png";
 import SquareWhite from "../assets/images/staff/squarewhite.png";
+import account from "../assets/images/manager/account.png"
+import logout from "../assets/images/manager/logout.png"
+
 const ICONS = {
   search,
   google,
@@ -46,11 +50,13 @@ const ICONS = {
   filter,
   update,
   close,
+  updateWhite,
   qr,
   SquarePen,
-  SquareWhite
+  SquareWhite,
   
-
+  account,
+  logout
 };
 
 export default ICONS;

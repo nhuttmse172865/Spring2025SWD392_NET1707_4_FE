@@ -92,8 +92,8 @@ const Schedule = () => {
   ];
 
   return (
-    <div className="schedule-container">
-      <h2 className="schedule-title">Schedule</h2>
+    <div className="schedule-page">
+      {/* <h2 className="schedule-title">Schedule</h2> */}
       <Table columns={columns} dataSource={schedule} pagination={false} className="schedule-table" />
     </div>
   );

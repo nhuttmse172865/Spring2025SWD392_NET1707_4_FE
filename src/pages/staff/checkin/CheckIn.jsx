@@ -42,7 +42,7 @@ const CheckIn = () => {
   return (
     <div className="checkin-container">
       <div className="checkin-header">
-        <h1 className="checkin-title">CheckIn</h1>
+        {/* <h1 className="checkin-title">CheckIn</h1> */}
         <div className="header-actions">
           <button className="btn-checkin" onClick={showModal}>Form Checkin</button>
           <FaQrcode className="qr-icon" />

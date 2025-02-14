@@ -41,7 +41,7 @@ const RecordBooking = () => {
   };
   return (
     <>
-    <h2 className="title-booking">Booking</h2>
+    
     <div className="record-booking-container">
      
       <div className="booking-list">
