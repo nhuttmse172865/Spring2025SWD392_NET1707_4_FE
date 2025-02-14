@@ -24,6 +24,7 @@ import updateWhite from "../assets/images/manager/update-white.png"
 import qr from "../assets/images/staff/qr.png";
 import account from "../assets/images/manager/account.png"
 import logout from "../assets/images/manager/logout.png"
+import loading from "../assets/images/manager/loading.png"
 
 const ICONS = {
   search,
@@ -51,7 +52,8 @@ const ICONS = {
   updateWhite,
   qr,
   account,
-  logout
+  logout,
+  loading
 };
 
 export default ICONS;
