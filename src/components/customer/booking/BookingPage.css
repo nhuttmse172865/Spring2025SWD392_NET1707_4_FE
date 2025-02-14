@@ -173,7 +173,6 @@ input[type="date"]:focus {
 .time-button.selected {
   background-color: #ff4f9d;
   color: white;
-  font-weight: bold;
   border-color: #ff4f9d;
 }
 
@@ -240,4 +239,7 @@ input[type="date"]:focus {
 
 .time-picker {
   flex: 0 0 60%;
+}
+.eJzENf {
+  transition: none !important;
 }
