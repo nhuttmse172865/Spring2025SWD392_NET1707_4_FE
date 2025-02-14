@@ -1,0 +1,243 @@
+.booking-container {
+  width: 95%;
+  margin: 0.5px auto;
+  padding: 20px;
+  display: block;
+  border: 0.5px solid #ff4f9d;
+}
+
+.appointment-card {
+  background: white;
+  padding: 25px;
+}
+
+.appointment-title {
+  text-align: center;
+  font-size: 3rem;
+  color: black;
+  margin-bottom: 20px;
+  font-family: "Playfair Display", serif;
+}
+
+.form-row {
+  display: flex;
+  justify-content: space-between;
+  gap: 16px;
+}
+
+.form-group {
+  flex: 1;
+}
+
+.form-label {
+  font-size: 1rem;
+  color: #ff4f9d;
+  display: block;
+  margin-bottom: 5px;
+  font-family: "Poppins", sans-serif;
+}
+
+.form-select,
+input[type="text"],
+input[type="date"] {
+  width: 100%;
+  padding: 10px;
+  font-size: 16px;
+  font-family: "Poppins", sans-serif;
+  border: 1px solid #ccc;
+  border-radius: 0.375rem;
+}
+
+.form-select:focus,
+input[type="text"]:focus,
+input[type="date"]:focus {
+  border-color: #ff4f9d;
+  outline: none;
+}
+
+.card {
+  display: flex;
+  align-items: center;
+  background: white;
+  border-radius: 0.375rem;
+  padding: 15px;
+  margin-bottom: 20px;
+}
+
+.profile-image {
+  width: 60px;
+  height: 60px;
+  border-radius: 50%;
+  margin-right: 15px;
+}
+
+.content {
+  flex: 1;
+}
+
+.title {
+  font-size: 18px;
+  color: black;
+  font-family: "Poppins", sans-serif;
+  font-weight: bold;
+}
+
+.description {
+  font-size: 14px;
+  color: black;
+  font-family: "Poppins", sans-serif;
+}
+
+.price-time {
+  margin-top: 5px;
+  font-size: 16px;
+  color: black;
+  font-family: "Poppins", sans-serif;
+}
+
+.date-picker {
+  background: white;
+  padding: 15px;
+  border-radius: 10px;
+  box-shadow: 0px 2px 6px rgba(0, 0, 0, 0.1);
+  text-align: center;
+}
+
+.date-picker-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 16px;
+  font-weight: bold;
+  color: #333;
+  margin-bottom: 10px;
+}
+
+.date-picker-nav {
+  background: #ff4f9d;
+  color: white;
+  border: none;
+  padding: 5px 10px;
+  border-radius: 0.375rem;
+  cursor: pointer;
+}
+
+.date-picker-grid {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 5px;
+}
+
+.date-picker-grid span {
+  padding: 8px;
+  border-radius: 5px;
+  font-size: 14px;
+  cursor: pointer;
+  transition: background 0.3s ease-in-out;
+  font-family: "Poppins", sans-serif;
+}
+
+.date-picker-grid span:hover {
+  background: #e0e0e0;
+}
+
+.date-selected {
+  background: #ff4f9d !important;
+  color: white;
+}
+
+.time-picker {
+  display: grid;
+  grid-template-columns: repeat(9, 1fr);
+  gap: 10px;
+  justify-content: center;
+  padding: 10px;
+}
+
+.time-button {
+  padding: 10px 15px;
+  border: none;
+  border-radius: 5px;
+  background: white;
+  font-size: 14px;
+  cursor: pointer;
+  font-family: "Poppins", sans-serif;
+  border: 1px solid #ff4f9d;
+}
+
+.time-button:hover {
+  background: #ff4f9d;
+  color: white;
+}
+
+.time-button.selected {
+  background-color: #ff4f9d;
+  color: white;
+  font-weight: bold;
+  border-color: #ff4f9d;
+}
+
+.time-note {
+  text-align: center;
+  font-size: 14px;
+  color: #777;
+  margin-top: 5px;
+}
+.form-groupB {
+  display: flex;
+  justify-content: center;
+}
+
+.appointment-button {
+  width: 20%;
+  padding: 12px;
+  margin-top: 10px;
+  font-size: 18px;
+  color: white;
+  background: #ff4f9d;
+  border: none;
+  border-radius: 0.375rem;
+  cursor: pointer;
+  transition: background 0.3s ease-in-out;
+  font-family: "Poppins", sans-serif;
+}
+
+.appointment-button:hover {
+  background: #ff4f9d;
+}
+
+@media (max-width: 768px) {
+  .date-time-group {
+    flex-direction: column;
+  }
+
+  .form-group {
+    flex: 1 0 100%;
+  }
+}
+
+.date-time-group {
+  display: flex;
+  align-items: flex-start;
+  gap: 16px;
+}
+.rainbow-date-picker {
+  width: 100%;
+  border-radius: 5px;
+}
+
+.rainbow-date-picker .rainbow-calendar {
+  width: 100%;
+  box-shadow: none;
+}
+
+.form-group0 {
+  flex: 0 0 50%;
+}
+.form-group1 {
+  flex: 0 0 50%;
+}
+
+.time-picker {
+  flex: 0 0 60%;
+}
