@@ -8,24 +8,56 @@ import LOCALSTORAGE_NAME from "../../../../../constants/localStorageName";
 
 function RegisterEmail() {
   const navigate = useNavigate();
-  const [guestInformation,setGuestInformation] = useLocalStorage(LOCALSTORAGE_NAME.GUEST_INFORMATION_CACHE,"")
-  const [loading,setLoading] = useState(false)
+  const [guestInformation, setGuestInformation] = useLocalStorage(
+    LOCALSTORAGE_NAME.GUEST_INFORMATION_CACHE,
+    ""
+  );
+  const [loading, setLoading] = useState(false);
   const [name, setName] = useState();
   const [email, setEmail] = useState();
   const [password, setPassword] = useState();
+  const [emailInCorrect, setEmailInCorrect] = useState(false);
+  const [messageErrorEmail, setMessageEmailError] = useState();
+  const [passwordInCorrect, setPasswordInCorrect] = useState(false);
+  const [messageErrorPassword, setMessageErrorPassword] = useState();
+
+  const handleValidateEmail = (value) => {
+    if (value === null || value === "" || value === undefined) {
+      setEmailInCorrect(true);
+      setMessageEmailError("Email must be not empty!");
+    } else if (VALIDATE.validateEmail(value)) {
+      setEmailInCorrect(false);
+    } else {
+      setEmailInCorrect(true);
+      setMessageEmailError("Email does not exist!");
+    }
+  };
+
+  const handleValidatePassword = (value) => {
+    if (value === null || value === "" || value === undefined) {
+      setPasswordInCorrect(true);
+      setMessageErrorPassword("Password must be not empty!");
+    } else {
+      setPasswordInCorrect(false);
+    }
+  };
 
   const handleSignUp = async () => {
-    setLoading(true)
-    try{
-      const response = await axios.post(`${BASE.BASE_URL}/send-otp?email=${email}`);
-      if(!response || response.status !== 200 ) throw new Error()
-      const guest = [name,email,password]
-      setGuestInformation(btoa(guest))
+    handleValidateEmail(email)
+    handleValidatePassword(password)
+    if (emailInCorrect || passwordInCorrect || !email || !password) return;
+    setLoading(true);
+    try {
+      const response = await axios.post(
+        `${BASE.BASE_URL}/send-otp?email=${email}`
+      );
+      if (!response || response.status !== 200) throw new Error();
+      const guest = [name, email, password];
+      setGuestInformation(btoa(guest));
       navigate("/registrations/confirm-email");
-    }catch(e){
-
-    }finally{
-      setLoading(false)
+    } catch (e) {
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -66,11 +98,6 @@ function RegisterEmail() {
           placeholder="Your name"
           onChange={(event) => setName(event.target.value)}
         />
-        {false && (
-          <p className="text-[13px] mt-0.5 text-red-400">
-            Email address is not registered!
-          </p>
-        )}
       </div>
       <div className="grid mb-4">
         <label className="text-[15px] mb-0.5 text-(--color-title-60)">
@@ -80,11 +107,12 @@ function RegisterEmail() {
           className={classInputEmail}
           type="text"
           placeholder="Email address"
+          onBlur={(event) => handleValidateEmail(event.target.value)}
           onChange={(event) => setEmail(event.target.value)}
         />
-        {false && (
+        {emailInCorrect && (
           <p className="text-[13px] mt-0.5 text-red-400">
-            Email address is not registered!
+            {messageErrorEmail}
           </p>
         )}
       </div>
@@ -96,11 +124,12 @@ function RegisterEmail() {
           className={classInputPassword}
           type="password"
           placeholder="Password"
+          onBlur={(event) => handleValidatePassword(event.target.value)}
           onChange={(event) => setPassword(event.target.value)}
         />
-        {false && (
+        {passwordInCorrect && (
           <p className="text-[13px] mt-0.5 text-red-400">
-            Password is incorrect!
+           {messageErrorPassword}
           </p>
         )}
       </div>

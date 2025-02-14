@@ -35,7 +35,7 @@ function ConfirmEmail() {
       if (!responseRegister || responseRegister.status !== 201)
         throw new Error();
       setGuestInformation("");
-      navigate("/");
+      navigate("/login");
     } catch (e) {
     } finally {
       setLoading(false);

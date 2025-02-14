@@ -3,12 +3,25 @@ import ElevatedButton from "../../button/elevated/ElevatedButton";
 import "./LoginForm.css";
 import ICONS from "../../../../constants/icons";
 import { useNavigate } from "react-router-dom";
+import axios from "axios";
+import BASE from "../../../../constants/base";
+import useLocalStorage from "use-local-storage";
+import LOCALSTORAGE_NAME from "../../../../constants/localStorageName";
+import VALIDATE from "../../../../constants/validate";
 
 const LoginForm = () => {
   const navigate = useNavigate();
-
+  const [customer, setCustomer] = useLocalStorage(
+    LOCALSTORAGE_NAME.CUSTOMER_INFORMATION_CACHE,
+    ""
+  );
+  const [email, setEmail] = useState();
+  const [password, setPassword] = useState();
   const [emailInCorrect, setEmailInCorrect] = useState(false);
+  const [messageErrorEmail, setMessageEmailError] = useState();
   const [passwordInCorrect, setPasswordInCorrect] = useState(false);
+  const [messageErrorPassword, setMessageErrorPassword] = useState();
+  const [loading, setLoading] = useState(false);
 
   const classInputEmail = `h-12 border-input-form-login text-(--color-title-100) text-[15px] ${
     emailInCorrect && "error"
@@ -16,6 +29,48 @@ const LoginForm = () => {
   const classInputPassword = `h-12 border-input-form-login text-(--color-title-100) text-[15px] ${
     passwordInCorrect && "error"
   }`;
+
+  const handleValidateEmail = (value) => {
+    if (value === null || value === "" || value === undefined) {
+      setEmailInCorrect(true);
+      setMessageEmailError("Email must be not empty!");
+    } else if (VALIDATE.validateEmail(value)) {
+      setEmailInCorrect(false);
+    } else {
+      setEmailInCorrect(true);
+      setMessageEmailError("Email does not exist!");
+    }
+  };
+
+  const handleValidatePassword = (value) => {
+    if (value === null || value === "" || value === undefined) {
+      setPasswordInCorrect(true);
+      setMessageErrorPassword("Password must be not empty!");
+    } else {
+      setPasswordInCorrect(false);
+    }
+  };
+
+  const handleLogin = async () => {
+    handleValidateEmail(email)
+    handleValidatePassword(password)
+    if (emailInCorrect || passwordInCorrect || !email || !password) return;
+    setLoading(true);
+    const data = {
+      email: email,
+      password: password,
+    };
+    try {
+      const response = await axios.post(`${BASE.BASE_URL}/login`, data);
+      if (!response || response.status !== 200) throw new Error();
+      setCustomer(response.data.data);
+      navigate(-1);
+    } catch (err) {
+      console.log(err);
+    } finally {
+      setLoading(false);
+    }
+  };
 
   return (
     <div className="grid items-center login-form-content max-w-[350px]">
@@ -37,10 +92,12 @@ const LoginForm = () => {
             className={classInputEmail}
             type="text"
             placeholder="Example@gmail.com"
+            onBlur={(event) => handleValidateEmail(event.target.value)}
+            onChange={(event) => setEmail(event.target.value)}
           />
           {emailInCorrect && (
             <p className="text-[13px] mt-0.5 text-red-400">
-              Email address is not registered!
+              {messageErrorEmail}
             </p>
           )}
         </div>
@@ -52,17 +109,24 @@ const LoginForm = () => {
             className={classInputPassword}
             type="password"
             placeholder="Password"
+            onChange={(event) => setPassword(event.target.value)}
           />
           {passwordInCorrect && (
             <p className="text-[13px] mt-0.5 text-red-400">
-              Password is incorrect!
+              {messageErrorPassword}
             </p>
           )}
           <p className="text-[14px] mt-2 text-end text-(--color-title-50) cursor-pointer hover:text-(--color-title-70) ease-in duration-300">
             Forgot password ?
           </p>
         </div>
-        <ElevatedButton text="Login" height="50px" rounded="0.375rem" />
+        <ElevatedButton
+          text="Login"
+          height="50px"
+          rounded="0.375rem"
+          handleOnclick={handleLogin}
+          isLoading={loading}
+        />
         <div></div>
       </div>
       <div className="line-or-line">
