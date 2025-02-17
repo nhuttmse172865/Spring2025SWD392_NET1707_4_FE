@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Card from "../card/Card";
 import useLocalStorage from "use-local-storage";
 import LOCALSTORAGE_NAME from "../../../../../constants/localStorageName";
@@ -10,6 +10,7 @@ const Content = ({setItemUpdate, setShowModal}) => {
     LOCALSTORAGE_NAME.CATEGORY_ITEMS_ACTIVE,
     ""
   );
+  const [categories, setCategories] = useState()
   const [itemActive, setItemActive] = useState([]);
   const handleOnClick = (item) => {
     let list = [];
@@ -28,6 +29,11 @@ const Content = ({setItemUpdate, setShowModal}) => {
     setItemUpdate(item)
     setShowModal(true)
   }
+
+  useEffect(() => {
+    
+  })
+
   return (
     <div
       className="mt-3 overflow-x-hidden overflow-y-scroll"

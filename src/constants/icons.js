@@ -25,6 +25,7 @@ import qr from "../assets/images/staff/qr.png";
 import account from "../assets/images/manager/account.png"
 import logout from "../assets/images/manager/logout.png"
 import loading from "../assets/images/manager/loading.png"
+import loadingActive from "../assets/images/manager/loading-active.png"
 
 const ICONS = {
   search,
@@ -53,7 +54,8 @@ const ICONS = {
   qr,
   account,
   logout,
-  loading
+  loading,
+  loadingActive
 };
 
 export default ICONS;

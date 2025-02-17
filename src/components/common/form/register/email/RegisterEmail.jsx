@@ -5,6 +5,7 @@ import axios from "axios";
 import BASE from "../../../../../constants/base";
 import useLocalStorage from "use-local-storage";
 import LOCALSTORAGE_NAME from "../../../../../constants/localStorageName";
+import VALIDATE from "../../../../../constants/validate";
 
 function RegisterEmail() {
   const navigate = useNavigate();
