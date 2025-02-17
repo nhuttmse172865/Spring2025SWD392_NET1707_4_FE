@@ -15,7 +15,8 @@ const Header = () => {
   },[location.pathname])
 
   return (
-    <div className="h-[60px] flex items-center pl-5 pr-10 justify-between bg-white rounded-3xl mt-2.5">
+    <div className="h-[60px] flex items-center pl-5 pr-10 justify-between bg-white rounded-3xl mt-2.5"
+    >
       <h6 className="text-[16px] font-medium text-[rgba(0,0,0,0.7)]">
         {title}
       </h6>

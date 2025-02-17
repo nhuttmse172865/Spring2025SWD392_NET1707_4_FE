@@ -1,10 +1,14 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import ICONS from "../../../../../constants/icons";
 import ElevatedButton from "../../../../common/button/elevated/ElevatedButton";
+import axios from "axios";
+import BASE from "../../../../../constants/base";
 
-const Modal = ({ setShowModal, itemUpdate, setItemUpdate }) => {
+const Modal = ({ setShowModal, itemUpdate, setItemUpdate,  setRefreshData }) => {
   const [active, setActive] = useState(true);
-
+  const [name, setName] = useState();
+  const [description, setDescription] = useState();
+  const [loading, setLoading] = useState(false);
   const handleCloseModal = () => {
     setActive(false);
     setTimeout(() => {
@@ -12,6 +16,49 @@ const Modal = ({ setShowModal, itemUpdate, setItemUpdate }) => {
       setShowModal(false);
     }, 250);
   };
+
+  const handleOnclickAdd = async () => {
+    setLoading(true)
+    const data = {
+      name: name,
+      description: description,
+    };
+    try {
+      const response = await axios.post(`${BASE.BASE_URL}/skinType/create`,data);
+      if(!response || response.status !== 201) throw new Error()
+      setShowModal(false)
+      setRefreshData(prev => !prev)
+    } catch (error) {
+      console.log(error)
+    } finally {
+      setLoading(false)
+    }
+  };
+
+  const handleOnclickUpdate = async () => {
+    setLoading(true)
+    const data = {
+      name: name,
+      description: description,
+    };
+    try {
+      const response = await axios.put(`${BASE.BASE_URL}/skinType/update?id=${itemUpdate.id}`,data);
+      if(!response || response.status !== 200) throw new Error()
+      setShowModal(false)
+      setRefreshData(prev => !prev)
+    } catch (error) {
+      console.log(error)
+    } finally {
+      setLoading(false)
+    }
+  }
+
+  useEffect(() => {
+    if(itemUpdate){
+      setName(itemUpdate.name)
+      setDescription(itemUpdate.description)
+    }
+  }, [itemUpdate])
 
   return (
     <div
@@ -35,7 +82,9 @@ const Modal = ({ setShowModal, itemUpdate, setItemUpdate }) => {
           <input
             type="text"
             placeholder="Oily skin"
+            value={name}
             className="h-12 border-input-form-login text-[rgba(0,0,0,0.8)] text-[15px]"
+            onChange={(event) => setName(event.target.value)}
           />
         </div>
         <div className="grid mt-5 mb-7">
@@ -46,12 +95,14 @@ const Modal = ({ setShowModal, itemUpdate, setItemUpdate }) => {
             name=""
             id=""
             rows="5"
+            value={description}
             placeholder="This type produces excess oil, leading to a shiny appearance, enlarged pores, and a tendency to develop acne"
             className="border-input-form-login text-[rgba(0,0,0,0.8)] text-[15px]"
             style={{
               padding: "12px",
               resize: "none",
             }}
+            onChange={(event) => setDescription(event.target.value)}
           ></textarea>
         </div>
         <div className="mb-10">
@@ -60,6 +111,8 @@ const Modal = ({ setShowModal, itemUpdate, setItemUpdate }) => {
             height="50px"
             rounded=".375rem"
             text={itemUpdate ? "Update" : "Add"}
+            handleOnclick={itemUpdate ? handleOnclickUpdate : handleOnclickAdd}
+            isLoading={loading}
           />
         </div>
       </div>

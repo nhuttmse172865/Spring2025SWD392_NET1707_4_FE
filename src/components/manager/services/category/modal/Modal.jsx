@@ -1,9 +1,13 @@
 import React, { useState } from "react";
 import ICONS from "../../../../../constants/icons";
 import ElevatedButton from "../../../../common/button/elevated/ElevatedButton";
+import axios from "axios";
+import BASE from "../../../../../constants/base";
 
 const Modal = ({ setShowModal, itemUpdate, setItemUpdate }) => {
   const [active, setActive] = useState(true);
+  const [category,setCategory] = useState()
+  const [isLoading,setIsLoading] = useState(false)
   const handleCloseModal = () => {
     setActive(false);
     setTimeout(() => {
@@ -11,6 +15,22 @@ const Modal = ({ setShowModal, itemUpdate, setItemUpdate }) => {
       setShowModal(false);
     }, 250);
   };
+
+  const handleAddCategory = async () => {
+    setIsLoading(true)
+    const data = {
+      "name": category
+    }
+    try{
+        const response = await axios.post(`${BASE.BASE_URL}/category/create`,data);
+        if(!response || response.status !== 200) throw Error()
+          setShowModal(false)
+    }catch(error){
+        console.log(error)
+    }finally{
+      setIsLoading(false)
+    }
+  }
 
   return (
     <div
@@ -34,6 +54,7 @@ const Modal = ({ setShowModal, itemUpdate, setItemUpdate }) => {
           <input
             type="text"
             placeholder="Facial Treatments"
+            onChange={(event) => setCategory(event.target.value)}
             className="h-12 border-input-form-login text-[rgba(0,0,0,0.8)] text-[15px]"
           />
         </div>
@@ -43,6 +64,8 @@ const Modal = ({ setShowModal, itemUpdate, setItemUpdate }) => {
             height="50px"
             rounded=".375rem"
             text={itemUpdate ? "Update" : "Add"}
+            isLoading={isLoading}
+            handleOnclick={handleAddCategory}
           />
         </div>
       </div>

@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Calendar } from "react-rainbow-components";
+import { Application, Calendar } from "react-rainbow-components";
 import { addMinutes, format, parse } from "date-fns";
 import "./BookingPage.css";
 
@@ -17,6 +17,14 @@ const BookingPage = () => {
       current = addMinutes(current, 15);
     }
     return slots;
+  };
+
+  const theme = {
+    rainbow: {
+      palette: {
+        brand: "#FF60A7"
+      },
+    },
   };
 
   const timeSlots = generateTimeSlots("07:00", "17:00");
@@ -62,13 +70,15 @@ const BookingPage = () => {
         <div className="form-group0">
           <label className="form-label">Select Date</label>
           <div className="calendar-container">
-            <Calendar
-              value={selectedDate}
-              onChange={setSelectedDate}
-              variant="single"
-              locale="en-US"
-              className="rainbow-calendar"
-            />
+            <Application theme={theme}>
+              <Calendar
+                value={selectedDate}
+                onChange={setSelectedDate}
+                variant="single"
+                locale="en-US"
+                className="rainbow-calendar"
+              />
+            </Application>
           </div>
         </div>
         <div className="form-group1">

@@ -5,7 +5,7 @@ import { Outlet } from "react-router-dom";
 
 const Manager = () => {
   return (
-    <div className="flex h-[100vh] gap-x-6 bg-gray-100">
+    <div className="flex h-[100vh] gap-x-6 bg-[#F7F7F7]">
       <div className="min-w-[250px] max-w-[300px] h-full">
         <Navigation />
       </div>
