@@ -12,7 +12,7 @@ const ToolBar = ({
   heightElevated = "40px",
   widthElevated = "150px",
   rounded = ".375rem",
-  activeOutlineButton = true,
+  activeOutlineButton = false,
   handleOnClickOutline,
   handleOnClickElevated,
   isLoadingOutline

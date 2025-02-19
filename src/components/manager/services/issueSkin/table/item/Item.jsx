@@ -8,7 +8,7 @@ const Item = ({ active = false, item, setShowModal, setItemUpdate, handleOnClick
   }
   return (
     <ul
-      className="text-[15px] relative font-normal text-[rgba(0,0,0,0.5)] hover:bg-white  ease-in duration-200 cursor-pointer  grid justify-around items-center rounded-[0.375rem] gap-[15px] h-[80px]"
+      className="text-[15px] relative font-normal text-[rgba(0,0,0,0.5)] hover:bg-[rgba(0,0,0,0.05)]  ease-in duration-200 cursor-pointer  grid justify-around items-center rounded-[0.375rem] gap-[15px] h-[80px]"
       style={{
         gridTemplateColumns: "0.5fr 1fr 2fr 3fr 5fr 0.5fr",
         padding: "0 15px",
