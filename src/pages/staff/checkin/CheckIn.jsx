@@ -2,9 +2,12 @@ import React, { useState } from "react";
 import "./CheckIn.css"; // Import file CSS
 import { FaQrcode } from "react-icons/fa";
 import { Button, Form, Input, Modal } from "antd";
+
 const CheckIn = () => {
   const [form] = Form.useForm();
   const [isCheckInModalVisible, setIsCheckInModalVisible] = useState(false);
+  const [isCheckOutModalVisible, setIsCheckOutModalVisible] = useState(false);
+  const [selectedProduct, setSelectedProduct] = useState(null);
   const [products, setProducts] = useState([
     {
       id: 1,
@@ -28,23 +31,38 @@ const CheckIn = () => {
       duration: "45 min",
     },
   ]);
- const showModal = () => {
-  setIsCheckInModalVisible(true);
-  form.resetFields();
-  }
+
+  const showCheckInModal = () => {
+    setIsCheckInModalVisible(true);
+    form.resetFields();
+  };
+
   const handleCheckInCancel = () => {
     setIsCheckInModalVisible(false);
   };
-  const handleSubmit = () =>{
+
+  const handleCheckInSubmit = () => {
     setIsCheckInModalVisible(false);
     form.resetFields();
-  }
+  };
+
+  const showCheckOutModal = (product) => {
+    setSelectedProduct(product);
+    setIsCheckOutModalVisible(true);
+  };
+
+  const handleCheckOutCancel = () => {
+    setIsCheckOutModalVisible(false);
+    setSelectedProduct(null);
+  };
+
   return (
     <div className="checkin-container">
       <div className="checkin-header">
-        {/* <h1 className="checkin-title">CheckIn</h1> */}
         <div className="header-actions">
-          <button className="btn-checkin" onClick={showModal}>Form Checkin</button>
+          <button className="btn-checkin" onClick={showCheckInModal}>
+            Form Checkin
+          </button>
           <FaQrcode className="qr-icon" />
         </div>
       </div>
@@ -58,7 +76,7 @@ const CheckIn = () => {
             <th>Duration</th>
             <th>Actions</th>
           </tr>
-        </thead>  
+        </thead>
         <tbody>
           {products.map((product) => (
             <tr key={product.id}>
@@ -67,12 +85,19 @@ const CheckIn = () => {
               <td>{product.price}</td>
               <td>{product.duration}</td>
               <td>
-                <button className="checkout-button">CheckOut</button>
+                <button
+                  className="checkout-button"
+                  onClick={() => showCheckOutModal(product)}
+                >
+                  CheckOut
+                </button>
               </td>
             </tr>
           ))}
         </tbody>
       </table>
+
+      
       <Modal
         title="Check-in Form"
         open={isCheckInModalVisible}
@@ -109,13 +134,45 @@ const CheckIn = () => {
             <Input placeholder="Enter duration" />
           </Form.Item>
           <Form.Item>
-            <Button type="primary" onClick={handleSubmit}>
+            <Button className="checkout-confirm-btn"type="primary" onClick={handleCheckInSubmit}>
               Check In
             </Button>
           </Form.Item>
         </Form>
       </Modal>
 
+     
+      <Modal
+  title="Check-out Information"
+  open={isCheckOutModalVisible}
+  onCancel={handleCheckOutCancel}
+  footer={[
+    <Button key="cancel" className="checkout-cancel-btn" onClick={handleCheckOutCancel}>
+      Cancel
+    </Button>,
+    <Button
+      key="checkout"
+      className="checkout-confirm-btn"
+      type="primary"
+      onClick={() => {
+        setProducts(products.filter((p) => p.id !== selectedProduct.id));
+        handleCheckOutCancel();
+      }}
+    >
+      Confirm CheckOut
+    </Button>,
+  ]}
+  className="checkout-modal"
+>
+  {selectedProduct && (
+    <div className="checkout-info">
+      <p><strong>Name:</strong> {selectedProduct.name}</p>
+      <p><strong>Service:</strong> {selectedProduct.service}</p>
+      <p><strong>Price:</strong> {selectedProduct.price}</p>
+      <p><strong>Duration:</strong> {selectedProduct.duration}</p>
+    </div>
+  )}
+</Modal>
 
     </div>
   );

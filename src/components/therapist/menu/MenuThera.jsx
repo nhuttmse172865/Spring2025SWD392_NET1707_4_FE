@@ -17,8 +17,10 @@ const MenuThera = () => {
       navigate("/therapist/schedule");
     }else if (name === "Record result") {
       navigate("/therapist/record");
-    }else if (name === "Change working schedule ") {
+    }else if (name === " Working schedule ") {
       navigate("/therapist/changeSchedule");
+    }else if (name === "Manager information ") {
+      navigate("/therapist/managerInformation");
     }
   };
 
@@ -34,7 +36,8 @@ const MenuThera = () => {
     { name: "Dashboard", icon: ICONS.dashboard, iconActive: ICONS.dashboardActive },
     { name: "Schedule", icon: ICONS.schedule, iconActive: ICONS.scheduleActive },
     { name: "Record result", icon: ICONS.appointment, iconActive: ICONS.appointmentActive },
-    { name: "Change working schedule ", icon: ICONS.update, iconActive: ICONS.update },
+    { name: " Working schedule ", icon: ICONS.update, iconActive: ICONS.update },
+    // { name: "Blog", icon: ICONS.account, iconActive: ICONS.account},
   ];
 
   return (

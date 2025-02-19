@@ -23,6 +23,10 @@ import Appointments from "./pages/customer/customerDetail/appointment/Appointmen
 import Account from "./pages/customer/customerDetail/account/Account";
 import AdminDashboard from "./pages/admin/home/AdminDashboard";
 import ManageAccount from "./pages/admin/account/ManageAccount";
+import CustomerViewTherapist from "./pages/customer/customerViewTherapist/CustomerViewTherapist";
+import TherapistDetail from "./pages/customer/customerViewTherapist/TherapistDetail";
+
+import TherapistProfile from "./pages/therapist/ManagerInformation/TherapistProfie";
 
 function App() {
   return (
@@ -31,6 +35,7 @@ function App() {
         <Route path="/" element={<CustomerLayout />}>
           <Route index element={<Customer />} />
           <Route path="customer-service" element={<CustomerService />}>
+
             <Route index element={<Content />} />
           </Route>
           <Route path="customer-detail/" element={<CustomerDetail />} >
@@ -38,6 +43,8 @@ function App() {
               <Route path="account" element={<Account />}/>
               <Route path="appointments" element={<Appointments />} />
           </Route>
+          <Route path="customer-view/therapist" element={<CustomerViewTherapist />} />
+          <Route path="/customer-view/therapist/:id" element={<TherapistDetail />} />
         </Route>
         <Route path="/login" element={<Login />} />
         <Route path="/registrations/" element={<Register />}>
@@ -64,6 +71,7 @@ function App() {
           <Route path="schedule" element={<Schedule />} />
           <Route path="record" element={<RecordBooking />} />
         <Route path="changeSchedule" element={<ChangeSchedule />} />
+        <Route path="managerInformation" element={<TherapistProfile />}/>
         </Route>
       </Routes>
     </BrowserRouter>

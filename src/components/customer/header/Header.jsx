@@ -22,6 +22,7 @@ const Header = ({ isShowSearch = false, isShowButtonLogin = false, isVerified = 
           <li>Booking</li>
           <li>Blog</li>
           <li>Contact us</li>
+          
         </ul>
         <div className="header-logo">
           <img src={IMAGES.logo} alt="" />

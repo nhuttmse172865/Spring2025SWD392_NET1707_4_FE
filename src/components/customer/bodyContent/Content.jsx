@@ -3,8 +3,11 @@ import React, { useState } from 'react';
 import './Content.css';
 import { CheckCircle } from "lucide-react";
 import IMAGES from "../../../constants/images";
+import { useNavigate } from 'react-router-dom';
+import { Button } from 'antd';
 
 const Content = () => {
+  const navigate  = useNavigate();
   const doctors = [
     {
       id: 1,
@@ -170,6 +173,11 @@ const Content = () => {
         <h2 className="therapist-title">
         Skincare Spa Expert Team
         </h2>
+        <div className="showmore-container">
+    <button onClick={() => navigate('/customer-view/therapist')} className="btn-showmore">
+      Show more
+    </button>
+  </div>
         <div className="doctor-container">
           {doctors.map((doctor) => (
             <div key={doctor.id} className="doctor-card">

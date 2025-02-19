@@ -135,4 +135,64 @@
       font-size: 14px;
       padding: 10px;
   }
+ 
 }
+.checkout-modal .ant-modal-content {
+    background: #fff0f5; 
+    border-radius: 12px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    padding: 20px;
+  }
+  
+  .checkout-modal .ant-modal-title {
+    font-size: 20px;
+    font-weight: bold;
+    color: #d63384;
+    text-align: center;
+    background: #fff0f5; 
+  }
+  
+  
+  .checkout-info {
+    padding: 10px;
+  }
+  
+  .checkout-info p {
+    font-size: 16px;
+    color: #5a5a5a;
+    margin-bottom: 10px;
+  }
+  
+ 
+  .checkout-modal-footer {
+    text-align: center;
+  }
+  
+ 
+  .checkout-cancel-btn {
+    background-color: #fff;
+    color: #d63384;
+    border: 1px solid #d63384;
+    border-radius: 5px;
+    font-size: 16px;
+    padding: 8px 20px;
+  }
+  
+  .checkout-cancel-btn:hover {
+    background-color: #fce4ec;
+  }
+  
+
+  .checkout-confirm-btn {
+    background-color: #d63384;
+    border-color: #d63384;
+    border-radius: 5px;
+    font-size: 16px;
+    padding: 8px 20px;
+  }
+  
+  .checkout-confirm-btn:hover {
+    background-color: #b62d6e;
+    border-color: #b62d6e;
+  }
+  
