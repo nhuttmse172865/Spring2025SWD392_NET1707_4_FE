@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from "react";
 import ICONS from "../../../../../constants/icons";
 import ElevatedButton from "../../../../common/button/elevated/ElevatedButton";
-import AGE from "../../../../../constants/age";
 import Select from "../../../../common/select/Select";
 import axios from "axios";
 import BASE from "../../../../../constants/base";
@@ -147,12 +146,14 @@ const Modal = ({ setShowModal, setRefreshData, itemUpdate, setItemUpdate }) => {
                   className="w-fit h-fit px-4 rounded-[.375rem] text-[14px]"
                   key={index}
                   style={{
-                    backgroundColor: itemAges.filter(
-                      (itemAge) => itemAge.name === item
-                    )[0]?.backgroundColor,
-                    color: itemAges.filter(
-                      (itemAge) => itemAge.name === item
-                    )[0]?.textColor,
+                    backgroundColor:
+                      itemAges &&
+                      itemAges?.filter((itemAge) => itemAge.name === item)[0]
+                        ?.backgroundColor,
+                    color:
+                      itemAges &&
+                      itemAges?.filter((itemAge) => itemAge.name === item)[0]
+                        ?.textColor,
                   }}
                 >
                   {item}
@@ -162,11 +163,14 @@ const Modal = ({ setShowModal, setRefreshData, itemUpdate, setItemUpdate }) => {
               <span
                 className="w-fit h-fit px-4 rounded-[.375rem] text-[14px] "
                 style={{
-                  backgroundColor: itemAges.filter(
-                    (itemAge) => itemAge.name === age
-                  )[0]?.backgroundColor,
-                  color: itemAges.filter((itemAge) => itemAge.name === age)[0]
-                    ?.textColor,
+                  backgroundColor:
+                    itemAges &&
+                    itemAges?.filter((itemAge) => itemAge.name === age)[0]
+                      ?.backgroundColor,
+                  color:
+                    itemAges &&
+                    itemAges.filter((itemAge) => itemAge.name === age)[0]
+                      ?.textColor,
                 }}
               >
                 {age}

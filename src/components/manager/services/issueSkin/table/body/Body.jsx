@@ -26,7 +26,7 @@ const Body = ({ issueSkins, setShowModal, setItemUpdate }) => {
 
   return (
     <div
-      className="mt-2.5 flex flex-col gap-2.5"
+      className="mt-1 flex flex-col gap-2.5 bg-white rounded-[.375rem]"
       style={{ height: "calc(100vh - 190px - 3.5rem" }}
     >
       {issueSkins &&
@@ -37,7 +37,7 @@ const Body = ({ issueSkins, setShowModal, setItemUpdate }) => {
             setShowModal={setShowModal}
             setItemUpdate={setItemUpdate}
             handleOnClick={handleOnclickItem}
-            active={issueSkinItemsActive.includes(item)}
+            active={issueSkinItemsActive ? issueSkinItemsActive.includes(item) : false}
           />
         ))}
     </div>

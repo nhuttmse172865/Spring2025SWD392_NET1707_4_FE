@@ -8,32 +8,32 @@ const Select = ({
   text = "Choose age...",
   mutilpleSelect = false,
   modeShowTextOnInput = false,
-  setListSelected
+  setListSelected,
 }) => {
   const [active, setActive] = useState(false);
   const [itemsSelected, setItemsSelected] = useState();
   const [mouseover, setMouseover] = useState(false);
-  const heightItems = list?.length * 40 + (list?.length)*5 + 19;
+  const heightItems = list?.length * 40 + list?.length * 5 + 19;
 
   const handleOnclick = (item) => {
     let listItemsSelected;
     if (mutilpleSelect) {
       if (!itemsSelected) {
-        listItemsSelected = [item]
+        listItemsSelected = [item];
         setItemsSelected(listItemsSelected);
       } else if (itemsSelected.includes(item)) {
-        listItemsSelected = itemsSelected.filter((element) => element !== item)
+        listItemsSelected = itemsSelected.filter((element) => element !== item);
         setItemsSelected(listItemsSelected);
       } else {
-        listItemsSelected = [...itemsSelected, item]
+        listItemsSelected = [...itemsSelected, item];
         setItemsSelected(listItemsSelected);
       }
     } else {
-      listItemsSelected = item
+      listItemsSelected = item;
       setItemsSelected(item);
     }
-    if(modeShowTextOnInput && setListSelected){
-      setListSelected(listItemsSelected)
+    if (modeShowTextOnInput && setListSelected) {
+      setListSelected(listItemsSelected);
     }
   };
 
@@ -52,6 +52,9 @@ const Select = ({
         {modeShowTextOnInput && (
           <span className="text-(--color-title-40)">{text}</span>
         )}
+        {!modeShowTextOnInput && !itemsSelected ? (
+          <span className="text-(--color-title-40)">{text}</span>
+        ) : null}
         {!modeShowTextOnInput &&
         itemsSelected &&
         Array.isArray(itemsSelected) ? (
@@ -72,7 +75,7 @@ const Select = ({
         onClick={(event) => event.stopPropagation()}
       >
         {list &&
-          list.map((item,index) => (
+          list.map((item, index) => (
             <li
               key={index}
               className="items-center flex rounded-[.375rem] duration-100 ease-in pl-[12px] text-[rgba(0,0,0,0.7)] hover:bg-[rgba(0,0,0,0.1)] text-[15px] mt-[5px]"

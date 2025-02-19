@@ -2,15 +2,15 @@ import React, { useEffect, useState } from "react";
 import Card from "../card/Card";
 import useLocalStorage from "use-local-storage";
 import LOCALSTORAGE_NAME from "../../../../../constants/localStorageName";
+import axios from "axios";
+import BASE from "../../../../../constants/base";
 
-const list = [{ id: 1 }, { id: 2 }, { id: 3 }, { id: 4 }];
-
-const Content = ({setItemUpdate, setShowModal}) => {
+const Content = ({ setItemUpdate, setShowModal, refreshData }) => {
   const [categoryActive, setCategoryActive] = useLocalStorage(
     LOCALSTORAGE_NAME.CATEGORY_ITEMS_ACTIVE,
     ""
   );
-  const [categories, setCategories] = useState()
+  const [categories, setCategories] = useState();
   const [itemActive, setItemActive] = useState([]);
   const handleOnClick = (item) => {
     let list = [];
@@ -22,17 +22,28 @@ const Content = ({setItemUpdate, setShowModal}) => {
       list = [...itemActive, Number(item.id)];
     }
     setItemActive(list);
-    setCategoryActive(list)
+    setCategoryActive(list);
   };
-  const handleOnUpdate = (event,item) => {
+  const handleOnUpdate = (event, item) => {
     event.stopPropagation();
-    setItemUpdate(item)
-    setShowModal(true)
-  }
+    setItemUpdate(item);
+    setShowModal(true);
+  };
+
+  const handleLoadCategory = async () => {
+    try {
+      const response = await axios.get(`${BASE.BASE_URL}/category/getAll`);
+      if (!response || response.status !== 200) throw new Error();
+      setCategories(response.data.data);
+    } catch (error) {
+      console.log(error);
+    } finally {
+    }
+  };
 
   useEffect(() => {
-    
-  })
+    handleLoadCategory();
+  }, [refreshData]);
 
   return (
     <div
@@ -40,8 +51,8 @@ const Content = ({setItemUpdate, setShowModal}) => {
       style={{ height: "calc(100vh - 120px - 3.5rem" }}
     >
       <div className="flex flex-wrap gap-5 pt-2.5 pl-0.5">
-        {list &&
-          list.map((item, index) => (
+        {categories &&
+          categories.map((item, index) => (
             <Card
               key={index}
               item={item}

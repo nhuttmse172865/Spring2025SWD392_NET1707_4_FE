@@ -48,6 +48,7 @@ export const IssueSkin = () => {
     } catch (error) {
       console.log(error);
     } finally {
+      setIssueSkinItemActive()
       setLoading(false);
     }
   };
@@ -61,6 +62,7 @@ export const IssueSkin = () => {
         handleOnClickElevated={() => setShowModal(true)}
         handleOnClickOutline={handleDeleteIssueSkins}
         isLoadingOutline={loading}
+        activeOutlineButton={issueSkinItemsActive && issueSkinItemsActive.length > 0}
       />
       <div>
         <Content
