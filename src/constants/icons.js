@@ -26,6 +26,8 @@ import account from "../assets/images/manager/account.png"
 import logout from "../assets/images/manager/logout.png"
 import loading from "../assets/images/manager/loading.png"
 import loadingActive from "../assets/images/manager/loading-active.png"
+import add from '../assets/images/manager/add.png';
+import time from '../assets/images/manager/time.png';
 
 const ICONS = {
   search,
@@ -55,7 +57,9 @@ const ICONS = {
   account,
   logout,
   loading,
-  loadingActive
+  loadingActive,
+  add,
+  time,
 };
 
 export default ICONS;

@@ -64,7 +64,7 @@ const LoginForm = () => {
       const response = await axios.post(`${BASE.BASE_URL}/login`, data);
       if (!response || response.status !== 200) throw new Error();
       setCustomer(response.data.data);
-      navigate(-1);
+      navigate("/");
     } catch (err) {
       console.log(err);
     } finally {

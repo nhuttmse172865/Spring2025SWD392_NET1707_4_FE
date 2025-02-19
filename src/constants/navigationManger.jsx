@@ -4,11 +4,12 @@ import ICONS from "./icons";
 import Category from "../pages/manager/services/category/Category";
 import SkinType from "../pages/manager/services/skinType/SkinType";
 import { IssueSkin } from "../pages/manager/services/issueSkin/IssueSkin";
+import Services from "../pages/manager/services/services/Services";
 
 const COMPONENTS = {
   DASHBOARD: <Dashboard />,
   SETTINGS: "Settings",
-  SERVICES: "Services",
+  SERVICES: <Services />,
   CATEGORY: <Category />,
   SKIN_TYPE: <SkinType />,
   ISSUE_SKIN: <IssueSkin />
