@@ -1,6 +1,6 @@
 import React from 'react'
 import Contact from '../../../components/customer/contactUs/Contact'
-const Customer = () => {
+const CustomerContact = () => {
   return (
       <div className="contact-container container mx-auto" >
         <Contact />
@@ -8,4 +8,4 @@ const Customer = () => {
   )
 }
 
-export default Customer
+export default CustomerContact
