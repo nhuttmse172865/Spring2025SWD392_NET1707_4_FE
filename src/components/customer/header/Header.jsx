@@ -25,7 +25,12 @@ const Header = ({
           >
             Services
           </li>
-          <li>Price</li>
+          <li onClick={() => navigate("/price")} style={{ cursor: "pointer" }}>
+            Price
+          </li>
+          <li onClick={() => navigate("/quiz")} style={{ cursor: "pointer" }}>
+            Quiz
+          </li>
           <li
             onClick={() => navigate("/booking")}
             style={{ cursor: "pointer" }}

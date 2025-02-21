@@ -1,0 +1,87 @@
+.beauty-container {
+  max-width: 95%;
+  margin: 0 auto;
+  padding: 2rem;
+}
+
+.beauty-title {
+  text-align: center;
+  font-size: 2.5rem;
+  font-weight: bold;
+  margin-bottom: 2rem;
+  color: #333;
+}
+
+.beauty-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 1.5rem;
+}
+
+@media (min-width: 640px) {
+  .beauty-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (min-width: 1024px) {
+  .beauty-grid {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+.beauty-card {
+  background-color: white;
+  border-radius: 0.5rem;
+  overflow: hidden;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  transition: transform 0.2s;
+}
+
+.beauty-card:hover {
+  transform: translateY(-5px);
+}
+
+.beauty-card-image {
+  width: 100%;
+  height: 12rem;
+  object-fit: cover;
+}
+
+.beauty-card-content {
+  padding: 1rem;
+}
+
+.beauty-card-title {
+  font-size: 1.125rem;
+  font-weight: bold;
+  margin-bottom: 0.5rem;
+  color: #333;
+}
+
+.beauty-card-description {
+  color: #4a5568;
+  margin-bottom: 1rem;
+  font-size: 0.875rem;
+}
+
+.beauty-card-footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  color: #a0aec0;
+  font-size: 0.875rem;
+}
+
+.beauty-card-footer span {
+  display: flex;
+  align-items: center;
+}
+
+.beauty-card-footer svg {
+  margin-right: 0.25rem;
+}
+
+.beauty-arrow-icon {
+  color: #f97316;
+}

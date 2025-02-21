@@ -22,6 +22,11 @@ import Appointments from "./pages/customer/customerDetail/appointment/Appointmen
 import Account from "./pages/customer/customerDetail/account/Account";
 import CustomerContact from "./pages/customer/customerContact/CustomerContact";
 import Booking from "./pages/customer/customerBooking/Booking";
+import CustomerBlog from "./pages/customer/customerBlog/CustomerBlog";
+import BlogDetails from "./components/customer/blog/blogDetails/BlogDetails";
+import ServiceDetails from "./components/customer/serviceDetails/ServiceDetails";
+import CustomerPrice from "./pages/customer/customerPrice/CustomerPrice";
+import CustomerQuiz from "./pages/customer/quiz/CustomerQuiz";
 
 function App() {
   return (
@@ -31,6 +36,7 @@ function App() {
           <Route index element={<Customer />} />
           <Route path="customer-service" element={<CustomerService />}>
             <Route index element={<Content />} />
+            <Route path="service-details" element={<ServiceDetails />} />
           </Route>
           <Route path="customer-detail/" element={<CustomerDetail />}>
             <Route index element={<Account />} />
@@ -39,6 +45,10 @@ function App() {
           </Route>
           <Route path="/booking" element={<Booking />} />
           <Route path="/contact" element={<CustomerContact />} />
+          <Route path="blog" element={<CustomerBlog />} />
+          <Route path="blog/:id" element={<BlogDetails />} />
+          <Route path="/price" element={<CustomerPrice />} />
+          <Route path="/quiz" element={<CustomerQuiz />} />
         </Route>
         <Route path="/login" element={<Login />} />
         <Route path="/registrations/" element={<Register />}>
