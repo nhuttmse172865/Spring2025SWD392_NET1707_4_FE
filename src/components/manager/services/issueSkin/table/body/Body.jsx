@@ -26,17 +26,18 @@ const Body = ({ issueSkins, setShowModal, setItemUpdate }) => {
 
   return (
     <div
-      className="mt-1 flex flex-col gap-2.5 bg-white rounded-[.375rem]"
+      className="mt-1 flex flex-col gap-2.5 bg-white rounded-[.375rem] overflow-x-hidden p-0.5"
       style={{ height: "calc(100vh - 190px - 3.5rem" }}
     >
       {issueSkins &&
         Array.isArray(issueSkins) &&
-        issueSkins.map((item) => (
+        issueSkins.map((item, index) => (
           <Item
             item={item}
             setShowModal={setShowModal}
             setItemUpdate={setItemUpdate}
             handleOnClick={handleOnclickItem}
+            index={index}
             active={issueSkinItemsActive ? issueSkinItemsActive.includes(item) : false}
           />
         ))}

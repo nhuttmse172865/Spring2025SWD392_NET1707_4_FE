@@ -15,7 +15,9 @@ const ToolBar = ({
   activeOutlineButton = false,
   handleOnClickOutline,
   handleOnClickElevated,
-  isLoadingOutline
+  isLoadingOutline,
+  isShowOulineButton = true,
+  isShowElevatedButton = true,
 }) => {
   return (
     <div className="flex justify-between items-end">
@@ -24,22 +26,26 @@ const ToolBar = ({
       </div>
       <div className="flex justify-end items-end gap-5">
         <Search />
-        <OutlineButton
-          text={textOutlineButton}
-          height={heightOutline}
-          width={widthOutline}
-          rounded={rounded}
-          active={activeOutlineButton}
-          handleOnclick={handleOnClickOutline}
-          isLoading={isLoadingOutline}
-        />
-        <ElevatedButton
-          text={textElevatedButton}
-          height={heightElevated}
-          width={widthElevated}
-          rounded={rounded}
-          handleOnclick={handleOnClickElevated}
-        />
+        {isShowOulineButton && (
+          <OutlineButton
+            text={textOutlineButton}
+            height={heightOutline}
+            width={widthOutline}
+            rounded={rounded}
+            active={activeOutlineButton}
+            handleOnclick={handleOnClickOutline}
+            isLoading={isLoadingOutline}
+          />
+        )}
+        {isShowElevatedButton && (
+          <ElevatedButton
+            text={textElevatedButton}
+            height={heightElevated}
+            width={widthElevated}
+            rounded={rounded}
+            handleOnclick={handleOnClickElevated}
+          />
+        )}
       </div>
     </div>
   );

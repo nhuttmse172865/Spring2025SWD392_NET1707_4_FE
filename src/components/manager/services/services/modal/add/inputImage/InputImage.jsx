@@ -11,14 +11,17 @@ const InputImage = ({
 }) => {
   const [image, setImage] = useState();
   const handleLoadFile = (file) => {
-    if (file) {
+    if (file && typeof file.name === 'string') {
       const reader = new FileReader();
       reader.onload = (event) => {
         const dataURL = event.target.result;
         setImage(dataURL);
       };
       reader.readAsDataURL(file);
+    }else{
+      setImage(file.url)
     }
+    console.log(file)
   };
   useEffect(() => {
     if (imageObject) {

@@ -7,17 +7,25 @@ import ServiceDetailCard from "./card/serviceDetail/ServiceDetailCard";
 import axios from "axios";
 import Popup from "../../../../../common/popup/Popup";
 import ServiceDetailModal from "./card/serviceDetail/modal/ServiceDetailModal";
+import BASE from "../../../../../../constants/base";
 
-const Modal = () => {
+const Modal = ({ setShowModal }) => {
   const [images, setImages] = useState([]);
   const [refreshImage, setRefreshImage] = useState(false);
-  const [categories, setCategories] = useState();
-  const [issueSkin, setIssueSkin] = useState();
-  const [skinType, setSkinType] = useState();
-  const [therapist, setTherapist] = useState();
-  const [serviceDetails, setServiceDetails] = useState();
+  const [name, setName] = useState()
+  const [description, setDescription] = useState()
+  const [gapDay,setGapDay] = useState()
+
+  const [categoriesList, setCategoriesList] = useState();
+  const [issueSkinList, setIssueSkinList] = useState();
+  const [skinTypeList, setSkinTypeList] = useState();
+  const [therapistList, setTherapistList] = useState();
+
+  const [serviceDetails, setServiceDetails] = useState([]);
   const [showModalServiceDetail, setShowModalServiceDetail] = useState(false);
-  const [left,setLeft] = useState()
+  const [left, setLeft] = useState();
+  const [serviceDetailUpdate, setServiceDetailUpdate] = useState();
+  const [serviceDetailUpdateIndex, setServiceDetailUpdateIndex] = useState();
 
   const handleAddImage = (event, index) => {
     const image = event.target.files[0];
@@ -45,14 +53,28 @@ const Modal = () => {
     }
   };
 
-  const handleOnclick = (event) => {
-     const rect = event.target.getBoundingClientRect()
-      setLeft(rect.right)
-      setShowModalServiceDetail(true)
+  const handleOnclick = (event, serviceDetail, index) => {
+    const rect = event.target.getBoundingClientRect();
+    setLeft(rect.left);
+    setShowModalServiceDetail(true);
+    if (serviceDetail) {
+      setServiceDetailUpdate(serviceDetail);
+      setServiceDetailUpdateIndex(index);
+    }
   };
 
+  const handleAddService = () => {
+    const data = {
+      name: name,
+      images: images,
+      description: description,
+      gapDay: gapDay,
+
+    }
+  }
+
   useEffect(() => {
-    if (!categories) {
+    if (!categoriesList) {
       handleLoadCategory();
     }
   });
@@ -69,6 +91,7 @@ const Modal = () => {
             width={"100px"}
             rounded={".375rem"}
             height={"45px"}
+            handleOnclick={() => setShowModal(false)}
           />
           <ElevatedButton
             width={"180px"}
@@ -93,6 +116,7 @@ const Modal = () => {
             {images &&
               images.map((item, index) => (
                 <InputImage
+                  key={index}
                   width="100px"
                   height="100px"
                   imageObject={item}
@@ -124,7 +148,7 @@ const Modal = () => {
               Category
             </label>
             <Select
-              list={categories}
+              list={categoriesList && categoriesList.map((item) => item.name)}
               modeShowTextOnInput={false}
               text="Select category"
               width="200px"
@@ -137,7 +161,7 @@ const Modal = () => {
             Issue Skin
           </label>
           <Select
-            list={categories}
+            list={issueSkinList && issueSkinList.map((item) => item.name)}
             modeShowTextOnInput={true}
             text="Select issue skin"
             width="250px"
@@ -148,22 +172,34 @@ const Modal = () => {
             Skin Type
           </label>
           <Select
-            list={categories}
+            list={skinTypeList && skinTypeList.map((item) => item.name)}
             modeShowTextOnInput={true}
             text="Select skin type"
             width="200px"
           />
         </div>
-        <div className="grid mt-5 mb-7">
-          <label className="text-[15px] mb-0.5 text-[rgba(0,0,0,0.7)]">
-            Therapist
-          </label>
-          <Select
-            list={categories}
-            modeShowTextOnInput={true}
-            text="Select skin type"
-            width="300px"
-          />
+        <div className="flex gap-x-5">
+          <div className="grid mt-5">
+            <label className="text-[15px] mb-0.5 text-[rgba(0,0,0,0.7)]">
+              Therapist
+            </label>
+            <Select
+              list={therapistList && therapistList.map((item) => item.name)}
+              modeShowTextOnInput={true}
+              text="Select skin type"
+              width="300px"
+            />
+          </div>
+          <div className="grid w-[200px] mt-5">
+            <label className="text-[15px] mb-0.5 text-[rgba(0,0,0,0.7)]">
+              Gap Day <span className="text-[13px] text-[rgba(0,0,0,0.5)]">(days)</span>
+            </label>
+            <input
+              type="number"
+              placeholder="Facial Treatment"
+              className="h-12 border-input-form-login text-[rgba(0,0,0,0.8)] text-[15px]"
+            />
+          </div>
         </div>
         <div className="grid mt-5 mb-7 w-[45vw]">
           <label className="text-[15px] mb-0.5 text-[rgba(0,0,0,0.7)]">
@@ -187,12 +223,29 @@ const Modal = () => {
             Service Detail
           </label>
           <div className="w-full">
-            <div className="rounded-[.375rem] mt-3">
+            <div className="rounded-[.375rem] mt-3 gap-2.5 flex flex-wrap">
+              {serviceDetails &&
+                serviceDetails.map((item, index) => (
+                  <ServiceDetailCard
+                    handleOnClick={handleOnclick}
+                    serviceDetail={item}
+                    index={index}
+                  />
+                ))}
               <ServiceDetailCard handleOnClick={handleOnclick} />
             </div>
             {showModalServiceDetail && (
               <Popup>
-                <ServiceDetailModal left={left} handleCloseModal={() => setShowModalServiceDetail(false)}/>
+                <ServiceDetailModal
+                  left={left}
+                  handleCloseModal={() => setShowModalServiceDetail(false)}
+                  setServiceDetails={setServiceDetails}
+                  serviceDetails={serviceDetails}
+                  serviceDetailUpdateIndex={serviceDetailUpdateIndex}
+                  setServiceDetailUpdateIndex={setServiceDetailUpdateIndex}
+                  serviceDetailUpdate={serviceDetailUpdate}
+                  setServiceDetailUpdate={setServiceDetailUpdate}
+                />
               </Popup>
             )}
           </div>
