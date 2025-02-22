@@ -10,7 +10,6 @@ import otherCard from '../assets/images/other.jpg'
 import mastercard from '../assets/images/mastercard.jpg'
 import background from '../assets/images/background.jpg'
 
-
 const IMAGES = {
   logo,
   bannerLogin,
