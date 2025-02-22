@@ -1,12 +1,14 @@
-import React, { useState } from "react";
-import "./CheckIn.css"; // Import file CSS
+import React, { useEffect, useState } from "react";
+import "./CheckIn.css"; 
 import { FaQrcode } from "react-icons/fa";
 import { Button, Form, Input, Modal } from "antd";
-
+import { Html5QrcodeScanner } from "html5-qrcode";
 const CheckIn = () => {
   const [form] = Form.useForm();
   const [isCheckInModalVisible, setIsCheckInModalVisible] = useState(false);
   const [isCheckOutModalVisible, setIsCheckOutModalVisible] = useState(false);
+  const [isQRModalVisible, setIsQRModalVisible] = useState(false);
+  const [scanResult, setScanResult] = useState(null);
   const [selectedProduct, setSelectedProduct] = useState(null);
   const [products, setProducts] = useState([
     {
@@ -55,7 +57,23 @@ const CheckIn = () => {
     setIsCheckOutModalVisible(false);
     setSelectedProduct(null);
   };
-
+  const showQRModal = () =>{
+    setIsQRModalVisible(true);
+  }
+  const handleQRCancel = () => setIsQRModalVisible(false);
+  useEffect(()=>{
+     if(isQRModalVisible){
+      const scanner = new Html5QrcodeScanner("reader", { qrbox: { width: 250, height: 250 }, fps: 10 })
+     scanner.render((result)=>{
+        setScanResult(result);
+        setIsQRModalVisible(false);
+        scanner.clear(); 
+     },
+     (error) =>console.log("QR error",error)
+    );
+    return () => scanner.clear();
+    }
+  },[isQRModalVisible])
   return (
     <div className="checkin-container">
       <div className="checkin-header">
@@ -63,7 +81,7 @@ const CheckIn = () => {
           <button className="btn-checkin" onClick={showCheckInModal}>
             Form Checkin
           </button>
-          <FaQrcode className="qr-icon" />
+          <FaQrcode onClick={showQRModal} style={{ cursor: "pointer", fontSize: "24px" }} className="qr-icon" />
         </div>
       </div>
 
@@ -173,7 +191,11 @@ const CheckIn = () => {
     </div>
   )}
 </Modal>
-
+    {/* Model QR */}
+ <Modal title="Scan QR Code" open={isQRModalVisible} onCancel={handleQRCancel} footer={null}>
+        <div id="reader"></div>
+        {scanResult && <p>Scanned QR Code: {scanResult}</p>}
+      </Modal>
     </div>
   );
 };
