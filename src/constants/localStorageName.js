@@ -4,6 +4,7 @@ const LOCALSTORAGE_NAME = {
     GUEST_INFORMATION_CACHE: "guest_user_information",
     CUSTOMER_INFORMATION_CACHE: "customer_information",
     AGE_INFORMATION_CACHE: "list_age",
-    ISSUE_SKIN_ITEMS_ACTIVE: "issue_skin_items_active"
+    ISSUE_SKIN_ITEMS_ACTIVE: "issue_skin_items_active",
+    THERAPISTS_ACTIVE:"therapists_active"
 }
 export default LOCALSTORAGE_NAME

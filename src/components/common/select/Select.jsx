@@ -31,15 +31,14 @@ const Select = ({
     } else {
       listItemsSelected = item;
       setItemsSelected(item);
+      setActive(false);
     }
-    if (modeShowTextOnInput && setListSelected) {
-      setListSelected(listItemsSelected);
-    }
+    setListSelected(listItemsSelected);
   };
 
   return (
     <div
-      className="cursor-pointer border-input-form-login relative flex items-center p-[12px]"
+      className="cursor-pointer border-input-form-login relative flex items-center p-[12px] bg-white "
       style={{
         width: width,
         height: height,
@@ -64,7 +63,7 @@ const Select = ({
         ) : null}
       </div>
       <ul
-        className="absolute bg-white h-mx top-[100%] duration-200 ease-in left-0 pt-[7px] px-[12px] rounded-[.375rem]"
+        className="absolute bg-white h-mx top-[100%] duration-200 ease-in left-0 pt-[7px] px-[12px] rounded-[.375rem] z-[1000]"
         style={{
           boxShadow: "0px 0px 1px 1px rgba(0,0,0,0.1)",
           transform: "translateX(-2px)",

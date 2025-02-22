@@ -1,20 +1,18 @@
-import React, { useRef, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import ICONS from "../../../../../../../constants/icons";
 
-const Step = ({ setSteps }) => {
+const Step = ({ setSteps, stepsAvailable }) => {
   const [listStep, setListStep] = useState([]);
   const [name, setName] = useState();
-  const [description, setDescription] = useState();
 
   const handleAddStep = () => {
     const step = {
       name: name,
-      description: description,
+      stepNumber: listStep.length + 1,
     };
     let _steps = [...listStep, step];
     setListStep(_steps);
     setName("");
-    setDescription("");
     setSteps(_steps);
   };
 
@@ -29,6 +27,12 @@ const Step = ({ setSteps }) => {
     event.preventDefault();
   };
 
+  const handleDeleteStep = (_index) => {
+    let steps = listStep.filter((item, index) => index !== _index);
+    setListStep(steps);
+    setSteps(steps);
+  };
+
   const handleDrop = (event, index) => {
     event.preventDefault();
     const droppedIndex = event.dataTransfer.getData("listIndex");
@@ -36,9 +40,21 @@ const Step = ({ setSteps }) => {
     let item = steps[droppedIndex];
     steps.splice(droppedIndex, 1);
     steps.splice(index, 0, item);
+    steps = steps.map((item, index) => {
+      return {
+        name: item.name,
+        stepNumber: index,
+      };
+    });
     setListStep(steps);
     setSteps(steps);
   };
+
+  useEffect(() => {
+    if (stepsAvailable) {
+      setListStep(stepsAvailable);
+    }
+  }, [stepsAvailable]);
 
   return (
     <div className="relative">
@@ -67,8 +83,13 @@ const Step = ({ setSteps }) => {
               <span className="w-[80%] text-[15px] text-[rgba(0,0,0,0.5)]">
                 {item.name}
               </span>
-              <div>
-                <img src={ICONS.delete} />
+              <div className="w-[40px] h-[40px] flex justify-center items-center">
+                <img
+                  src={ICONS.trash}
+                  width="20px"
+                  height="20px"
+                  onClick={() => handleDeleteStep(index)}
+                />
               </div>
             </div>
             <div

@@ -129,7 +129,7 @@ const Modal = ({ setShowModal, setRefreshData, itemUpdate, setItemUpdate }) => {
           </label>
           <input
             type="text"
-            placeholder="Oily skin"
+            placeholder="Acne"
             value={name}
             onChange={(event) => setName(event.target.value)}
             className="h-12 border-input-form-login text-[rgba(0,0,0,0.8)] text-[15px]"
