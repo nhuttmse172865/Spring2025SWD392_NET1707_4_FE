@@ -15,11 +15,11 @@ const Card = ({ item, handleOnClick, active = false, handleOnUpdate }) => {
       onClick={() => handleOnClick(item)}
     >
       <h4 className="font-semibold text-[18px] text-(--color-title-50)">
-        Category
+        {item.name}
       </h4>
-      <span className="font-light text-[13px] text-(--color-title-50)">Lorem Ipsum is simply dummy</span>
+      <span className="font-light text-[13px] text-(--color-title-50)">{item.description}</span>
       <div className="mt-4 flex gap-1 items-end">
-        <span className="text-[40px] text-(--color-title-80)">20</span>
+        <span className="text-[40px] text-(--color-title-80)">0</span>
         <span className="font-light text-[13px] text-(--color-title-50)">services</span>
         <div onClick={(event) => handleOnUpdate(event,item)} className="absolute w-[80px] h-[35px] bg-(--color-primary-80) hover:bg-(--color-primary-100) ease-in-out duration-300  right-5 rounded-[.375rem] flex items-center justify-center">
             <img src={ICONS.updateWhite} alt="" />

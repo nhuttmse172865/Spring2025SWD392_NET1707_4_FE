@@ -1,50 +1,47 @@
-/* BeautySalon.css */
 .salon-container {
-    max-width: 100%;
-    margin: 0 auto;
-    padding: 1rem;
+  max-width: 100%;
+  margin: 0 auto;
+  padding: 1rem;
 }
-.salon-section{
-    border-bottom: 2px solid rgb(216, 202, 202);
+.salon-section {
+  border-bottom: 2px solid rgb(216, 202, 202);
 }
 
 .content-wrapper {
-    display: flex;
-    align-items: center;
-    gap: 4rem;
+  display: flex;
+  align-items: center;
+  gap: 4rem;
 }
 
 .image-section {
-    position: relative;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    flex: 1;
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex: 1;
 
+  .pink-circle {
+    position: absolute;
+    width: 90%;
+    height: 90%;
+    background-color: #f0e4e9;
+    border-radius: 50%;
+    z-index: -1;
+    left: 20%;
+    top: 50%;
+    transform: translateY(-50%);
+  }
 
-    .pink-circle {
-        position: absolute;
-        width: 90%;
-        height: 90%;
-        background-color: #f0e4e9;
-        border-radius: 50%;
-        z-index: -1;
-        left: 20%;
-        top: 50%;
-        transform: translateY(-50%);
-    }
-
-    .model-image {
-        max-width: 100%;
-        height: 650px;
-    }
+  .model-image {
+    max-width: 100%;
+    height: 650px;
+  }
 }
 
 .text-section {
-    flex: 1;
-    padding-right: 1rem;
-    padding-left: 8rem;
-    
+  flex: 1;
+  padding-right: 1rem;
+  padding-left: 8rem;
 }
 
 .tag {
@@ -52,58 +49,57 @@
   font-size: 1rem;
   font-weight: bold;
   letter-spacing: 1px;
-  font-family: 'Poppins', sans-serif;
+  font-family: "Poppins", sans-serif;
 }
 
-
 .main-title {
-    color: black;
-    font-size: 3rem;
-    line-height: 1.2;
-    margin: 1.5rem 0;
-    font-family: 'Playfair Display', serif;
-    font-weight: bold;
+  color: black;
+  font-size: 3rem;
+  line-height: 1.2;
+  margin: 1.5rem 0;
+  font-family: "Playfair Display", serif;
+  font-weight: bold;
 }
 
 .services-list {
-    list-style: none;
-    padding: 0;
-    margin: 2rem 0;
-    font-family: 'Poppins', sans-serif;
+  list-style: none;
+  padding: 0;
+  margin: 2rem 0;
+  font-family: "Poppins", sans-serif;
 }
 
 .services-list li {
-    display: flex;
-    align-items: start;
-    gap: 0.5rem;
-    margin-bottom: 1rem;
-    color: black;
-    line-height: 1.5;
+  display: flex;
+  align-items: start;
+  gap: 0.5rem;
+  margin-bottom: 1rem;
+  color: black;
+  line-height: 1.5;
 }
 
 .bullet {
-    color: black;
-    font-size: 0.5rem;
-    font-family: 'Poppins', sans-serif;
+  color: black;
+  font-size: 0.5rem;
+  font-family: "Poppins", sans-serif;
 }
 
 .button-group {
-    display: flex;
-    gap: 1rem;
-    margin-top: 2rem;
+  display: flex;
+  gap: 1rem;
+  margin-top: 2rem;
 }
 
 .btn {
-    padding: 0.8rem 1.5rem;
-    border-radius: 0.375rem;
-    cursor: pointer;
-    transition: all 0.3s ease;
+  padding: 0.8rem 1.5rem;
+  border-radius: 0.375rem;
+  cursor: pointer;
+  transition: all 0.3s ease;
 }
 
 .btn.primary {
-    background-color :#ff4f9d;
-    color: white;
-    border: none;
+  background-color: #ff4f9d;
+  color: white;
+  border: none;
 }
 .btn-showmore{
    
@@ -121,13 +117,13 @@
 }
 
 .btn.secondary {
-    color: black;
-    border: 2px solid #FF69B4;
+  color: black;
+  border: 2px solid #ff69b4;
 }
 
 .btn:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 4px 12px rgba(255, 105, 180, 0.2);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(255, 105, 180, 0.2);
 }
 
 .showmore-container {
@@ -139,499 +135,475 @@
 
 
 @media (max-width: 768px) {
-    .content-wrapper {
-        flex-direction: column;
-        gap: 2rem;
-    }
+  .content-wrapper {
+    flex-direction: column;
+    gap: 2rem;
+  }
 
-    .text-section {
-        padding-right: 0;
-    }
+  .text-section {
+    padding-right: 0;
+  }
 
-    .main-title {
-        font-size: 2rem;
-    }
+  .main-title {
+    font-size: 2rem;
+  }
 
-    .button-group {
-        flex-direction: column;
-    }
+  .button-group {
+    flex-direction: column;
+  }
 }
 
 @media (max-width: 1025px) {
-    .salon-container {
-        padding: 2rem;
-    }
+  .salon-container {
+    padding: 2rem;
+  }
 
+  .content-wrapper {
+    flex-direction: column;
+    gap: 3rem;
+  }
 
-    .content-wrapper {
-        flex-direction: column;
-        gap: 3rem;
-    }
+  .text-section {
+    padding-left: 1rem;
+    padding-right: 1rem;
+    text-align: center;
+  }
 
-    .text-section {
-        padding-left: 1rem;
-        padding-right: 1rem;
-        text-align: center;
-    }
+  .main-title {
+    font-size: 2rem;
+  }
 
-    .main-title {
-        font-size: 2rem;
-    }
+  .services-list {
+    text-align: center;
+  }
 
-    .services-list {
-        text-align: center;
-    }
-
-    .button-group {
-        justify-content: center;
-    }
+  .button-group {
+    justify-content: center;
+  }
 }
 
 @media (max-width: 767px) {
-    .salon-container {
-        padding: 2rem;
-    }
+  .salon-container {
+    padding: 2rem;
+  }
 
-    .text-section {
-        padding-left: 1rem;
-        padding-right: 1rem;
-    }
+  .text-section {
+    padding-left: 1rem;
+    padding-right: 1rem;
+  }
 
-    .main-title {
-        font-size: 1.8rem;
-    }
+  .main-title {
+    font-size: 1.8rem;
+  }
 
-    .button-group {
-        flex-direction: column;
-        align-items: center;
-    }
+  .button-group {
+    flex-direction: column;
+    align-items: center;
+  }
 
-    .btn {
-        width: 100%;
-        text-align: center;
-    }
+  .btn {
+    width: 100%;
+    text-align: center;
+  }
 }
 
 @media (max-width: 480px) {
-    .salon-container {
-        padding: 1.5rem;
-    }
-
-    .content-wrapper {
-        gap: 2rem;
-    }
-
-    .text-section {
-        padding: 0;
-        text-align: center;
-    }
-
-    .main-title {
-        font-size: 1.5rem;
-    }
-
-    .services-list li {
-        font-size: 0.9rem;
-    }
-
-    .button-group {
-        flex-direction: column;
-        align-items: center;
-    }
-}
-
-
-
-/* AboutSection.css */
-.about-section {
-    padding-top: 4rem;
-    padding-left: 2rem;
-    padding-right: 2rem;
-    background-color: #fff;
-    border-bottom: 2px solid rgb(216, 202, 202);
-  }
-  
-  .about-container {
-    max-width: 95%;
-    margin: 0 auto;
-    display: flex;
-    gap: 4rem;
-  }
-  
-  .image-grid {
-    flex: 1.1;
-    display: grid;
-    grid-template-columns: repeat(2, 1fr);
-    grid-gap: 0rem;
-    position: relative;
-  }
-  
-  .image-item img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    border-radius: 12px;
-  }
-  
-  .image-item.cucumber {
-    grid-column: 1;
-    grid-row: 1;
-  }
-  
-  .image-item.mask {
-    grid-column: 2;
-    grid-row: 1;
-  }
-  
-  .image-item.massage {
-    grid-column: 1 / -1;
-    grid-row: 2;
-    width: 100%;
-    height: 85%;
-  }
-  
-
-   .about-content {
-    flex: 1;
-    padding-left: 2rem;
-    padding-top: 2rem;
-   
-    
-    .about-tag {
-      color: #FF69B4;
-      font-size: 1.5rem;
-      font-weight: bold;
-      letter-spacing: 2px;
-      margin-bottom: 1rem;
-      display: block;
-      font-family: 'Poppins', sans-serif;
-    }
-  
-    .about-title {
-      color: black;
-      font-size: 2.5rem;
-      line-height: 1.2;
-      margin-bottom: 1.5rem;
-      font-weight: bold;
-      font-family: 'Playfair Display', serif;
-    }
-  
-    .about-description {
-      color: black;
-      line-height: 1.45;
-      margin-bottom: 2rem;
-      font-size: 1.1rem;
-      font-family: 'Poppins', sans-serif;
-    }
-  
-    .learn-more-btn {
-      background-color: #ff4f9d;
-      color: white;
-      border: none;
-      padding: 1rem 2rem;
-      border-radius: 0.375rem;
-      cursor: pointer;
-      transition: all 0.3s ease;
-      font-family: 'Poppins', sans-serif;
-  
-      &:hover {
-        transform: translateY(-2px);
-        box-shadow: 0 4px 12px rgba(255, 105, 180, 0.2);
-      }
-    }
-  }
-  
-
-  @media (max-width: 968px) {
-    .about-container {
-      flex-direction: column;
-      gap: 2rem;
-    }
-    
-    .about-content {
-      padding-right: 0;
-    }
-    
-    .about-title {
-      font-size: 2rem;
-    }
-    
-    .image-grid {
-      width: 100%;
-    }
-  }
-  
-  @media (max-width: 576px) {
-    .image-grid {
-      grid-template-columns: 1fr;
-    }
-    
-    .image-item.massage {
-      grid-column: 1;
-    }
-    
-    .about-section {
-      padding: 2rem 1rem;
-    }
+  .salon-container {
+    padding: 1.5rem;
   }
 
-
-
-
-
-
-
-
- /* SpaServices.css */
-.spa-services {
-    padding: 4rem 2rem;
-    background: linear-gradient(135deg, #fff5f8 0%, #fff 100%);
-    border-bottom: 2px solid rgb(216, 202, 202);
+  .content-wrapper {
+    gap: 2rem;
   }
-  
-  .services-container {
-    max-width: 95%;
-    margin: 0 auto;
-    display: flex;
-    gap: 4rem;
+
+  .text-section {
+    padding: 0;
+    text-align: center;
+  }
+
+  .main-title {
+    font-size: 1.5rem;
+  }
+
+  .services-list li {
+    font-size: 0.9rem;
+  }
+
+  .button-group {
+    flex-direction: column;
     align-items: center;
   }
-  
-  .services-images {
-    flex: 1;
+}
+
+.about-section {
+  padding-top: 4rem;
+  padding-left: 2rem;
+  padding-right: 2rem;
+  background-color: #fff;
+  border-bottom: 2px solid rgb(216, 202, 202);
+}
+
+.about-container {
+  max-width: 95%;
+  margin: 0 auto;
+  display: flex;
+  gap: 4rem;
+}
+
+.image-grid {
+  flex: 1.1;
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  grid-gap: 0rem;
+  position: relative;
+}
+
+.image-item img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 12px;
+}
+
+.image-item.cucumber {
+  grid-column: 1;
+  grid-row: 1;
+}
+
+.image-item.mask {
+  grid-column: 2;
+  grid-row: 1;
+}
+
+.image-item.massage {
+  grid-column: 1 / -1;
+  grid-row: 2;
+  width: 100%;
+  height: 85%;
+}
+
+.about-content {
+  flex: 1;
+  padding-left: 2rem;
+  padding-top: 2rem;
+
+  .about-tag {
+    color: #ff69b4;
+    font-size: 1.5rem;
+    font-weight: bold;
+    letter-spacing: 2px;
+    margin-bottom: 1rem;
+    display: block;
+    font-family: "Poppins", sans-serif;
   }
-  
-  .image-grid1 {
-    display: grid;
-    grid-gap: 1rem;
-    grid-template-columns: 1fr 1fr;
-    grid-template-rows: auto auto;
-  }
-  
-  .massage-img {
-    grid-column: 1 / -1;
-    width: 100%;
-    height: 370px;
-    object-fit: cover;
-    border-radius: 15px;
-  }
-  
-  .aroma-img, .tools-img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    border-radius: 15px;
-  }
-  
-  .services-content {
-    flex: 1;
-    padding-left: 2rem;
-    font-family: 'Poppins', sans-serif;
-  }
-  
-  .services-title {
-    color: Black;
+
+  .about-title {
+    color: black;
     font-size: 2.5rem;
     line-height: 1.2;
     margin-bottom: 1.5rem;
     font-weight: bold;
-    font-family: 'Playfair Display', serif;
+    font-family: "Playfair Display", serif;
   }
-  
-  .services-description {
+
+  .about-description {
     color: black;
-    line-height: 1.6;
+    line-height: 1.45;
     margin-bottom: 2rem;
-    font-family: 'Poppins', sans-serif;
-  }
-  
-  .services-grid {
-    display: grid;
-    grid-template-columns: repeat(2, 1fr);
-    gap: 1.5rem;
-    margin-bottom: 2rem;
-  }
-  
-  .service-item {
-    
-    display: flex;
-    align-items: center;
-    gap: 1rem;
-    background-color: white;
-    border-radius: 10px;
-    transition: transform 0.3s ease;
-  }
-  
-  .service-item:hover {
-    transform: translateY(-2px);
-  }
-  
-  .service-icon {
-    font-size: 1.5rem;
-    background: #ff4f9d;
-    padding: 0.5rem;
-    border-radius: 50%;
-  }
-  
-  .service-text {
-    font-size: 0.9rem;
-    color: black;
-    font-family: 'Poppins', sans-serif;
-  }
-  
-  
-  @media (max-width: 968px) {
-    .services-container {
-      flex-direction: column;
-      gap: 2rem;
-    }
-  
-    .services-grid {
-      grid-template-columns: 1fr;
-    }
-  }
-  
-  @media (max-width: 576px) {
-    .spa-services {
-      padding: 2rem 1rem;
-    }
-  
-    .services-title {
-      font-size: 2rem;
-    }
-  
-    .image-grid {
-      grid-template-columns: 1fr;
-    }
-  
-    .contact-info {
-      flex-direction: column;
-      text-align: center;
-    }
+    font-size: 1.1rem;
+    font-family: "Poppins", sans-serif;
   }
 
-
-
-
-
-
-
-  .therapist-title {
-    padding-top: 4rem;
-    font-size: 2.5rem;
-    font-weight: bold;
-    color: black;
-    text-align: center;
-    margin-bottom: 1.5rem;
-    line-height: 1.3;
-    font-family: 'Playfair Display', serif;
-}
-
-
-
-  .doctor-container {
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: center;
-    gap: 2rem;
-    padding: 2rem;
-    max-width: 90%;
-    margin: 0 auto;
-  }
-  
-  .doctor-card {
-    width: 300px;
-    height: 400px;
-    perspective: 100%;
-    cursor: pointer;
-  }
-  
-  .doctor-card-inner {
-    position: relative;
-    width: 100%;
-    height: 100%;
-    text-align: center;
-    transition: transform 0.8s;
-    transform-style: preserve-3d;
-  }
-  
-  .doctor-card:hover .doctor-card-inner {
-    transform: rotateY(180deg);
-  }
-  
-  .doctor-card-front,
-  .doctor-card-back {
-    position: absolute;
-    width: 100%;
-    height: 100%;
-    backface-visibility: hidden;
-    border-radius: 15px;
-    background: white;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-    padding: 1rem;
-  }
-  
-  .doctor-card-front {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-  }
-  
-  .doctor-card-back {
-    transform: rotateY(180deg);
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    padding: 2rem;
-  }
-  
-  .doctor-image {
-    width: 200px;
-    height: 200px;
-    border-radius: 50%;
-    overflow: hidden;
-    margin-bottom: 1rem;
-  }
-  
-  .doctor-image img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-  }
-  
-  .doctor-name {
-    font-size: 1.5rem;
-    color: black;
-    margin: 0.5rem 0;
-    font-family: 'Poppins', sans-serif;
-  }
-  
-  .doctor-role {
-    color: black;
-    font-size: 1rem;
-    font-family: 'Poppins', sans-serif;
-  }
-  
-  .doctor-description {
-    color: black;
-    margin: 1rem 0;
-    line-height: 1.6;
-    font-family: 'Poppins', sans-serif;
-  }
-  
-  .doctor-button {
-    background-color: #FF69B4;
+  .learn-more-btn {
+    background-color: #ff4f9d;
     color: white;
     border: none;
-    padding: 0.8rem 1.5rem;
+    padding: 1rem 2rem;
     border-radius: 0.375rem;
     cursor: pointer;
-    font-size: 1rem;
-    font-family: 'Poppins', sans-serif;
-    transition: background-color 0.3s;
+    transition: all 0.3s ease;
+    font-family: "Poppins", sans-serif;
+
+    &:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 4px 12px rgba(255, 105, 180, 0.2);
+    }
   }
-  
-  .doctor-button:hover {
-    background-color: #FF69B4;
+}
+
+@media (max-width: 968px) {
+  .about-container {
+    flex-direction: column;
+    gap: 2rem;
   }
+
+  .about-content {
+    padding-right: 0;
+  }
+
+  .about-title {
+    font-size: 2rem;
+  }
+
+  .image-grid {
+    width: 100%;
+  }
+}
+
+@media (max-width: 576px) {
+  .image-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .image-item.massage {
+    grid-column: 1;
+  }
+
+  .about-section {
+    padding: 2rem 1rem;
+  }
+}
+
+.spa-services {
+  padding: 4rem 2rem;
+  background: linear-gradient(135deg, #fff5f8 0%, #fff 100%);
+  border-bottom: 2px solid rgb(216, 202, 202);
+}
+
+.services-container {
+  max-width: 95%;
+  margin: 0 auto;
+  display: flex;
+  gap: 4rem;
+  align-items: center;
+}
+
+.services-images {
+  flex: 1;
+}
+
+.image-grid1 {
+  display: grid;
+  grid-gap: 1rem;
+  grid-template-columns: 1fr 1fr;
+  grid-template-rows: auto auto;
+}
+
+.massage-img {
+  grid-column: 1 / -1;
+  width: 100%;
+  height: 370px;
+  object-fit: cover;
+  border-radius: 15px;
+}
+
+.aroma-img,
+.tools-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 15px;
+}
+
+.services-content {
+  flex: 1;
+  padding-left: 2rem;
+  font-family: "Poppins", sans-serif;
+}
+
+.services-title {
+  color: Black;
+  font-size: 2.5rem;
+  line-height: 1.2;
+  margin-bottom: 1.5rem;
+  font-weight: bold;
+  font-family: "Playfair Display", serif;
+}
+
+.services-description {
+  color: black;
+  line-height: 1.6;
+  margin-bottom: 2rem;
+  font-family: "Poppins", sans-serif;
+}
+
+.services-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 1.5rem;
+  margin-bottom: 2rem;
+}
+
+.service-item {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  background-color: white;
+  border-radius: 10px;
+  transition: transform 0.3s ease;
+}
+
+.service-item:hover {
+  transform: translateY(-2px);
+}
+
+.service-icon {
+  font-size: 1.5rem;
+  background: #ff4f9d;
+  padding: 0.5rem;
+  border-radius: 50%;
+}
+
+.service-text {
+  font-size: 0.9rem;
+  color: black;
+  font-family: "Poppins", sans-serif;
+}
+
+@media (max-width: 968px) {
+  .services-container {
+    flex-direction: column;
+    gap: 2rem;
+  }
+
+  .services-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 576px) {
+  .spa-services {
+    padding: 2rem 1rem;
+  }
+
+  .services-title {
+    font-size: 2rem;
+  }
+
+  .image-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .contact-info {
+    flex-direction: column;
+    text-align: center;
+  }
+}
+
+.therapist-title {
+  padding-top: 4rem;
+  font-size: 2.5rem;
+  font-weight: bold;
+  color: black;
+  text-align: center;
+  margin-bottom: 1.5rem;
+  line-height: 1.3;
+  font-family: "Playfair Display", serif;
+}
+
+.doctor-container {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 2rem;
+  padding: 2rem;
+  max-width: 90%;
+  margin: 0 auto;
+}
+
+.doctor-card {
+  width: 300px;
+  height: 400px;
+  perspective: 100%;
+  cursor: pointer;
+}
+
+.doctor-card-inner {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  text-align: center;
+  transition: transform 0.8s;
+  transform-style: preserve-3d;
+}
+
+.doctor-card:hover .doctor-card-inner {
+  transform: rotateY(180deg);
+}
+
+.doctor-card-front,
+.doctor-card-back {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  backface-visibility: hidden;
+  border-radius: 15px;
+  background: white;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  padding: 1rem;
+}
+
+.doctor-card-front {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.doctor-card-back {
+  transform: rotateY(180deg);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  padding: 2rem;
+}
+
+.doctor-image {
+  width: 200px;
+  height: 200px;
+  border-radius: 50%;
+  overflow: hidden;
+  margin-bottom: 1rem;
+}
+
+.doctor-image img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.doctor-name {
+  font-size: 1.5rem;
+  color: black;
+  margin: 0.5rem 0;
+  font-family: "Poppins", sans-serif;
+}
+
+.doctor-role {
+  color: black;
+  font-size: 1rem;
+  font-family: "Poppins", sans-serif;
+}
+
+.doctor-description {
+  color: black;
+  margin: 1rem 0;
+  line-height: 1.6;
+  font-family: "Poppins", sans-serif;
+}
+
+.doctor-button {
+  background-color: #ff69b4;
+  color: white;
+  border: none;
+  padding: 0.8rem 1.5rem;
+  border-radius: 0.375rem;
+  cursor: pointer;
+  font-size: 1rem;
+  font-family: "Poppins", sans-serif;
+  transition: background-color 0.3s;
+}
+
+.doctor-button:hover {
+  background-color: #ff69b4;
+}

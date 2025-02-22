@@ -1,21 +1,35 @@
 import React from "react";
 import ICONS from "../../../../../../constants/icons";
 
-const Item = ({active = false}) => {
+const Item = ({ active = false, item, setShowModal, setItemUpdate, handleOnClick }) => {
+  const handleUpdateItem = (item) => {
+    setItemUpdate(item)
+    setShowModal(true)
+  }
   return (
     <ul
-      className="text-[15px] relative font-normal text-[rgba(0,0,0,0.7)] hover:bg-white ease-in duration-200 cursor-pointer  grid justify-around items-center rounded-[0.375rem] gap-[15px] h-[80px]"
+      className="text-[15px] relative font-normal text-[rgba(0,0,0,0.5)] hover:bg-[rgba(0,0,0,0.05)]  ease-in duration-200 cursor-pointer  grid justify-around items-center rounded-[0.375rem] gap-[15px] h-[80px]"
       style={{
         gridTemplateColumns: "0.5fr 1fr 2fr 3fr 5fr 0.5fr",
         padding: "0 15px",
-        boxShadow:active ? "0px 0px 1px 1px var(--color-primary-50)" : null,
+        boxShadow: active ? "0px 0px 1px 1px var(--color-primary-50)" : null,
       }}
+      onClick={() => handleOnClick(item)}
     >
-      <li>1</li>
-      <li>Acne</li>
-      <li>Teens, Young Adults</li>
-      <li>Hormones, bacteria, oil, clogged pores</li>
-      <li>Pimples, blackheads, whiteheads, cysts, papules, pustules</li>
+      <li></li>
+      <li>{item.name}</li>
+      <li className="flex flex-wrap gap-2">
+        {item.ages &&
+          Array.isArray(item.ages) &&
+          item.ages.map((age) => <span
+            className="px-4 rounded-[.375rem]"
+          style={{
+            backgroundColor: age.backgroundColor,
+            color: age.textColor
+          }}>{age.name}</span>)}
+      </li>
+      <li>{item.cause}</li>
+      <li>{item.description}</li>
       <li></li>
       <div
         className="absolute top-0 right-3.5"
@@ -23,6 +37,7 @@ const Item = ({active = false}) => {
           top: "50%",
           transform: "translateY(-50%)",
         }}
+        onClick={() => handleUpdateItem(item)}
       >
         <img src={ICONS.update} alt="" />
       </div>

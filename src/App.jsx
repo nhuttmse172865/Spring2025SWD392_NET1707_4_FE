@@ -1,7 +1,7 @@
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 import Login from "./pages/login/Login";
 import Customer from "./pages/customer/Customer";
-import CustomerLayout from './layouts/customer/Customer'
+import CustomerLayout from "./layouts/customer/Customer";
 import Manager from "./layouts/manager";
 import Dashboard from "./pages/manager/dashboard/Dashboard";
 import COMPONENT_PATH_HELPER from "./helpers/ComponentPathHelper";
@@ -27,6 +27,13 @@ import CustomerViewTherapist from "./pages/customer/customerViewTherapist/Custom
 import TherapistDetail from "./pages/customer/customerViewTherapist/TherapistDetail";
 
 import TherapistProfile from "./pages/therapist/ManagerInformation/TherapistProfie";
+import CustomerContact from "./pages/customer/customerContact/CustomerContact";
+import Booking from "./pages/customer/customerBooking/Booking";
+import CustomerBlog from "./pages/customer/customerBlog/CustomerBlog";
+import BlogDetails from "./components/customer/blog/blogDetails/BlogDetails";
+import ServiceDetails from "./components/customer/serviceDetails/ServiceDetails";
+import CustomerPrice from "./pages/customer/customerPrice/CustomerPrice";
+import CustomerQuiz from "./pages/customer/quiz/CustomerQuiz";
 
 function App() {
   return (
@@ -37,14 +44,21 @@ function App() {
           <Route path="customer-service" element={<CustomerService />}>
 
             <Route index element={<Content />} />
+            <Route path="service-details" element={<ServiceDetails />} />
           </Route>
-          <Route path="customer-detail/" element={<CustomerDetail />} >
-              <Route index element={<Account />}/>
-              <Route path="account" element={<Account />}/>
-              <Route path="appointments" element={<Appointments />} />
+          <Route path="customer-detail/" element={<CustomerDetail />}>
+            <Route index element={<Account />} />
+            <Route path="account" element={<Account />} />
+            <Route path="appointments" element={<Appointments />} />
           </Route>
           <Route path="customer-view/therapist" element={<CustomerViewTherapist />} />
           <Route path="/customer-view/therapist/:id" element={<TherapistDetail />} />
+          <Route path="/booking" element={<Booking />} />
+          <Route path="/contact" element={<CustomerContact />} />
+          <Route path="blog" element={<CustomerBlog />} />
+          <Route path="blog/:id" element={<BlogDetails />} />
+          <Route path="/price" element={<CustomerPrice />} />
+          <Route path="/quiz" element={<CustomerQuiz />} />
         </Route>
         <Route path="/login" element={<Login />} />
         <Route path="/registrations/" element={<Register />}>

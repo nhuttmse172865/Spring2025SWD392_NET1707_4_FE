@@ -1,0 +1,122 @@
+.contact-container {
+  background-color: white;
+}
+
+.contact-main {
+  max-width: 100%;
+  margin: auto;
+}
+
+.contact-card {
+  background: white;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  border-radius: 0.375rem;
+  padding: 1rem;
+}
+
+.contact-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 1.5rem;
+}
+
+@media (min-width: 768px) {
+  .contact-grid {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+
+.contact-heading {
+  background: #ff4f9d;
+  color: white;
+  text-align: center;
+  padding: 0.75rem;
+  border-radius: 0.375rem;
+  font-size: 1.25rem;
+  font-weight: bold;
+  font-family: "Poppins", sans-serif;
+}
+
+.contact-details,
+.contact-form {
+  padding: 1.5rem;
+}
+
+.contact-item {
+  display: flex;
+  align-items: center;
+  margin-bottom: 1rem;
+}
+
+.contact-icon {
+  font-size: 1.5rem;
+  color: #ff4f9d;
+  margin-right: 1rem;
+}
+
+.contact-title {
+  font-weight: 500;
+  font-size: 1rem;
+  color: #ff4f9d;
+  font-family: "Poppins", sans-serif;
+}
+
+.contact-form-section {
+  background: white;
+  border-radius: 0.375rem;
+}
+
+.contact-form label {
+  display: block;
+  font-size: 1rem;
+  font-weight: 500;
+  color: #ff4f9d;
+  margin-bottom: 0.25rem;
+  font-family: "Poppins", sans-serif;
+}
+
+.contact-form input,
+.contact-form textarea {
+  width: 100%;
+  padding: 0.5rem;
+  border: 1px solid #d1d5db;
+  border-radius: 0.375rem;
+}
+
+.contact-row {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 1rem;
+  margin-bottom: 1rem;
+}
+
+@media (min-width: 768px) {
+  .contact-row {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+
+.required {
+  color: red;
+}
+
+.contact-submit {
+  text-align: center;
+  margin-bottom: 30px;
+}
+
+.contact-submit button {
+  background: #ff4f9d;
+  color: white;
+  padding: 0.5rem 1rem;
+  border-radius: 0.375rem;
+  border: none;
+  cursor: pointer;
+  font-size: 1rem;
+  font-weight: 500;
+  font-family: "Poppins", sans-serif;
+}
+
+.contact-submit button:hover {
+  background: #ff4f9d;
+}

@@ -6,7 +6,11 @@ import Search from "../../common/search/Search";
 import { useNavigate } from "react-router-dom";
 import HeaderVerified from "./verified/HeaderVerified";
 
-const Header = ({ isShowSearch = false, isShowButtonLogin = false, isVerified = false }) => {
+const Header = ({
+  isShowSearch = false,
+  isShowButtonLogin = false,
+  isVerified = false,
+}) => {
   const navigate = useNavigate();
   return (
     <div className="header-container">
@@ -15,13 +19,33 @@ const Header = ({ isShowSearch = false, isShowButtonLogin = false, isVerified = 
           <li onClick={() => navigate("/")} style={{ cursor: "pointer" }}>
             Home
           </li>
-          <li onClick={() => navigate("/customer-service")} style={{ cursor: "pointer" }}>
+          <li
+            onClick={() => navigate("/customer-service")}
+            style={{ cursor: "pointer" }}
+          >
             Services
           </li>
-          <li>Price</li>
-          <li>Booking</li>
-          <li>Blog</li>
-          <li>Contact us</li>
+          <li onClick={() => navigate("/price")} style={{ cursor: "pointer" }}>
+            Price
+          </li>
+          <li onClick={() => navigate("/quiz")} style={{ cursor: "pointer" }}>
+            Quiz
+          </li>
+          <li
+            onClick={() => navigate("/booking")}
+            style={{ cursor: "pointer" }}
+          >
+            Booking
+          </li>
+          <li onClick={() => navigate("/blog")} style={{ cursor: "pointer" }}>
+            Blog
+          </li>
+          <li
+            onClick={() => navigate("/contact")}
+            style={{ cursor: "pointer" }}
+          >
+            Contact us
+          </li>
           
         </ul>
         <div className="header-logo">
@@ -29,7 +53,15 @@ const Header = ({ isShowSearch = false, isShowButtonLogin = false, isVerified = 
         </div>
         <div className="items-center">
           {isShowSearch && <Search />}
-          {isShowButtonLogin && <ElevatedButton handleOnclick={() => navigate("/login")} text="Login" width="150px" height="40px" rounded=".375rem" />}
+          {isShowButtonLogin && (
+            <ElevatedButton
+              handleOnclick={() => navigate("/login")}
+              text="Login"
+              width="150px"
+              height="40px"
+              rounded=".375rem"
+            />
+          )}
           {isVerified && <HeaderVerified />}
         </div>
       </div>

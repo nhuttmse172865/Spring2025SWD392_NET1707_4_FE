@@ -12,12 +12,11 @@ const ToolBar = ({
   heightElevated = "40px",
   widthElevated = "150px",
   rounded = ".375rem",
-  activeOutlineButton = true,
-  setShowModal,
+  activeOutlineButton = false,
+  handleOnClickOutline,
+  handleOnClickElevated,
+  isLoadingOutline
 }) => {
-  const handleOnclick = () => {
-    setShowModal(true);
-  };
   return (
     <div className="flex justify-between items-end">
       <div className="flex justify-start items-end">
@@ -31,13 +30,15 @@ const ToolBar = ({
           width={widthOutline}
           rounded={rounded}
           active={activeOutlineButton}
+          handleOnclick={handleOnClickOutline}
+          isLoading={isLoadingOutline}
         />
         <ElevatedButton
           text={textElevatedButton}
           height={heightElevated}
           width={widthElevated}
           rounded={rounded}
-          handleOnclick={handleOnclick}
+          handleOnclick={handleOnClickElevated}
         />
       </div>
     </div>

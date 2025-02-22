@@ -78,8 +78,8 @@
 .checkout-button:hover {
     background-color: #e04c8a;
 }
-.btn-checkin{
-    width: 70%;
+.btn-checkinn{
+    
     background-color: #ff5ca4;
     color: #fff;
     padding: 5px;
@@ -90,7 +90,7 @@
     cursor: pointer;
     margin-top: 5px;
 }
-.btn-checkin:hover{
+.btn-checkinn:hover{
     background-color: #e04c8a;
 }
 @media (max-width: 768px) {

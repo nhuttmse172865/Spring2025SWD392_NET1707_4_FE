@@ -24,6 +24,7 @@
   --color-primary-10: rgba(255, 79, 157, 0.1);
 }
 input,
+select,
 textarea {
   outline: none;
   background-color: transparent;
@@ -38,9 +39,12 @@ textarea::placeholder {
   font-family: "Poppins";
 }
 input:focus,
+select:focus,
 textarea:focus {
   border-color: var(--color-primary-100);
 }
+
+
 input[type="number"]::-webkit-inner-spin-button,
 input[type="number"]::-webkit-outer-spin-button {
   margin: 0;
@@ -55,6 +59,9 @@ input[type="number"]::-webkit-outer-spin-button {
 *::-webkit-scrollbar-thumb {
   background-color: var(--color-primary-100);
   border-radius: 50px;
+}
+.scroll-hidden::-webkit-scrollbar {
+  width: 0;
 }
 @keyframes fade-in {
   from {
@@ -80,4 +87,22 @@ input[type="number"]::-webkit-outer-spin-button {
   -moz-user-select: none !important;
   -ms-user-select: none !important;
   user-select: none !important;
+}
+.limited-lines-3 {
+  overflow: hidden;
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+}
+.limited-lines-5 {
+  overflow: hidden;
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+}
+.limited-lines-7 {
+  overflow: hidden;
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
 }

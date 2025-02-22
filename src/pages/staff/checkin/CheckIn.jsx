@@ -78,10 +78,10 @@ const CheckIn = () => {
     <div className="checkin-container">
       <div className="checkin-header">
         <div className="header-actions">
-          <button className="btn-checkin" onClick={showCheckInModal}>
+          <button className="btn-checkinn" onClick={showCheckInModal}>
             Form Checkin
           </button>
-          <FaQrcode onClick={showQRModal} style={{ cursor: "pointer", fontSize: "24px" }} className="qr-icon" />
+          {/* <FaQrcode onClick={showQRModal} style={{ cursor: "pointer", fontSize: "24px" }} className="qr-icon" /> */}
         </div>
       </div>
 
