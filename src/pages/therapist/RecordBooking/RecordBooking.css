@@ -1,0 +1,92 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap');
+.record-booking-container{
+  max-width: 1500px;
+  margin:40px auto;
+  
+  border-radius: 10px;
+  font-family: 'Poppins', sans-serif;
+  
+}
+.record-booking-table .ant-table {
+  border-radius: 10px;
+  overflow: hidden;
+  background-color: #fff;
+}
+
+.record-booking-table .ant-table-thead > tr > th {
+  background-color: #ff85c0; 
+  font-weight: bold;
+  text-align: center;
+  color: white;
+}
+
+.record-booking-table .ant-table-tbody > tr > td {
+  text-align: center;
+  padding: 12px;
+  color: #d63384;
+}
+
+
+.record-booking-table .ant-table-tbody > tr:hover {
+  background-color: #fdeff3; 
+}
+
+.record-button{
+  background-color: #ff66a3;
+  color: white;
+  border: none;
+  padding: 6px 14px;
+  border-radius: 0.37rem;
+  cursor: pointer;
+  transition: background 0.3s ease;
+  font-weight: bold;
+}
+
+.record-button:hover {
+  background-color: #ff3385;
+}
+.quiz-modal-container {
+  max-height: 500px;
+  overflow-y: auto;
+  padding: 15px;
+}
+
+.quiz-question {
+  background-color: #f9f9f9;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  margin-bottom: 15px;
+  padding: 10px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+.quiz-question p {
+  margin: 0;
+  font-size: 14px;
+  line-height: 1.6;
+}
+
+.quiz-question strong {
+  color: #8f4168; 
+}
+
+.quiz-question:last-child {
+  margin-bottom: 0;
+}
+
+.quiz-modal-container .ant-pagination {
+  display: flex;
+  justify-content: center;
+  margin-top: 20px;
+}
+
+
+.ant-modal-header {
+  background-color: #d63384;
+  color: white;
+  font-weight: bold;
+  border-radius: 8px 8px 0 0;
+  padding: 16px;
+}
+
+

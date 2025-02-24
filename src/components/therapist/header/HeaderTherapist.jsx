@@ -1,18 +1,29 @@
 import React, { useEffect, useState } from "react";
 import ICONS from "../../../constants/icons";
-import { useLocation } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import useMapPath from "../../../hook/useMapPath";
 
 const HeaderTherapist = () => {
   const location = useLocation()
   const [isHaveMessage, setIsHaveMessage] = useState(true);
   const [isHaveNotification, setIsHaveNotification] = useState(true);
-  const [title,setTitle] = useState()
-
-//   useEffect(() => {
-//     const item = useMapPath(location.pathname)
-//     setTitle(item.title)
-//   },[location.pathname])
+  const [title,setTitle] = useState();
+  const navigate = useNavigate();
+  const useMapPath = (pathname) => {
+    const map = {
+      "/therapist": { title: "Dashboard" },
+      "/therapist/schedule": { title: "Schedule" },
+      "/therapist/record": { title: "Record result" },
+      "/therapist/changeSchedule": { title: "Change Working Schedule" },
+      "/therapist/managerInformation": { title: "Manager Information" },
+    };
+    return map[pathname] || { title: "" };
+  };
+  
+  useEffect(() => {
+    const item = useMapPath(location.pathname)
+    setTitle(item.title);
+  },[location.pathname])
 
   return (
     <div className="h-[60px] flex items-center pl-5 pr-10 justify-between bg-white rounded-3xl mt-2.5">
@@ -40,7 +51,7 @@ const HeaderTherapist = () => {
             <img src={ICONS.notification} alt="" />
           </div>
         </div>
-        <div className="flex w-[35px] h-[35px] bg-[rgba(0,0,0,0.05)] items-center justify-center rounded-[.375rem] cursor-pointer">
+        <div className="flex w-[35px] h-[35px] bg-[rgba(0,0,0,0.05)] items-center justify-center rounded-[.375rem] cursor-pointer" onClick={()=> navigate("/therapist/managerInformation")}>
           <img src="" alt="" />
         </div>
       </div>

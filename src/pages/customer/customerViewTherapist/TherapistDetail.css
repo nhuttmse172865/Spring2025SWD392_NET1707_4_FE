@@ -1,0 +1,57 @@
+.therapist-detail-container{
+    padding: 40px;
+    max-width: 1000px;
+    font-family: 'Poppins', sans-serif;
+    margin: auto;
+    box-shadow: 0 4px 10px rgba(168, 165, 167, 0.2);
+}
+.therapist-detail-content {
+    display: flex;
+    gap: 30px;
+}
+.therapist-image img {
+    width: 250px;
+    height: auto;
+    border-radius: 10px;
+}
+
+.therapist-detail-info{
+    flex :1;
+}
+.therapist-detail-name{
+    font-size: 26px;
+    font-weight: bold;
+    text-transform: uppercase;
+    margin-bottom: 15px;
+    color: #d63384; 
+}
+.therapist-detail-table{
+width: 100%;
+border-collapse: collapse;
+margin-bottom: 20px;
+}
+.therapist-detail-table td {
+    padding: 8px 15px;
+    border-bottom: 1px solid #ddd;
+    
+}
+.therapist-detail-section{
+    margin-bottom: 20px;
+}
+.therapist-section-title{
+  
+    color: #d63384;
+    padding: 10px;
+    font-size: 18px;
+    font-weight: bold;
+  
+
+}
+.therapist-section-list{
+    padding: 10px;
+    list-style: none;
+}
+.therapist-section-list li{
+    margin-bottom: 5px;
+    
+}

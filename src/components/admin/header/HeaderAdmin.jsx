@@ -3,15 +3,15 @@ import ICONS from "../../../constants/icons";
 import { useLocation } from "react-router-dom";
 
 
-const HeaderStaff = () => {
+const HeaderAdmin = () => {
   const location = useLocation()
   const [isHaveMessage, setIsHaveMessage] = useState(true);
   const [isHaveNotification, setIsHaveNotification] = useState(true);
   const [title,setTitle] = useState()
   const useMapPath = (pathname) => {
     const map = {
-      "/staff": { title: "Dashboard" },
-      "/staff/checkin": { title: "CheckIn" },
+      "/admin": { title: "Dashboard" },
+      "/admin/manageAccount": { title: "Manage account" },
     };
     return map[pathname] || { title: "" };
   };
@@ -54,4 +54,4 @@ const HeaderStaff = () => {
   );
 };
 
-export default HeaderStaff;
+export default HeaderAdmin;

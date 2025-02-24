@@ -46,6 +46,7 @@ const Header = ({
           >
             Contact us
           </li>
+          
         </ul>
         <div className="header-logo">
           <img src={IMAGES.logo} alt="" />

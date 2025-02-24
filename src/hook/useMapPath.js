@@ -2,7 +2,7 @@ import COMPONENT_PATH_HELPER from "../helpers/ComponentPathHelper";
 
 const useMapPath = (currentPathName) => {
   let itemActivePathName = null;
-  if (["/manager", "/manager/"].includes(currentPathName)) {
+  if (["/manager", "/manager/",""].includes(currentPathName)) {
     itemActivePathName = COMPONENT_PATH_HELPER.listRouteNavigationManager[0];
     return itemActivePathName;
   }

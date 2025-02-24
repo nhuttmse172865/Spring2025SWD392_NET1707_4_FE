@@ -2,21 +2,20 @@ import React, { useState } from "react";
 import ICONS from "../../../constants/icons";
 import { useNavigate } from "react-router-dom";
 
-import "./MenuStaff.css";
+import "./MenuAdmin.css";
 
-const MenuStaff = () => {
+const MenuAdmin = () => {
   const [itemActive, setItemActive] = useState(null);
   const [itemHover, setItemHover] = useState(null);
   const navigate = useNavigate();
 
   const handleOnclickItem = (index,name) => {
     setItemActive(index);
-    if(name === "Check-in"){
-      navigate("/staff/checkin");
-  }else if(name === "Check-out"){
-    navigate("/staff/checkout");
+    if(name === "ManagerAccount"){
+      navigate("/admin/manageAccount");
+  
   }else if(name === "Dashboard"){
-    navigate("/staff");
+    navigate("/admin");
   }
   ;
 }
@@ -31,7 +30,7 @@ const MenuStaff = () => {
 
   const menuItems = [
     { name: "Dashboard", icon: ICONS.dashboard, iconActive: ICONS.dashboardActive },
-    { name: "Check-in", icon: ICONS.services, iconActive: ICONS.servicesActive },
+    { name: "ManagerAccount", icon: ICONS.employee, iconActive: ICONS.employeeActive },
     // { name: "Check-out", icon: ICONS.services, iconActive: ICONS.servicesActive },
   ];
 
@@ -72,4 +71,4 @@ const MenuStaff = () => {
   );
 };
 
-export default MenuStaff;
+export default MenuAdmin;
