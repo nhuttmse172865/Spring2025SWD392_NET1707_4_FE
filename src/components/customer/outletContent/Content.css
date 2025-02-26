@@ -82,6 +82,26 @@
 .service-info {
   padding: 16px;
 }
+.service-action {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+}
+.book-button {
+  padding: 8px 16px;
+  font-size: 16px;
+  color: white;
+  background-color: #ff4f9d;
+  border: none;
+  border-radius: 0.375rem;
+  cursor: pointer;
+  transition: 0.3s;
+}
+
+.book-button:hover {
+  background-color: #ff4f9d;
+}
 
 .service-title {
   font-size: 1rem;
