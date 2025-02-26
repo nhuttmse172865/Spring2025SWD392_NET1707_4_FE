@@ -110,6 +110,10 @@ const Content = () => {
     localStorage.setItem("selectedService", JSON.stringify(service));
     navigate("/customer-service/service-details");
   };
+  const handleBookClick = (id) => {
+    localStorage.setItem("selectedServiceId", id);
+    navigate("/booking");
+  };
 
   const sortServices = (services) => {
     switch (sortType) {
@@ -145,25 +149,25 @@ const Content = () => {
   return (
     <div className="spa-container">
       <div className="sort-container">
-        <span className="sort-label">Xếp theo:</span>
+        <span className="sort-label">Sort by:</span>
         <div className="sort-buttons">
           <button
             className={`sort-button ${sortType === "default" ? "active" : ""}`}
             onClick={() => setSortType("default")}
           >
-            Mặc định
+            Default
           </button>
           <button
             className={`sort-button ${sortType === "nameAZ" ? "active" : ""}`}
             onClick={() => setSortType("nameAZ")}
           >
-            Tên A-Z
+            Name A-Z
           </button>
           <button
             className={`sort-button ${sortType === "nameZA" ? "active" : ""}`}
             onClick={() => setSortType("nameZA")}
           >
-            Tên Z-A
+            Name Z-A
           </button>
           <button
             className={`sort-button ${
@@ -171,7 +175,7 @@ const Content = () => {
             }`}
             onClick={() => setSortType("priceLowHigh")}
           >
-            Giá thấp đến cao
+            Price Low to High
           </button>
           <button
             className={`sort-button ${
@@ -179,7 +183,7 @@ const Content = () => {
             }`}
             onClick={() => setSortType("priceHighLow")}
           >
-            Giá cao xuống thấp
+            Price High to Low
           </button>
         </div>
       </div>
@@ -199,8 +203,19 @@ const Content = () => {
               />
             </div>
             <div className="service-info">
-              <h3 className="service-title">Dịch vụ: {service.name}</h3>
-              <p className="service-price">{formatPrice(service.price)}₫</p>
+              <h3 className="service-title">Service: {service.name}</h3>
+              <div className="service-action">
+                <p className="service-price">{formatPrice(service.price)}₫</p>
+                <button
+                  className="book-button"
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    handleBookClick(service.id);
+                  }}
+                >
+                  Book
+                </button>
+              </div>
             </div>
           </div>
         ))}

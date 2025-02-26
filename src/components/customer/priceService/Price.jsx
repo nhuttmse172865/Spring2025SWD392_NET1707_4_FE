@@ -1,4 +1,3 @@
-
 import React from "react";
 import "./Price.css";
 
@@ -59,49 +58,51 @@ const Price = () => {
   const steps = [
     {
       number: "01",
-      title: "Đăng ký lịch khám",
+      title: "Schedule an Appointment",
       icon: "📋",
       description:
-        "Để chủ động thời gian và không phải chờ đợi lâu, khách hàng có thể đặt lịch hẹn trước theo 2 cách:",
-      bullets: ["Điền form đăng ký trên website.", "Gọi Hotline 1900 3147."],
+        "To manage your time efficiently and avoid long waiting times, you can book an appointment in two ways:",
+      bullets: [
+        "Fill out the registration form on the website.",
+        "Call the Hotline 1900 3147.",
+      ],
     },
     {
       number: "02",
-      title: "Khám và tư vấn",
+      title: "Consultation & Examination",
       icon: "👨‍⚕️",
       description:
-        "Khách hàng sẽ được bác sĩ chuyên khoa Da liễu trực tiếp khám và soi da. Sau đó, căn cứ theo góc độ khoa học và dựa trên thực trạng da của khách hàng, bác sĩ sẽ thiết lập phác đồ điều trị phù hợp.",
+        "A dermatologist will examine your skin and conduct a skin analysis. Based on scientific assessment and your skin condition, the doctor will develop a suitable treatment plan.",
     },
     {
       number: "03",
-      title: "Thanh toán chi phí",
+      title: "Payment Process",
       icon: "💳",
       description:
-        "Khi đồng ý với phương án điều trị của bác sĩ, khách hàng sẽ được nhân viên tư vấn chi tiết một lần nữa và tiến hành thanh toán.",
+        "Once you agree with the doctor's treatment plan, a consultant will provide detailed information again, and you can proceed with the payment.",
     },
     {
       number: "04",
-      title: "Thực hiện dịch vụ",
+      title: "Treatment Procedure",
       icon: "🏥",
       description:
-        "Khách hàng được hướng dẫn di chuyển đến Phòng chăm sóc da để thực hiện quy trình điều trị mụn. Với mỗi số dịch vụ nhất định, bác sĩ là người trực tiếp thực hiện.",
+        "You will be guided to the skincare treatment room to undergo the acne treatment process. For certain procedures, the doctor will perform the treatment directly.",
     },
     {
       number: "05",
-      title: "Chăm sóc sau điều trị",
+      title: "Post-Treatment Care",
       icon: "👩‍⚕️",
       description:
-        "Điều khác biệt tại O2 SKIN là sau điều trị, khách hàng sẽ được tư vấn tận tình về cách chăm sóc và bảo vệ da tại nhà nhằm ngăn ngừa tái phát. Ngoài ra, O2 SKIN cũng sẵn sàng giải đáp mọi thắc mắc của khách hàng ngay cả khi đã kết thúc liệu trình.",
+        "At O2 SKIN, post-treatment care is a priority. You will receive detailed guidance on how to care for and protect your skin at home to prevent recurrence. Additionally, O2 SKIN is always available to answer any questions, even after your treatment is complete.",
     },
     {
       number: "06",
-      title: "Tái khám và kết thúc liệu trình",
+      title: "Follow-Up & Completion",
       icon: "🏣",
       description:
-        "Khách hàng lưu ý nên tái khám đúng hẹn để bác sĩ theo dõi kết quả sát sao và có những thay đổi kịp thời, nhằm mang đến hiệu quả tối ưu.",
+        "It's important to attend follow-up appointments as scheduled so that the doctor can monitor your progress closely and make any necessary adjustments to ensure optimal results.",
     },
   ];
-
 
   const formatPrice = (price) => {
     return new Intl.NumberFormat("vi-VN", {
@@ -112,7 +113,7 @@ const Price = () => {
 
   return (
     <div className="price-container">
-      <h1 className="price-title">Bảng Giá Điều Trị</h1>
+      <h1 className="price-title">Treatment Pricing Table</h1>
       <div className="price-categories">
         {categories.map((category) => {
           const categoryServices = services.filter(
@@ -127,8 +128,8 @@ const Price = () => {
 
               <div className="service-table">
                 <div className="table-header">
-                  <div className="header-cell">Dịch vụ điều trị</div>
-                  <div className="header-cell">Giá Dịch Vụ</div>
+                  <div className="header-cell">Treatment Service</div>
+                  <div className="header-cell">Service Price</div>
                 </div>
 
                 {categoryServices.map((service) => (
@@ -144,9 +145,10 @@ const Price = () => {
           );
         })}
       </div>
+
       <div className="treatment-timeline">
         <h1 className="timeline-title">
-          Quy Trình Thăm Khám & Điều Trị Mụn Tại O2 SKIN
+          Acne Treatment & Consultation Process at O2 SKIN
         </h1>
 
         <div className="timeline-container">

@@ -115,3 +115,20 @@
   margin-top: 24px;
   color: black;
 }
+.back-button {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  padding: 6px 6px;
+  font-size: 14px;
+  color: white;
+  background-color: #ff4f9d;
+  border: none;
+  border-radius: 50%;
+  cursor: pointer;
+  transition: 0.3s;
+}
+
+.back-button:hover {
+  background-color: #ff4f9d;
+}
