@@ -1,52 +1,79 @@
 import React, { useEffect, useState } from "react";
 import "./CheckIn.css"; 
 import { FaQrcode } from "react-icons/fa";
-import { Button, Form, Input, Modal } from "antd";
+import { Button, Form, Input, Modal ,Spin ,Pagination} from "antd";
 import { Html5QrcodeScanner } from "html5-qrcode";
+import axios from "axios";
+import BASE from "../../../constants/base";
+
 const CheckIn = () => {
-  const [form] = Form.useForm();
-  const [isCheckInModalVisible, setIsCheckInModalVisible] = useState(false);
+ 
   const [isCheckOutModalVisible, setIsCheckOutModalVisible] = useState(false);
-  const [isQRModalVisible, setIsQRModalVisible] = useState(false);
-  const [scanResult, setScanResult] = useState(null);
+  const [loading, setLoading] = useState(false);
   const [selectedProduct, setSelectedProduct] = useState(null);
+  const [currentPage, setCurrentPage] = useState(1);
+  const pageSize = 5;
+  const [totalItems, setTotalItems] = useState(0);
   const [products, setProducts] = useState([
-    {
-      id: 1,
-      name: "Alice",
-      service: "Facial Treatment",
-      price: "$50",
-      duration: "60 min",
-    },
-    {
-      id: 2,
-      name: "Bob",
-      service: "Massage Therapy",
-      price: "$70",
-      duration: "90 min",
-    },
-    {
-      id: 3,
-      name: "Charlie",
-      service: "Hair Spa",
-      price: "$40",
-      duration: "45 min",
-    },
+   
   ]);
+ useEffect(()=>{
+  const fectchAppointments = async () =>{
+    setLoading(true);
+    try {
+      const res = await axios.get(`${BASE.BASE_URL}/appointments/getAll`, {
+        params: { page: currentPage - 1, size: pageSize },
+      });
+      setProducts(res.data.data.content);
+      setTotalItems(res.data.data.totalElements);
+    }
+    catch (error) {
+    console.log(error)
+   }
+   setLoading(false);
+  }
+  fectchAppointments();
+ },[currentPage])
 
-  const showCheckInModal = () => {
-    setIsCheckInModalVisible(true);
-    form.resetFields();
-  };
+ const handleCheckin = async (appointmentDetailId) => {
+  try {
+    const res = await axios.put(
+      `${BASE.BASE_URL}/appointment-detail/checkin`,
+      null,
+      { params: { appointmentDetailId } }
+    );
 
-  const handleCheckInCancel = () => {
-    setIsCheckInModalVisible(false);
-  };
+    Modal.success({ content: "Check-in Successful!" });
 
-  const handleCheckInSubmit = () => {
-    setIsCheckInModalVisible(false);
-    form.resetFields();
-  };
+    //cập nhật ds 
+    setProducts((prevProducts) =>
+      prevProducts.map((product) =>
+        product.id === selectedProduct.id
+          ? {
+              ...product,
+              appointment_details: product.appointment_details.map((detail) =>
+                detail.id === appointmentDetailId
+                  ? { ...detail, status: "CHECKIN" } 
+                  : detail
+              ),
+            }
+          : product
+      )
+    );
+
+    //cập nhật nút checkin
+    setSelectedProduct((prevProduct) => ({
+      ...prevProduct,
+      appointment_details: prevProduct.appointment_details.map((detail) =>
+        detail.id === appointmentDetailId
+          ? { ...detail, status: "CHECKIN" }
+          : detail
+      ),
+    }));
+  } catch (error) {
+    console.log(error);
+  }
+};
 
   const showCheckOutModal = (product) => {
     setSelectedProduct(product);
@@ -57,111 +84,76 @@ const CheckIn = () => {
     setIsCheckOutModalVisible(false);
     setSelectedProduct(null);
   };
-  const showQRModal = () =>{
-    setIsQRModalVisible(true);
-  }
-  const handleQRCancel = () => setIsQRModalVisible(false);
-  useEffect(()=>{
-     if(isQRModalVisible){
-      const scanner = new Html5QrcodeScanner("reader", { qrbox: { width: 250, height: 250 }, fps: 10 })
-     scanner.render((result)=>{
-        setScanResult(result);
-        setIsQRModalVisible(false);
-        scanner.clear(); 
-     },
-     (error) =>console.log("QR error",error)
-    );
-    return () => scanner.clear();
-    }
-  },[isQRModalVisible])
+
+ const showAppointmentDetail = (product) =>{
+  setSelectedProduct(product);
+    setIsCheckOutModalVisible(true);
+ }
+ const handleCloseModal = () => {
+  setIsCheckOutModalVisible(false);
+  setSelectedProduct(null);
+};
   return (
     <div className="checkin-container">
       <div className="checkin-header">
         <div className="header-actions">
-          <button className="btn-checkinn" onClick={showCheckInModal}>
-            Form Checkin
-          </button>
-          {/* <FaQrcode onClick={showQRModal} style={{ cursor: "pointer", fontSize: "24px" }} className="qr-icon" /> */}
+          
+         
         </div>
       </div>
-
-      <table className="checkin-table">
+{loading ? ( 
+  <div className="loading-container">
+    <Spin size="large"/>
+  </div>
+) : (
+ 
+ <>
+ <table className="checkin-table">
         <thead>
           <tr>
             <th>Name</th>
             <th>Service</th>
-            <th>Price</th>
-            <th>Duration</th>
+            <th>Phone</th>
+            <th>Total</th>
             <th>Actions</th>
           </tr>
         </thead>
         <tbody>
           {products.map((product) => (
             <tr key={product.id}>
-              <td>{product.name}</td>
-              <td>{product.service}</td>
-              <td>{product.price}</td>
-              <td>{product.duration}</td>
+              <td>{product.account.name}</td>
+              <td>{product.service.name}</td>
+              <td>{product.account.phone}</td>
+              <td>{product.total}</td> 
+              
               <td>
                 <button
                   className="checkout-button"
-                  onClick={() => showCheckOutModal(product)}
+                  onClick={() => showAppointmentDetail(product)}
                 >
-                  CheckOut
+                  View detail
                 </button>
               </td>
             </tr>
           ))}
         </tbody>
       </table>
-
+       
+       <Pagination
+            current={currentPage}
+            pageSize={pageSize}
+            total={totalItems}
+            onChange={(page) => setCurrentPage(page)}
+            style={{ marginTop: "20px", textAlign: "center" }}
+          />
+ </>
+)}
       
-      <Modal
-        title="Check-in Form"
-        open={isCheckInModalVisible}
-        onCancel={handleCheckInCancel}
-        footer={null}
-      >
-        <Form form={form} layout="vertical">
-          <Form.Item
-            label="Name"
-            name="name"
-            rules={[{ required: true, message: "Please enter the name!" }]}
-          >
-            <Input placeholder="Enter name" />
-          </Form.Item>
-          <Form.Item
-            label="Service"
-            name="service"
-            rules={[{ required: true, message: "Please enter the service!" }]}
-          >
-            <Input placeholder="Enter service" />
-          </Form.Item>
-          <Form.Item
-            label="Price"
-            name="price"
-            rules={[{ required: true, message: "Please enter the price!" }]}
-          >
-            <Input placeholder="Enter price" />
-          </Form.Item>
-          <Form.Item
-            label="Duration"
-            name="duration"
-            rules={[{ required: true, message: "Please enter the duration!" }]}
-          >
-            <Input placeholder="Enter duration" />
-          </Form.Item>
-          <Form.Item>
-            <Button className="checkout-confirm-btn"type="primary" onClick={handleCheckInSubmit}>
-              Check In
-            </Button>
-          </Form.Item>
-        </Form>
-      </Modal>
+     
 
      
       <Modal
-  title="Check-out Information"
+  title="Information"
   open={isCheckOutModalVisible}
   onCancel={handleCheckOutCancel}
   footer={[
@@ -177,25 +169,44 @@ const CheckIn = () => {
         handleCheckOutCancel();
       }}
     >
-      Confirm CheckOut
+       CheckOut
     </Button>,
+      
   ]}
   className="checkout-modal"
 >
-  {selectedProduct && (
-    <div className="checkout-info">
-      <p><strong>Name:</strong> {selectedProduct.name}</p>
-      <p><strong>Service:</strong> {selectedProduct.service}</p>
-      <p><strong>Price:</strong> {selectedProduct.price}</p>
-      <p><strong>Duration:</strong> {selectedProduct.duration}</p>
-    </div>
-  )}
+{selectedProduct && selectedProduct.appointment_details.length > 0 ? (
+  <div className="checkout-info">
+    {selectedProduct.appointment_details.map((detail) => (
+      <div key={detail.id} className="appointment-item">
+        <p><strong>Service detail:</strong> {detail.name}</p>
+        <p><strong>Status:</strong> {detail.status}</p>
+        <p><strong>Price:</strong> {detail.price}</p>
+        <p><strong>Start:</strong> {detail.startHour}</p>
+        <p><strong>End:</strong> {detail.endHour}</p>
+
+      
+        <Button
+          type="primary"
+          className="checkout-confirm-btn"
+          onClick={() => handleCheckin(detail.id)}
+          disabled={detail.status === "CHECKIN"} 
+        >
+          {detail.status === "CHECKIN" ? "Checked In" : "Check In"}
+        </Button>
+        
+       
+      </div>
+    ))}
+  </div>
+) : (
+  <p>No appointment details available</p>
+)}
+
+
 </Modal>
-    {/* Model QR */}
- <Modal title="Scan QR Code" open={isQRModalVisible} onCancel={handleQRCancel} footer={null}>
-        <div id="reader"></div>
-        {scanResult && <p>Scanned QR Code: {scanResult}</p>}
-      </Modal>
+  
+
     </div>
   );
 };

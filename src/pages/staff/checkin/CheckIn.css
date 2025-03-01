@@ -63,7 +63,7 @@
 
 
 .checkout-button {
-    width: 50%;
+    
     background-color: #ff5ca4;
     color: #fff;
     padding: 12px;
@@ -151,9 +151,19 @@
     text-align: center;
     background: #fff0f5; 
   }
+  .appointment-item{
+    padding: 15px;
   
-  
+    margin-bottom: 10px;
+  }
+  .appointment-item p {
+    margin: 5px 0;
+    font-family: 'Poppins', sans-serif;
+    
+  }
   .checkout-info {
+    max-height: 500px;
+    overflow-y: auto;
     padding: 10px;
   }
   
@@ -196,3 +206,9 @@
     border-color: #b62d6e;
   }
   
+  .loading-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 50vh;
+  }
