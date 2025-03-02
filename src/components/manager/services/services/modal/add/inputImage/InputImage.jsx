@@ -21,7 +21,6 @@ const InputImage = ({
     }else{
       setImage(file.url)
     }
-    console.log(file)
   };
   useEffect(() => {
     if (imageObject) {

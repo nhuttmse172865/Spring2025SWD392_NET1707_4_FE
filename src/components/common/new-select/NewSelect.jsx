@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import ICONS from "../../../constants/icons";
 
+
 const Select = ({
   width = "200px",
   height = "50px",
@@ -9,33 +10,15 @@ const Select = ({
   mutilpleSelect = false,
   modeShowTextOnInput = false,
   setListSelected,
-  isTop = false,
-  heightFix,
 }) => {
   const [active, setActive] = useState(false);
   const [itemsSelected, setItemsSelected] = useState();
+  const [indexActive, setIndexActive] = useState()
   const [mouseover, setMouseover] = useState(false);
   const heightItems = list?.length * 40 + list?.length * 5 + 19;
 
-  const handleOnclick = (item) => {
-    let listItemsSelected;
-    if (mutilpleSelect) {
-      if (!itemsSelected) {
-        listItemsSelected = [item];
-        setItemsSelected(listItemsSelected);
-      } else if (itemsSelected.includes(item)) {
-        listItemsSelected = itemsSelected.filter((element) => element !== item);
-        setItemsSelected(listItemsSelected);
-      } else {
-        listItemsSelected = [...itemsSelected, item];
-        setItemsSelected(listItemsSelected);
-      }
-    } else {
-      listItemsSelected = item;
-      setItemsSelected(item);
-      setActive(false);
-    }
-    setListSelected(listItemsSelected);
+  const handleOnclick = (item, index) => {
+    
   };
 
   return (
@@ -65,17 +48,13 @@ const Select = ({
         ) : null}
       </div>
       <ul
-        className="absolute bg-white h-mx duration-200 ease-in left-0 pt-[7px] px-[12px] rounded-[.375rem] z-[1000]"
+        className="absolute bg-white h-mx top-[100%] duration-200 ease-in left-0 pt-[7px] px-[12px] rounded-[.375rem] z-[1000]"
         style={{
           boxShadow: "0px 0px 1px 1px rgba(0,0,0,0.1)",
-          transform: isTop ? "translate(-2px, -100%)" : "translateX(-2px)",
-          top: isTop ? "0%" : "100%",
+          transform: "translateX(-2px)",
           width: `calc(${width} + 2px)`,
-          height:
-            heightItems > heightFix ? heightFix : active ? heightItems : 0,
+          height: active ? heightItems : 0,
           opacity: active ? 1 : 0,
-          overflow: heightItems > heightFix ? "scroll" : null,
-          display: active ? "block" : "none",
         }}
         onClick={(event) => event.stopPropagation()}
       >
@@ -104,7 +83,7 @@ const Select = ({
                     ? "#FFFFFF"
                     : null,
               }}
-              onClick={() => handleOnclick(item)}
+              onClick={() => handleOnclick(item, index)}
             >
               {item}
             </li>

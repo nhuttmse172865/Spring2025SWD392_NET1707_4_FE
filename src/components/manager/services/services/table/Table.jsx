@@ -14,11 +14,11 @@ const Table = ({ setShowModal, setItemUpdate }) => {
     },
     {
       name: "Category",
-      column: 2,
+      column: 1.5,
     },
     {
       name: "Description",
-      column: 3,
+      column: 2.5,
     },
     {
       name: "Issue Skin",
@@ -26,11 +26,11 @@ const Table = ({ setShowModal, setItemUpdate }) => {
     },
     {
       name: "Skin Type",
-      column: 1.5,
+      column:2,
     },
     {
       name: "Therapist",
-      column: 1,
+      column: 1.5,
     },
     {
       name: "",
