@@ -1,9 +1,10 @@
 import React from "react";
-import "./ServiceDetails.css"; // Import file CSS nếu cần
-
+import { ArrowLeft } from "lucide-react";
+import { useNavigate } from "react-router-dom";
+import "./ServiceDetails.css";
 const ServiceDetails = () => {
   const service = JSON.parse(localStorage.getItem("selectedService"));
-
+  const navigate = useNavigate();
   const serviceDetails = [
     {
       id: 1,
@@ -72,6 +73,10 @@ const ServiceDetails = () => {
 
   return (
     <div className="service-details-container">
+      <button className="back-button" onClick={() => navigate(-1)}>
+        <ArrowLeft size={20} />
+      </button>
+
       <h4 className="service-title0">{service.name}</h4>
       <img src={service.image} alt={service.name} className="service-image" />
       <p className="service-price">Price: {service.price.toLocaleString()}₫</p>
@@ -99,7 +104,10 @@ const ServiceDetails = () => {
                   <p className="detail-duration">
                     Time: {detail.duration} phút
                   </p>
-                  <p className="detail-description"> Description :{detail.description}</p>
+                  <p className="detail-description">
+                    {" "}
+                    Description :{detail.description}
+                  </p>
                   <p className="detail-price">
                     Price: {detail.price.toLocaleString()}₫
                   </p>

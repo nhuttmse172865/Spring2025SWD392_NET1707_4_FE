@@ -1,7 +1,6 @@
 .beauty-container {
   max-width: 95%;
   margin: 0 auto;
-  padding: 2rem;
 }
 
 .beauty-title {
@@ -9,7 +8,8 @@
   font-size: 2.5rem;
   font-weight: bold;
   margin-bottom: 2rem;
-  color: #333;
+  color: black;
+  font-family: "Poppins", sans-serif;
 }
 
 .beauty-grid {
@@ -44,12 +44,13 @@
 
 .beauty-card-image {
   width: 100%;
-  height: 12rem;
+  height: 15rem;
   object-fit: cover;
 }
 
 .beauty-card-content {
   padding: 1rem;
+  font-family: "Poppins", sans-serif;
 }
 
 .beauty-card-title {
@@ -57,12 +58,14 @@
   font-weight: bold;
   margin-bottom: 0.5rem;
   color: #333;
+  font-family: "Poppins", sans-serif;
 }
 
 .beauty-card-description {
   color: #4a5568;
   margin-bottom: 1rem;
   font-size: 0.875rem;
+  font-family: "Poppins", sans-serif;
 }
 
 .beauty-card-footer {
@@ -71,6 +74,7 @@
   align-items: center;
   color: #a0aec0;
   font-size: 0.875rem;
+  font-family: "Poppins", sans-serif;
 }
 
 .beauty-card-footer span {

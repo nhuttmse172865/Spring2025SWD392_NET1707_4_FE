@@ -68,6 +68,7 @@ const ICONS = {
   time,
   trash,
   arrow
+
 };
 
 export default ICONS;
