@@ -88,6 +88,12 @@ input[type="number"]::-webkit-outer-spin-button {
   -ms-user-select: none !important;
   user-select: none !important;
 }
+.limited-lines-1 {
+  overflow: hidden;
+  display: -webkit-box;
+  -webkit-line-clamp: 1;
+  -webkit-box-orient: vertical;
+}
 .limited-lines-3 {
   overflow: hidden;
   display: -webkit-box;

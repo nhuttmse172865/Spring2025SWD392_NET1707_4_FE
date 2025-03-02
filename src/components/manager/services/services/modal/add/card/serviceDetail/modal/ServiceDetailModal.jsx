@@ -57,7 +57,7 @@ const ServiceDetailModal = ({
       price: price,
       duration: duration,
       steps: steps,
-      images: images,
+      imagesId: images,
     };
     let service = serviceDetails;
     if (serviceDetailUpdate) {
@@ -74,13 +74,14 @@ const ServiceDetailModal = ({
   };
 
   useEffect(() => {
+    console.log(serviceDetailUpdate,"serviceDetailUpdate")
     if (serviceDetailUpdate) {
       setName(serviceDetailUpdate.name);
       setDescription(serviceDetailUpdate.description);
       setPrice(serviceDetailUpdate.price);
       setDuration(serviceDetailUpdate.duration);
       setSteps(serviceDetailUpdate.steps);
-      setImages(serviceDetailUpdate.images);
+      setImages(serviceDetailUpdate.imagesId);
     }
   }, [serviceDetailUpdate]);
 
