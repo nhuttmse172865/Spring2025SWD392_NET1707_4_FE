@@ -150,7 +150,7 @@ const ServiceDetailModal = ({
               placeholder="1000 $"
               value={price}
               onChange={(event) => setPrice(event.target.value)}
-              className="h-12 border-input-form-login text-[rgba(0,0,0,0.8)] text-[15px] "
+              className="h-12 border-input-form-login text-[rgba(0,0,0,0.8)] text-[15px] w-full"
             />
             {messageErrorPrice && (
               <span className="text-[12px] text-red-500">
