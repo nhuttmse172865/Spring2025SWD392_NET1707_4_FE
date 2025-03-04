@@ -141,7 +141,7 @@ const ServiceDetailModal = ({
           )}
         </div>
         <div className="flex gap-5 mt-5">
-          <div className="grid max-w-[160px]">
+          <div className="grid max-w-[160px] relative">
             <label className="text-[15px] mb-0.5 text-[rgba(0,0,0,0.7)]">
               Price
             </label>

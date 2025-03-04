@@ -2,7 +2,7 @@ import React from "react";
 import ICONS from "../../../../../../constants/icons";
 import CaculateGridColumn from "../../../../../../helpers/CaculateGridColumn";
 
-const Item = ({ listTitle, active = false }) => {
+const Item = ({ listTitle, active = false, item, index }) => {
   const gridColumnTemplate = CaculateGridColumn(listTitle);
   return (
     <ul
@@ -13,12 +13,12 @@ const Item = ({ listTitle, active = false }) => {
         boxShadow: active ? "0px 0px 1px 1px var(--color-primary-50)" : null,
       }}
     >
-      <li>1</li>
-      <li>Name</li>
-      <li>Category</li>
-      <li>Description</li>
-      <li>Issue Skin</li>
-      <li>Skin Type</li>
+      <li>{index + 1}</li>
+      <li>{item.name}</li>
+      <li>{item.email}</li>
+      <li>{item.phone}</li>
+      <li>{item.gender}</li>
+      <li>{item.status}</li>
       <li></li>
       <div
         className="absolute top-0 right-3.5"

@@ -6,7 +6,7 @@ import ElevatedButton from "../../../../common/button/elevated/ElevatedButton";
 import axios from "axios";
 import BASE from "../../../../../constants/base";
 
-const Modal = ({ handleCloseModal, itemUpdate }) => {
+const Modal = ({ handleCloseModal, itemUpdate,setRefreshData }) => {
   const [images, setImages] = useState([]);
   const [refreshImage, setRefreshImage] = useState(false);
   const [name, setName] = useState();
@@ -57,6 +57,7 @@ const Modal = ({ handleCloseModal, itemUpdate }) => {
     } catch (error) {
       console.log(error);
     } finally {
+      setRefreshData(prev => !prev)
       setLoading(false);
     }
   };
