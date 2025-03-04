@@ -2,7 +2,7 @@ import React from "react";
 import Header from "../../../../common/table/header/Header";
 import Body from "./body/Body";
 
-const Table = ({setShowModal, setItemUpdate}) => {
+const Table = ({setShowModal, setItemUpdate, refreshData}) => {
   const listTitle = [
     {
       name: "No.",
@@ -40,7 +40,7 @@ const Table = ({setShowModal, setItemUpdate}) => {
   return (
     <div className="mt-5">
       <Header listTitle={listTitle} />
-      <Body  listTitle={listTitle} setShowModal={setShowModal} setItemUpdate={setItemUpdate}/>
+      <Body  listTitle={listTitle} setShowModal={setShowModal} setItemUpdate={setItemUpdate} refreshData={refreshData}/>
     </div>
   );
 };

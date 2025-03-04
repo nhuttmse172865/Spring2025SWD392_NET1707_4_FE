@@ -141,7 +141,7 @@ const ServiceDetailModal = ({
           )}
         </div>
         <div className="flex gap-5 mt-5">
-          <div className="grid max-w-[160px]">
+          <div className="grid max-w-[160px] relative">
             <label className="text-[15px] mb-0.5 text-[rgba(0,0,0,0.7)]">
               Price
             </label>
@@ -150,7 +150,7 @@ const ServiceDetailModal = ({
               placeholder="1000 $"
               value={price}
               onChange={(event) => setPrice(event.target.value)}
-              className="h-12 border-input-form-login text-[rgba(0,0,0,0.8)] text-[15px]"
+              className="h-12 border-input-form-login text-[rgba(0,0,0,0.8)] text-[15px] "
             />
             {messageErrorPrice && (
               <span className="text-[12px] text-red-500">

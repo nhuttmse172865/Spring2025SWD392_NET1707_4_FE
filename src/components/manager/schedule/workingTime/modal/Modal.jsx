@@ -136,7 +136,7 @@ const Modal = ({ setShowModal, setReloadData }) => {
                 Start End:
               </label>
               <Select
-                text="Select Gender"
+                text="End Hour"
                 width="200px"
                 heightFix={400}
                 setListSelected={setEndHour}

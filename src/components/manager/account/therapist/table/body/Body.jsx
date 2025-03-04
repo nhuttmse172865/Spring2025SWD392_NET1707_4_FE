@@ -3,7 +3,7 @@ import Item from "../item/Item";
 import axios from "axios";
 import BASE from "../../../../../../constants/base";
 
-const Body = ({ listTitle, setShowModal, setItemUpdate }) => {
+const Body = ({ listTitle, setShowModal, setItemUpdate, refreshData }) => {
   const [therapists, setTherapists] = useState();
 
   const handleLoadTherapist = async () => {
@@ -14,12 +14,15 @@ const Body = ({ listTitle, setShowModal, setItemUpdate }) => {
       if (response || response.status === 200) {
         setTherapists(response.data.data.content);
       }
-      console.log(response.data.data.content);
     } catch (error) {
       console.log(error);
     } finally {
     }
   };
+
+  useEffect(() => {
+    handleLoadTherapist();
+  }, [refreshData]);
 
   useEffect(() => {
     if (!therapists) {
