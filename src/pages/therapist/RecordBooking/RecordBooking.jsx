@@ -1,24 +1,13 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Table, Button, Modal, Input } from "antd";
 import "./RecordBooking.css";
 import ElevatedButton from "../../../components/common/button/elevated/ElevatedButton";
-
+import axios from "axios";
+import BASE from "../../../constants/base";
+import { jwtDecode } from "jwt-decode";
 const RecordBooking = () => {
   const [bookings, setBookings] = useState([
-    {
-      id: 1,
-      patientName: "Alex Sander",
-      startTime: "09:00",
-      endTime: "09:30",
-      date: "2023-10-15",
-    },
-    {
-      id: 2,
-      patientName: "MOI Gomes",
-      startTime: "10:00",
-      endTime: "10:30",
-      date: "2023-10-15",
-    },
+   
   ]);
   const [questions] = useState([
     { question: "What is React?", answer: "A JavaScript library for building UI." },
@@ -39,6 +28,24 @@ const RecordBooking = () => {
     treatment: "",
     notes: "",
   });
+
+
+  useEffect(() => {
+  const token = localStorage.getItem("customer_information");
+  const decoded = jwtDecode(token);
+  const accountId = decoded.accountId; 
+    const featchBookings = async () => {
+      try {
+        const res = await axios.get(`${BASE.BASE_URL}/appointments/account/${accountId}`);
+        setBookings(res.data.data);
+        console.log(res.data.data)
+      } catch (error) {
+        console.log(error);
+      }
+    }
+featchBookings();
+
+  }, []);
   const [isQuizModalOpen, setIsQuizModalOpen] = useState(false);
   const showModal = (booking) => {
     setSelectedBooking(booking);
@@ -96,7 +103,7 @@ const RecordBooking = () => {
 
   return (
     <div className="record-booking-container">
-      <Table  className="record-booking-table"  dataSource={bookings} columns={columns} rowKey="id" />
+      {/* <Table  className="record-booking-table"  dataSource={bookings} columns={columns} rowKey="id" /> */}
 
      
       <Modal

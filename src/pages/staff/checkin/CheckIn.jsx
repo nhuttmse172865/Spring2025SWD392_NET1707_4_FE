@@ -1,11 +1,11 @@
 import React, { useEffect, useState } from "react";
 import "./CheckIn.css"; 
 import { FaQrcode } from "react-icons/fa";
-import { Button, Form, Input, Modal ,Spin ,Pagination} from "antd";
+import { Button, Form, Input, Modal ,Spin,DatePicker ,Pagination} from "antd";
 import { Html5QrcodeScanner } from "html5-qrcode";
 import axios from "axios";
 import BASE from "../../../constants/base";
-
+import dayjs from "dayjs";
 const CheckIn = () => {
  
   const [isCheckOutModalVisible, setIsCheckOutModalVisible] = useState(false);
@@ -14,34 +14,44 @@ const CheckIn = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const pageSize = 5;
   const [totalItems, setTotalItems] = useState(0);
-  const [products, setProducts] = useState([
-   
-  ]);
- useEffect(()=>{
-  const fectchAppointments = async () =>{
+  const [selectedDate, setSelectedDate] = useState(dayjs());
+  const [filteredProducts, setFilteredProducts] = useState([]);
+  const [products, setProducts] = useState([]);
+  const [searchPhone, setSearchPhone] = useState("");
+  useEffect(() => {
+    fetchAppointments();
+  }, [currentPage]);
+
+  useEffect(() => {
+    filterAppointmentsByDate();
+  }, [selectedDate, products,searchPhone]); 
+
+  const fetchAppointments = async () => {
     setLoading(true);
     try {
       const res = await axios.get(`${BASE.BASE_URL}/appointments/getAll`, {
-        params: { page: currentPage - 1, size: pageSize },
+        // params: { page: currentPage - 1, size: pageSize },
       });
       setProducts(res.data.data.content);
-      setTotalItems(res.data.data.totalElements);
+    } catch (error) {
+      console.log(error);
     }
-    catch (error) {
-    console.log(error)
-   }
-   setLoading(false);
-  }
-  fectchAppointments();
- },[currentPage])
+    setLoading(false);
+  };
+
+  const filterAppointmentsByDate = () => {
+    const filtered = products.filter((product) =>
+      product.appointment_details.some((detail) =>
+        dayjs(detail.day).isSame(selectedDate, "day")
+      )&& product.account.phone.includes(searchPhone) 
+    );
+    setFilteredProducts(filtered);
+  };
 
  const handleCheckin = async (appointmentDetailId) => {
   try {
-    const res = await axios.put(
-      `${BASE.BASE_URL}/appointment-detail/checkin`,
-      null,
-      { params: { appointmentDetailId } }
-    );
+    const res = await axios.put(`${BASE.BASE_URL}/appointment-detail/checkin/${appointmentDetailId}`);
+
 
     Modal.success({ content: "Check-in Successful!" });
 
@@ -75,10 +85,7 @@ const CheckIn = () => {
   }
 };
 
-  const showCheckOutModal = (product) => {
-    setSelectedProduct(product);
-    setIsCheckOutModalVisible(true);
-  };
+
 
   const handleCheckOutCancel = () => {
     setIsCheckOutModalVisible(false);
@@ -89,16 +96,27 @@ const CheckIn = () => {
   setSelectedProduct(product);
     setIsCheckOutModalVisible(true);
  }
- const handleCloseModal = () => {
-  setIsCheckOutModalVisible(false);
-  setSelectedProduct(null);
-};
+
   return (
     <div className="checkin-container">
       <div className="checkin-header">
         <div className="header-actions">
           
          
+        </div>
+
+        <div style={{ display: "flex", gap: "20px", marginBottom: "10px" }}>
+        <Input
+            placeholder="Search by phone..."
+            value={searchPhone}
+            onChange={(e) => setSearchPhone(e.target.value)}
+          />
+          <DatePicker
+            value={selectedDate}
+            onChange={(date) => setSelectedDate(date || dayjs())}
+            format="YYYY-MM-DD"
+          />
+       
         </div>
       </div>
 {loading ? ( 
@@ -115,28 +133,37 @@ const CheckIn = () => {
             <th>Service</th>
             <th>Phone</th>
             <th>Total</th>
+            <th>Day</th>
             <th>Actions</th>
           </tr>
         </thead>
         <tbody>
-          {products.map((product) => (
-            <tr key={product.id}>
-              <td>{product.account.name}</td>
-              <td>{product.service.name}</td>
-              <td>{product.account.phone}</td>
-              <td>{product.total}</td> 
-              
-              <td>
-                <button
-                  className="checkout-button"
-                  onClick={() => showAppointmentDetail(product)}
-                >
-                  View detail
-                </button>
-              </td>
-            </tr>
-          ))}
-        </tbody>
+              {filteredProducts.length > 0 ? (
+                filteredProducts.map((product) => (
+                  <tr key={product.id}>
+                    <td>{product.account.name}</td>
+                    <td>{product.service.name}</td>
+                    <td>{product.account.phone}</td>
+                    <td>{product.total}</td>
+                    <td>{dayjs(product.appointment_details[0].day).format("YYYY-MM-DD")}</td>
+                    <td>
+                      <Button
+                        className="checkout-button"
+                        onClick={() => showAppointmentDetail(product)}
+                      >
+                        View detail
+                      </Button>
+                    </td>
+                  </tr>
+                ))
+              ) : (
+                <tr>
+                  <td colSpan="6" style={{ textAlign: "center" }}>
+                    No appointments found
+                  </td>
+                </tr>
+              )}
+            </tbody>
       </table>
        
        <Pagination
@@ -160,17 +187,7 @@ const CheckIn = () => {
     <Button key="cancel" className="checkout-cancel-btn" onClick={handleCheckOutCancel}>
       Cancel
     </Button>,
-    <Button
-      key="checkout"
-      className="checkout-confirm-btn"
-      type="primary"
-      onClick={() => {
-        setProducts(products.filter((p) => p.id !== selectedProduct.id));
-        handleCheckOutCancel();
-      }}
-    >
-       CheckOut
-    </Button>,
+    
       
   ]}
   className="checkout-modal"
@@ -185,8 +202,9 @@ const CheckIn = () => {
         <p><strong>Start:</strong> {detail.startHour}</p>
         <p><strong>End:</strong> {detail.endHour}</p>
 
+    <div className="btn-action-checkinout">
       
-        <Button
+    <Button
           type="primary"
           className="checkout-confirm-btn"
           onClick={() => handleCheckin(detail.id)}
@@ -194,6 +212,18 @@ const CheckIn = () => {
         >
           {detail.status === "CHECKIN" ? "Checked In" : "Check In"}
         </Button>
+        <Button
+      key="checkout"
+      className="checkout-confirm-btn"
+      type="primary"
+      onClick={() => {
+        setProducts(products.filter((p) => p.id !== selectedProduct.id));
+        handleCheckOutCancel();
+      }}
+    >
+       CheckOut
+    </Button>
+    </div>
         
        
       </div>
