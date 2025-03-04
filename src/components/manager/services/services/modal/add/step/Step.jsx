@@ -99,7 +99,7 @@ const Step = ({ setSteps, stepsAvailable }) => {
             ></div>
           </>
         ))}
-      <div className="h-[40px]  rounded-[.375rem] flex items-center gap-5 mt-2">
+      <div className="h-[40px]  rounded-[.375rem] flex items-center gap-5 mt-2 ">
         <span className="text-[15px] text-[rgba(0,0,0,0.5)] w-[10%]"></span>
         <input
           type="text"
@@ -109,6 +109,7 @@ const Step = ({ setSteps, stepsAvailable }) => {
             fontSize: "14px",
             color: "rgba(0,0,0,0.6)",
           }}
+          className="border-input-form-login"
           placeholder="Step 1..."
           value={name}
           onChange={(event) => setName(event.target.value)}
