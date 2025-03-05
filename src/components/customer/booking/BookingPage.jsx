@@ -4,6 +4,10 @@ import { addMinutes, format, parse } from "date-fns";
 import { useNavigate } from "react-router-dom";
 import { Eye } from "lucide-react";
 import ServiceModal from "./serviceDetailsModal/ServiceModal";
+import axios from "axios";
+import BASE from "../../../constants/base";
+import useLocalStorage from "use-local-storage";
+import LOCALSTORAGE_NAME from "../../../constants/localStorageName";
 import "./BookingPage.css";
 
 const theme = {
@@ -19,139 +23,35 @@ const theme = {
   },
 };
 
-const today = new Date();
-const tomorrow = new Date();
-tomorrow.setDate(today.getDate() + 1);
-
-const doctorServices = [
-  {
-    doctor_id: 1,
-    doctor_name: "Emely Jonson",
-    role: "Chuyên viên massage",
-    services: [
-      { id: 5, name: "Aromatherapy Massage" },
-      { id: 4, name: "Body Scrub" },
-      { id: 6, name: "Slimming Treatment" },
-    ],
-  },
-  {
-    doctor_id: 2,
-    doctor_name: "Lola Jonson",
-    role: "Chuyên viên chăm sóc da",
-    services: [
-      { id: 1, name: "Deep Cleansing Facial" },
-      { id: 2, name: "Hydrating Facial" },
-      { id: 3, name: "Anti-Acne Facial" },
-    ],
-  },
-  {
-    doctor_id: 3,
-    doctor_name: "Rose Marian",
-    role: "Chuyên viên chăm sóc da",
-    services: [
-      { id: 7, name: "Hair Strengthening" },
-      { id: 8, name: "Dandruff Treatment" },
-      { id: 9, name: "Scalp Detox" },
-    ],
-  },
-  {
-    doctor_id: 4,
-    doctor_name: "Rose Marian",
-    role: "Chuyên viên chăm sóc da",
-    services: [
-      { id: 1, name: "Deep Cleansing Facial" },
-      { id: 3, name: "Anti-Acne Facial" },
-      { id: 2, name: "Hydrating Facial" },
-    ],
-  },
-];
-
-const services = [
-  {
-    id: 1,
-    name: "Deep Cleansing Facial",
-    category_id: 1,
-    gap_day: 7,
-    price: 500000,
-    duration: 60,
-    image: "/images/deep-cleansing.jpg",
-  },
-  {
-    id: 2,
-    name: "Hydrating Facial",
-    category_id: 1,
-    gap_day: 10,
-    price: 600000,
-    duration: 75,
-    image: "/images/hydrating.jpg",
-  },
-  {
-    id: 3,
-    name: "Anti-Acne Facial",
-    category_id: 1,
-    gap_day: 14,
-    price: 550000,
-    duration: 70,
-    image: "/images/anti-acne.jpg",
-  },
-  {
-    id: 4,
-    name: "Body Scrub",
-    category_id: 2,
-    gap_day: 7,
-    price: 400000,
-    duration: 45,
-    image: "/images/body-scrub.jpg",
-  },
-  {
-    id: 5,
-    name: "Aromatherapy Massage",
-    category_id: 2,
-    gap_day: 14,
-    price: 700000,
-    duration: 90,
-    image: "/images/aromatherapy.jpg",
-  },
-  {
-    id: 6,
-    name: "Slimming Treatment",
-    category_id: 2,
-    gap_day: 21,
-    price: 800000,
-    duration: 120,
-    image: "/images/slimming.jpg",
-  },
-  {
-    id: 7,
-    name: "Hair Strengthening",
-    category_id: 3,
-    gap_day: 14,
-    price: 650000,
-    duration: 60,
-    image: "/images/hair-strengthening.jpg",
-  },
-  {
-    id: 8,
-    name: "Dandruff Treatment",
-    category_id: 3,
-    gap_day: 10,
-    price: 450000,
-    duration: 50,
-    image: "/images/dandruff-treatment.jpg",
-  },
-  {
-    id: 9,
-    name: "Scalp Detox",
-    category_id: 3,
-    gap_day: 7,
-    price: 480000,
-    duration: 55,
-    image: "/images/scalp-detox.jpg",
-  },
-];
-
 const BookingPage = () => {
   const navigate = useNavigate();
+  const [accountId, setAccountId] = useState(null);
+  const [customer, setCustomer] = useLocalStorage(
+    LOCALSTORAGE_NAME.CUSTOMER_INFORMATION_CACHE,
+    ""
+  );
+  useEffect(() => {
+    if (customer) {
+      try {
+        const token = customer;
+        const base64Url = token.split(".")[1];
+        const base64 = base64Url.replace(/-/g, "+").replace(/_/g, "/");
+        const jsonPayload = decodeURIComponent(
+          atob(base64)
+            .split("")
+            .map((c) => `%${("00" + c.charCodeAt(0).toString(16)).slice(-2)}`)
+            .join("")
+        );
+
+        const decodedData = JSON.parse(jsonPayload);
+        console.log("Decoded Data:", decodedData);
+        console.log("Customer ID:", decodedData.accountId);
+        setAccountId(decodedData.accountId);
+      } catch (error) {
+        console.error("Invalid JWT Token", error);
+      }
+    }
+  }, [customer]);
   const [selectedDate, setSelectedDate] = useState(new Date());
   const [selectedTime, setSelectedTime] = useState(null);
   const [selectedService, setSelectedService] = useState("");
@@ -161,8 +61,73 @@ const BookingPage = () => {
     email: "",
     phone: "",
   });
+
   const [showPopup, setShowPopup] = useState(false);
   const [currentModalType, setCurrentModalType] = useState("");
+  const [services, setServices] = useState([]);
+  const [availableTimeSlots, setAvailableTimeSlots] = useState([]);
+  const [therapists, setTherapists] = useState([]);
+
+  useEffect(() => {
+    const fetchServices = async () => {
+      try {
+        const response = await axios.get(
+          `${BASE.BASE_URL}/service/getAllServicePaging?page=0&size=10`
+        );
+        setServices(response.data.data);
+      } catch (error) {
+        console.error("Error fetching services:", error);
+      }
+    };
+
+    fetchServices();
+  }, []);
+
+  useEffect(() => {
+    const fetchTherapists = async () => {
+      try {
+        const response = await axios.get(
+          `${BASE.BASE_URL}/get-all-therapists?page=0&size=10`
+        );
+
+        const therapistsData = response.data.data.content;
+
+        const transformedDoctors = therapistsData.map((therapist) => ({
+          id: therapist.id,
+          name: therapist.account ? therapist.account.name : "Unknown",
+          experience: therapist.experience,
+          speciality: therapist.speciality,
+        }));
+
+        setTherapists(transformedDoctors);
+      } catch (error) {
+        console.error("Error fetching therapists:", error);
+      }
+    };
+
+    fetchTherapists();
+  }, []);
+
+  useEffect(() => {
+    const fetchAvailableTimeSlots = async () => {
+      if (!selectedService || !selectedDate) return;
+      try {
+        const response = await axios.get(
+          `${
+            BASE.BASE_URL
+          }/therapist-working-time/get-by-available-time?serviceId=${selectedService}&day=${format(
+            selectedDate,
+            "yyyy-MM-dd"
+          )}`
+        );
+        setAvailableTimeSlots(response.data.data);
+      } catch (error) {
+        console.error("Error fetching available time slots:", error);
+      }
+    };
+
+    fetchAvailableTimeSlots();
+  }, [selectedService, selectedDate]);
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -174,8 +139,8 @@ const BookingPage = () => {
 
   const generateTimeSlots = (start, end, duration = 15) => {
     let slots = [];
-    let current = parse(start, "HH:mm", new Date());
-    let endTime = parse(end, "HH:mm", new Date());
+    let current = parse(start, "HH:mm:ss", new Date());
+    let endTime = parse(end, "HH:mm:ss", new Date());
 
     while (current < endTime) {
       const potentialEndTime = addMinutes(current, duration);
@@ -191,27 +156,47 @@ const BookingPage = () => {
 
       current = addMinutes(current, 15);
     }
-    if (format(current, "HH:mm") === "17:00") {
-      slots.push({ start: "17:00", end: "17:15", display: "17:00" });
-    }
 
     return slots;
   };
 
   const getAvailableTimeSlots = () => {
-    if (!selectedService) {
-      return generateTimeSlots("07:00", "17:00", 15);
-    }
+    let slots = [];
+    const uniqueSlots = new Set();
 
-    const serviceData = services.find((s) => s.id === selectedService);
-    if (!serviceData) return [];
+    availableTimeSlots.forEach((therapist) => {
+      if (
+        !selectedDoctor ||
+        therapist.therapistId === parseInt(selectedDoctor)
+      ) {
+        therapist.availableTimeSlots.forEach((timeSlot) => {
+          const generatedSlots = generateTimeSlots(
+            timeSlot.startHour,
+            timeSlot.endHour
+          );
+          generatedSlots.forEach((slot) => {
+            uniqueSlots.add(JSON.stringify(slot));
+          });
+        });
+      }
+    });
 
-    return generateTimeSlots("07:00", "17:00", serviceData.duration);
+    uniqueSlots.forEach((slot) => {
+      slots.push(JSON.parse(slot));
+    });
+
+    slots.sort(
+      (a, b) =>
+        parse(a.start, "HH:mm", new Date()) -
+        parse(b.start, "HH:mm", new Date())
+    );
+
+    return slots;
   };
 
   const timeSlots = getAvailableTimeSlots();
 
-  const handleAppointment = () => {
+  const handleAppointment = async () => {
     if (!selectedService || !selectedDoctor || !selectedTime || !selectedDate) {
       alert("Please select all fields before proceeding!");
       return;
@@ -221,20 +206,40 @@ const BookingPage = () => {
       (slot) => slot.display === selectedTime
     );
 
-    navigate("/payment", {
-      state: {
-        service: selectedServiceName,
-        doctor: selectedDoctor,
-        date: format(selectedDate, "yyyy-MM-dd"),
-        startTime: selectedTimeSlot.start,
-        endTime: selectedTimeSlot.end,
-        price: selectedServiceData.price,
-      },
-    });
+    const selectedDoctorName = therapists.find(
+      (therapist) => therapist.id === parseInt(selectedDoctor)
+    )?.name;
+
+    const appointmentData = accountId
+      ? {
+          accountId: accountId,
+          serviceId: selectedService,
+          day: format(selectedDate, "yyyy-MM-dd"),
+          therapistId: selectedDoctor,
+          startHour: selectedTimeSlot.start,
+        }
+      : null;
+    console.log("check", appointmentData);
+
+    try {
+      await axios.post(`${BASE.BASE_URL}/appointments/create`, appointmentData);
+      navigate("/payment", {
+        state: {
+          service: selectedServiceName,
+          doctor: selectedDoctorName,
+          date: format(selectedDate, "yyyy-MM-dd"),
+          startTime: selectedTimeSlot.start,
+          price: selectedServiceData.total,
+        },
+      });
+    } catch (error) {
+      console.error("Error creating appointment:", error);
+      alert("Failed to create appointment. Please try again.");
+    }
   };
 
-  const filteredDoctors = doctorServices.filter((doctor) =>
-    doctor.services.some((service) => service.id === selectedService)
+  const filteredDoctors = therapists.filter((therapist) =>
+    availableTimeSlots.some((slot) => slot.therapistId === therapist.id)
   );
 
   useEffect(() => {
@@ -249,6 +254,13 @@ const BookingPage = () => {
     const newServiceId = Number(e.target.value);
     setSelectedService(newServiceId);
     setSelectedDoctor("");
+    setSelectedTime(null);
+    localStorage.removeItem("selectedServiceID");
+    localStorage.setItem("selectedServiceID", newServiceId);
+  };
+
+  const handleDoctorChange = (e) => {
+    setSelectedDoctor(e.target.value);
     setSelectedTime(null);
   };
 
@@ -296,13 +308,13 @@ const BookingPage = () => {
             <select
               className="form-select1"
               value={selectedDoctor}
-              onChange={(e) => setSelectedDoctor(e.target.value)}
+              onChange={handleDoctorChange}
               disabled={!selectedService}
             >
               <option value="">Select a doctor</option>
               {filteredDoctors.map((doctor) => (
-                <option key={doctor.doctor_id} value={doctor.doctor_name}>
-                  {doctor.doctor_name}
+                <option key={doctor.id} value={doctor.id}>
+                  {doctor.name}
                 </option>
               ))}
             </select>
@@ -319,10 +331,10 @@ const BookingPage = () => {
             <div className="content">
               <h2 className="title">{selectedServiceData.name}</h2>
               <div className="price-time">
-                <span className="price">${selectedServiceData.price}</span>
+                <span className="price">${selectedServiceData.total}</span>
                 <span className="time">
                   {" "}
-                  · {selectedServiceData.gap_day} days
+                  · GapDay :{selectedServiceData.gapDay} days
                 </span>
               </div>
             </div>
@@ -386,15 +398,6 @@ const BookingPage = () => {
                 </button>
               ))}
             </div>
-            <p className="time-note">
-              {selectedService
-                ? `Service duration: ${selectedServiceData?.duration} minutes ${
-                    currentTimeSlot
-                      ? `(${currentTimeSlot.start} - ${currentTimeSlot.end})`
-                      : ""
-                  }`
-                : "All times are in Central Time (Vietnam)"}
-            </p>
           </div>
         </div>
 

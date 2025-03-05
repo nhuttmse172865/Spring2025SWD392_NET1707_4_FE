@@ -13,10 +13,10 @@ const Payment = () => {
     return <p>No booking data available.</p>;
   }
 
-  const { service, doctor, date, startTime, endTime, price } = data;
+  const { service, doctor, date, startTime, price } = data;
   const [discountRate, setDiscountRate] = useState(0);
 
-  const prepaymentRate = 0.1; // 10% prepayment
+  const prepaymentRate = 0.1;
   const discount = price * discountRate;
   const prepayment = price * prepaymentRate;
   const totalCost = prepayment + discount;
@@ -27,7 +27,6 @@ const Payment = () => {
       doctor,
       date,
       startTime,
-      endTime,
     };
     const existingData = JSON.parse(localStorage.getItem("paymentData")) || [];
     existingData.push(paymentData);
@@ -129,7 +128,7 @@ const Payment = () => {
             </div>
             <div className="summary-item">
               <label>Time</label>
-              <input type="text" value={`${startTime} - ${endTime}`} readOnly />
+              <input type="text" value={`${startTime}`} readOnly />
             </div>
           </div>
 

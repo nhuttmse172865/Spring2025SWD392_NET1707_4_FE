@@ -12,9 +12,9 @@ import BASE from "../../../../../../constants/base";
 const Modal = ({ setShowModal }) => {
   const [images, setImages] = useState([]);
   const [refreshImage, setRefreshImage] = useState(false);
-  const [name, setName] = useState()
-  const [description, setDescription] = useState()
-  const [gapDay,setGapDay] = useState()
+  const [name, setName] = useState();
+  const [description, setDescription] = useState();
+  const [gapDay, setGapDay] = useState();
 
   const [categoriesList, setCategoriesList] = useState();
   const [issueSkinList, setIssueSkinList] = useState();
@@ -55,6 +55,7 @@ const Modal = ({ setShowModal }) => {
 
   const handleOnclick = (event, serviceDetail, index) => {
     const rect = event.target.getBoundingClientRect();
+    console.log("Bounding Client Rect:", rect);
     setLeft(rect.left);
     setShowModalServiceDetail(true);
     if (serviceDetail) {
@@ -69,9 +70,8 @@ const Modal = ({ setShowModal }) => {
       images: images,
       description: description,
       gapDay: gapDay,
-
-    }
-  }
+    };
+  };
 
   useEffect(() => {
     if (!categoriesList) {
@@ -192,7 +192,8 @@ const Modal = ({ setShowModal }) => {
           </div>
           <div className="grid w-[200px] mt-5">
             <label className="text-[15px] mb-0.5 text-[rgba(0,0,0,0.7)]">
-              Gap Day <span className="text-[13px] text-[rgba(0,0,0,0.5)]">(days)</span>
+              Gap Day{" "}
+              <span className="text-[13px] text-[rgba(0,0,0,0.5)]">(days)</span>
             </label>
             <input
               type="number"
