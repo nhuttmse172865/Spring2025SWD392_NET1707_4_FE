@@ -1,7 +1,7 @@
 import React from "react";
 import CaculateGridColumn from "../../../../../../helpers/CaculateGridColumn";
 
-const Item = ({active = false, listTitle}) => {
+const Item = ({ active = false, listTitle, item, index }) => {
   const gridColumnTemplate = CaculateGridColumn(listTitle);
   return (
     <ul
@@ -12,14 +12,13 @@ const Item = ({active = false, listTitle}) => {
         boxShadow: active ? "0px 0px 1px 1px var(--color-primary-50)" : null,
       }}
     >
-      <li>1</li>
-      <li>Name</li>
-      <li>Category</li>
-      <li>Description</li>
-      <li>Issue Skin</li>
-      <li>Skin Type</li>
+      <li>{index + 1}</li>
+      <li>{item.name}</li>
+      <li>{item.email}</li>
+      <li>{item.phone}</li>
+      <li>{item.gender}</li>
+      <li>{item.status}</li>
       <li></li>
-     
     </ul>
   );
 };

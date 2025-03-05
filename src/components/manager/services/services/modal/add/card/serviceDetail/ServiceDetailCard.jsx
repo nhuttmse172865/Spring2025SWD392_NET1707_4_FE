@@ -15,7 +15,7 @@ const ServiceDetailCard = ({ serviceDetail, handleOnClick, index }) => {
   };
   useEffect(() => {
     if (serviceDetail) {
-      handleLoadFile(serviceDetail.images[0]);
+      handleLoadFile(serviceDetail.imagesId[0]);
     }
   }, []);
 

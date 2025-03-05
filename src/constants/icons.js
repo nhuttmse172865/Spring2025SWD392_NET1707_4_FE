@@ -22,17 +22,16 @@ import update from "../assets/images/manager/update.png";
 import close from "../assets/images/manager/close.png";
 import updateWhite from "../assets/images/manager/update-white.png";
 import qr from "../assets/images/staff/qr.png";
-
 import SquarePen from "../assets/images/staff/square-pen.png";
 import SquareWhite from "../assets/images/staff/squarewhite.png";
-import account from "../assets/images/manager/account.png";
-import logout from "../assets/images/manager/logout.png";
-import loading from "../assets/images/manager/loading.png";
-import loadingActive from "../assets/images/manager/loading-active.png";
-
-import add from "../assets/images/manager/add.png";
-import time from "../assets/images/manager/time.png";
-import trash from "../assets/images/manager/trash.png";
+import account from "../assets/images/manager/account.png"
+import logout from "../assets/images/manager/logout.png"
+import loading from "../assets/images/manager/loading.png"
+import loadingActive from "../assets/images/manager/loading-active.png"
+import add from '../assets/images/manager/add.png';
+import time from '../assets/images/manager/time.png';
+import trash from '../assets/images/manager/trash.png';
+import arrow from '../assets/images/manager/arrow-left.png'
 
 const ICONS = {
   search,
@@ -61,7 +60,6 @@ const ICONS = {
   qr,
   SquarePen,
   SquareWhite,
-
   account,
   logout,
   loading,
@@ -69,6 +67,8 @@ const ICONS = {
   add,
   time,
   trash,
+  arrow
+
 };
 
 export default ICONS;
