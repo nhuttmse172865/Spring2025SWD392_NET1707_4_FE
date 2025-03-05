@@ -96,6 +96,7 @@ const Modal = ({ setShowModal }) => {
 
   const handleOnclick = (event, serviceDetail, index) => {
     const rect = event.target.getBoundingClientRect();
+    console.log("Bounding Client Rect:", rect);
     setLeft(rect.left);
     setShowModalServiceDetail(true);
     if (serviceDetail) {

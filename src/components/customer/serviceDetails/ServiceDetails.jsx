@@ -1,75 +1,74 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { ArrowLeft } from "lucide-react";
 import { useNavigate } from "react-router-dom";
+import axios from "axios";
+import BASE from "../../../constants/base";
 import "./ServiceDetails.css";
+
 const ServiceDetails = () => {
-  const service = JSON.parse(localStorage.getItem("selectedService"));
+  const [selectedService, setSelectedService] = useState(null);
+  const [serviceDetail, setServiceDetail] = useState(null);
+  const [serviceSteps, setServiceSteps] = useState([]);
   const navigate = useNavigate();
-  const serviceDetails = [
-    {
-      id: 1,
-      day: "Day 1",
-      duration: 60,
-      description: "Cleansing and exfoliation",
-      price: 50,
-      name: "Cleanse",
-      service_id: 1,
-      image: "https://via.placeholder.com/300x200?text=Cleanse",
-    },
-    {
-      id: 2,
-      day: "Day 2",
-      duration: 45,
-      description: "Mask application",
-      price: 30,
-      name: "Mask",
-      service_id: 1,
-      image: "https://via.placeholder.com/300x200?text=Mask",
-    },
-    {
-      id: 3,
-      day: "2024-02-03",
-      duration: 30,
-      description: "Moisturizing",
-      price: 20,
-      name: "Moisturize",
-      service_id: 2,
-      image: "https://via.placeholder.com/300x200?text=Moisturize",
-    },
-  ];
 
-  const serviceSteps = [
-    {
-      id: 1,
-      service_detail_id: 1,
-      name: "Step 1",
-      description: "Wash face with gentle cleanser",
-    },
-    {
-      id: 2,
-      service_detail_id: 1,
-      name: "Step 2",
-      description: "Apply exfoliating scrub",
-    },
-    {
-      id: 3,
-      service_detail_id: 2,
-      name: "Step 1",
-      description: "Apply hydrating mask",
-    },
-  ];
+  useEffect(() => {
+    const fetchServices = async () => {
+      try {
+        const response = await axios.get(
+          `${BASE.BASE_URL}/service/getAllServicePaging?page=0&size=10`
+        );
+        setSelectedService(
+          JSON.parse(localStorage.getItem("selectedService")) || null
+        );
+      } catch (error) {
+        console.error("Error fetching services:", error);
+      }
+    };
 
-  if (!service) {
-    return (
-      <p className="text-center text-red-500">
-        Không có dịch vụ nào được chọn.
-      </p>
-    );
+    fetchServices();
+  }, []);
+
+  useEffect(() => {
+    const storedService = JSON.parse(localStorage.getItem("selectedService"));
+
+    if (storedService?.id) {
+      const serviceId = storedService.id;
+
+      // Fetch service details
+      axios
+        .get(`${BASE.BASE_URL}/service-detail/getByServiceId?id=${serviceId}`)
+        .then((response) => {
+          setServiceDetail(response.data.data);
+        })
+        .catch((error) => {
+          console.error("Error fetching service details:", error);
+        });
+    }
+  }, []);
+
+  useEffect(() => {
+    if (serviceDetail && serviceDetail.length > 0) {
+      serviceDetail.forEach((detail) => {
+        axios
+          .get(
+            `${BASE.BASE_URL}/service-detail-step/getByServiceDetailId?id=${detail.id}`
+          )
+          .then((response) => {
+            setServiceSteps((prevSteps) => [
+              ...prevSteps,
+              { detailId: detail.id, steps: response.data.data },
+            ]);
+          })
+          .catch((error) => {
+            console.error("Error fetching service steps:", error);
+          });
+      });
+    }
+  }, [serviceDetail]);
+
+  if (!selectedService) {
+    return <p className="text-center text-red-500">No service is selected.</p>;
   }
-
-  const filteredDetails = serviceDetails.filter(
-    (detail) => detail.service_id === service.id
-  );
 
   return (
     <div className="service-details-container">
@@ -77,20 +76,27 @@ const ServiceDetails = () => {
         <ArrowLeft size={20} />
       </button>
 
-      <h4 className="service-title0">{service.name}</h4>
-      <img src={service.image} alt={service.name} className="service-image" />
-      <p className="service-price">Price: {service.price.toLocaleString()}₫</p>
+      <h4 className="service-title">{selectedService.name}</h4>
+      <img
+        src={selectedService.image}
+        alt={selectedService.name}
+        className="service-image"
+      />
+      <p className="service-price">
+        Price: {selectedService.total.toLocaleString()}₫
+      </p>
       <p className="service-gap">
-        Interval between uses: {service.gap_day} day
+        Interval between uses: {selectedService.gapDay} day
       </p>
 
-      {filteredDetails.length > 0 ? (
+      {serviceDetail && serviceDetail.length > 0 ? (
         <div className="service-details-list">
-          <h4 className="service-details-title">Services Details</h4>
-          {filteredDetails.map((detail) => {
-            const steps = serviceSteps.filter(
-              (step) => step.service_detail_id === detail.id
-            );
+          <h4 className="service-details-title">Service Details</h4>
+          {serviceDetail.map((detail) => {
+            const stepsData =
+              serviceSteps.find((item) => item.detailId === detail.id)?.steps ||
+              [];
+
             return (
               <div key={detail.id} className="service-detail-card">
                 <img
@@ -100,26 +106,25 @@ const ServiceDetails = () => {
                 />
                 <div className="service-detail-info">
                   <p className="detail-name">{detail.name}</p>
-                  <p className="detail-day">Day: {detail.day}</p>
+                  <p className="detail-day">Day: {detail.day_order}</p>
                   <p className="detail-duration">
-                    Time: {detail.duration} phút
+                    Time: {detail.duration} minutes
                   </p>
                   <p className="detail-description">
-                    {" "}
-                    Description :{detail.description}
+                    Description: {detail.description}
                   </p>
                   <p className="detail-price">
                     Price: {detail.price.toLocaleString()}₫
                   </p>
                 </div>
 
-                {steps.length > 0 && (
+                {stepsData.length > 0 && (
                   <div className="service-steps">
                     <h4 className="steps-title1">Implementation steps:</h4>
                     <ul className="steps-list">
-                      {steps.map((step) => (
+                      {stepsData.map((step) => (
                         <li key={step.id}>
-                          <strong>{step.name}:</strong> {step.description}
+                          <strong>{step.stepNumber}:</strong> {step.name}
                         </li>
                       ))}
                     </ul>
@@ -130,7 +135,7 @@ const ServiceDetails = () => {
           })}
         </div>
       ) : (
-        <p className="no-service-details">Không có chi tiết dịch vụ nào.</p>
+        <p className="no-service-details">No have Service Details.</p>
       )}
     </div>
   );

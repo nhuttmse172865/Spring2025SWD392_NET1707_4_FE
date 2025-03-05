@@ -1,5 +1,7 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import "./Menu.css";
+import axios from "axios";
+import BASE from "../../../../constants/base";
 
 const Menu = () => {
   const [openCategories, setOpenCategories] = useState(() => {
@@ -11,6 +13,48 @@ const Menu = () => {
   const [selectedPriceRanges, setSelectedPriceRanges] = useState(() => {
     return JSON.parse(localStorage.getItem("selectedPriceRanges")) || [];
   });
+
+  const [categories, setCategories] = useState([]);
+  const [services, setServices] = useState([]);
+
+  useEffect(() => {
+    const fetchCategories = async () => {
+      try {
+        const response = await axios.get(`${BASE.BASE_URL}/category/getAll`);
+        if (response.data.data && Array.isArray(response.data.data)) {
+          setCategories(response.data.data);
+        } else {
+          console.error(
+            "Categories data is not an array or is missing:",
+            response.data
+          );
+        }
+      } catch (error) {
+        console.error("Error fetching categories:", error);
+      }
+    };
+
+    const fetchServices = async () => {
+      try {
+        const response = await axios.get(
+          `${BASE.BASE_URL}/service/getAllServicePaging?page=0&size=10`
+        );
+        if (response.data.data && Array.isArray(response.data.data)) {
+          setServices(response.data.data);
+        } else {
+          console.error(
+            "Services data is not an array or is missing:",
+            response.data
+          );
+        }
+      } catch (error) {
+        console.error("Error fetching services:", error);
+      }
+    };
+
+    fetchCategories();
+    fetchServices();
+  }, []);
 
   const toggleCategory = (categoryId) => {
     let selectedCategories =
@@ -49,90 +93,6 @@ const Menu = () => {
     window.location.reload();
   };
 
-  const categories = [
-    { id: 1, name: "Facial Treatment" },
-    { id: 2, name: "Body Care" },
-    { id: 3, name: "Hair Treatment" },
-    { id: 4, name: "Acne Treatment" },
-    { id: 5, name: "Anti-Aging" },
-    { id: 6, name: "Laser Therapy" },
-  ];
-
-  const services = [
-    {
-      id: 1,
-      name: "Deep Cleansing Facial",
-      category_id: 1,
-      gap_day: 7,
-      price: 500000,
-      image: "/images/deep-cleansing.jpg",
-    },
-    {
-      id: 2,
-      name: "Hydrating Facial",
-      category_id: 1,
-      gap_day: 10,
-      price: 600000,
-      image: "/images/hydrating.jpg",
-    },
-    {
-      id: 3,
-      name: "Anti-Acne Facial",
-      category_id: 1,
-      gap_day: 14,
-      price: 550000,
-      image: "/images/anti-acne.jpg",
-    },
-    {
-      id: 4,
-      name: "Body Scrub",
-      category_id: 2,
-      gap_day: 7,
-      price: 400000,
-      image: "/images/body-scrub.jpg",
-    },
-    {
-      id: 5,
-      name: "Aromatherapy Massage",
-      category_id: 2,
-      gap_day: 14,
-      price: 700000,
-      image: "/images/aromatherapy.jpg",
-    },
-    {
-      id: 6,
-      name: "Slimming Treatment",
-      category_id: 2,
-      gap_day: 21,
-      price: 800000,
-      image: "/images/slimming.jpg",
-    },
-    {
-      id: 7,
-      name: "Hair Strengthening",
-      category_id: 3,
-      gap_day: 14,
-      price: 650000,
-      image: "/images/hair-strengthening.jpg",
-    },
-    {
-      id: 8,
-      name: "Dandruff Treatment",
-      category_id: 3,
-      gap_day: 10,
-      price: 450000,
-      image: "/images/dandruff-treatment.jpg",
-    },
-    {
-      id: 9,
-      name: "Scalp Detox",
-      category_id: 3,
-      gap_day: 7,
-      price: 480000,
-      image: "/images/scalp-detox.jpg",
-    },
-  ];
-
   const priceRanges = [
     { id: 1, label: "Dưới 500.000đ", min: 0, max: 500000 },
     { id: 2, label: "Từ 500.000đ - 1.000.000đ", min: 500000, max: 1000000 },
@@ -153,35 +113,36 @@ const Menu = () => {
       <div className="filter-section">
         <div className="section-title">SERVICE CATEGORIES</div>
         <div className="services-container">
-          {categories.map((category) => (
-            <div key={category.id} className="service-category">
-              <div
-                className="service-header"
-                onClick={() => toggleCategory(category.id)}
-              >
-                <span>{category.name}</span>
-                <span className="toggle-icon">
-                  {openCategories[category.id] ? "-" : "+"}
-                </span>
+          {Array.isArray(categories) &&
+            categories.map((category) => (
+              <div key={category.id} className="service-category">
+                <div
+                  className="service-header"
+                  onClick={() => toggleCategory(category.id)}
+                >
+                  <span>{category.name}</span>
+                  <span className="toggle-icon">
+                    {openCategories[category.id] ? "-" : "+"}
+                  </span>
+                </div>
+                <div
+                  className={`subservices ${
+                    openCategories[category.id] ? "open" : ""
+                  }`}
+                >
+                  {services
+                    .filter((service) => service.categoryId === category.id)
+                    .map((service) => (
+                      <div key={service.name} className="service-item">
+                        <input type="checkbox" id={`service-${service.name}`} />
+                        <label htmlFor={`service-${service.name}`}>
+                          {service.name}
+                        </label>
+                      </div>
+                    ))}
+                </div>
               </div>
-              <div
-                className={`subservices ${
-                  openCategories[category.id] ? "open" : ""
-                }`}
-              >
-                {services
-                  .filter((service) => service.category_id === category.id)
-                  .map((service) => (
-                    <div key={service.id} className="service-item">
-                      <input type="checkbox" id={`service-${service.id}`} />
-                      <label htmlFor={`service-${service.id}`}>
-                        {service.name}
-                      </label>
-                    </div>
-                  ))}
-              </div>
-            </div>
-          ))}
+            ))}
         </div>
       </div>
 

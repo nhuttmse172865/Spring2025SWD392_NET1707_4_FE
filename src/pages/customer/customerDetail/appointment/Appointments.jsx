@@ -128,9 +128,7 @@ const Appointments = () => {
             </div>
           </div>
 
-          <div className="appointment-time">
-            {appointment.startTime} - {appointment.endTime}
-          </div>
+          <div className="appointment-time">{appointment.startTime}</div>
 
           <div className="appointment-actions">
             <div>
