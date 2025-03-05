@@ -52,6 +52,7 @@ const BookingPage = () => {
       }
     }
   }, [customer]);
+
   const [selectedDate, setSelectedDate] = useState(new Date());
   const [selectedTime, setSelectedTime] = useState(null);
   const [selectedService, setSelectedService] = useState("");
@@ -197,6 +198,7 @@ const BookingPage = () => {
   const timeSlots = getAvailableTimeSlots();
 
   const handleAppointment = async () => {
+    console.log("Account ID:", accountId); // Debugging log
     if (!selectedService || !selectedDoctor || !selectedTime || !selectedDate) {
       alert("Please select all fields before proceeding!");
       return;
@@ -219,7 +221,7 @@ const BookingPage = () => {
           startHour: selectedTimeSlot.start,
         }
       : null;
-    console.log("check", appointmentData);
+    console.log("Appointment Data:", appointmentData);
 
     try {
       await axios.post(`${BASE.BASE_URL}/appointments/create`, appointmentData);
