@@ -29,6 +29,7 @@ const Schedule = () => {
       };
     });
     setSchedule(formatData);
+    console.log(formatData)
     
   } catch (error) {
     console.log(error);

@@ -5,63 +5,60 @@ import ContentModal from "./modal/ContentModal";
 import ProfileModal from "./modal/ProfileModal";
 
 const Appointments = () => {
+  const [appointments, setAppointments] = useState([]);
   const [countdowns, setCountdowns] = useState([]);
   const [openDropdown, setOpenDropdown] = useState(null);
   const dropdownRef = useRef(null);
+  const [showPopup, setShowPopup] = useState(false);
+  const [currentModalType, setCurrentModalType] = useState("");
 
-  const appointments = [
-    {
-      id: 1,
-      date: "21/2/2025",
-      type: "Geo Medical Center",
-      therapist: "Chinedu Ikechukwu",
-      time: "08:45 AM",
-    },
-    {
-      id: 2,
-      date: "20/2/2025",
-      type: "Teleconsult Call",
-      therapist: "Ayotunde Akinleye",
-      time: "11:00 AM",
-    },
-    {
-      id: 3,
-      date: "20/2/2025",
-      type: "Geo Medical Center",
-      therapist: "Mr. Ayo Akintunde",
-      time: "08:00 AM",
-    },
-    {
-      id: 4,
-      date: "20/2/2025",
-      type: "Geo Medical Center",
-      therapist: "Mr. Ayo Akintunde",
-      time: "07:30 PM",
-    },
-  ];
+  useEffect(() => {
+    const storedData = JSON.parse(localStorage.getItem("paymentData"));
+    if (storedData) {
+      setAppointments(Array.isArray(storedData) ? storedData : [storedData]);
+    }
+  }, []);
 
   const convertToDate = (dateStr, timeStr) => {
-    const dateParts = dateStr.split("/");
-    const timeParts = timeStr.split(" ");
-    const timeArr = timeParts[0].split(":");
-    let hour = parseInt(timeArr[0], 10);
-    const minute = parseInt(timeArr[1], 10);
-
-    if (timeParts[1] === "PM" && hour !== 12) hour += 12;
-    if (timeParts[1] === "AM" && hour === 12) hour = 0;
-
-    const year = parseInt(dateParts[2], 10);
-    const month = parseInt(dateParts[1], 10) - 1;
-    const day = parseInt(dateParts[0], 10);
-
-    return new Date(year, month, day, hour, minute, 0);
+    if (!dateStr || !timeStr) return null;
+    const formattedDate = new Date(`${dateStr}T${timeStr}:00`);
+    return isNaN(formattedDate.getTime()) ? null : formattedDate;
   };
 
-  const getTimeLeft = (startTime) => {
-    const currentTime = new Date();
-    if (isNaN(startTime.getTime())) return "Invalid date!";
+  useEffect(() => {
+    const updateCountdown = () => {
+      const newCountdowns = appointments.map((appointment) => {
+        const startTime = convertToDate(
+          appointment.date,
+          appointment.startTime
+        );
+        if (!startTime) return "Invalid date!";
 
-    const diff = startTime - currentTime;
+        const currentTime = new Date();
+        const diff = startTime - currentTime;
+
+        if (diff <= 0) return "Time's up!";
+
+        const hours = Math.floor(diff / (1000 * 60 * 60));
+        const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+        const seconds = Math.floor((diff % (1000 * 60)) / 1000);
+
+        return `${hours} : ${minutes.toString().padStart(2, "0")} : ${seconds
+          .toString()
+          .padStart(2, "0")} hours`;
+      });
+
+      setCountdowns(newCountdowns);
+    };
+
+    updateCountdown();
+    const timerId = setInterval(updateCountdown, 1000);
+
+    return () => clearInterval(timerId);
+  }, [appointments]);
+
+  const getTimeLeft = (startTime) => {
+    const diff = startTime - new Date();
     if (diff <= 0) return "Time's up!";
 
     const hours = Math.floor(diff / (1000 * 60 * 60));
@@ -73,24 +70,6 @@ const Appointments = () => {
       .padStart(2, "0")} hours`;
   };
 
-  useEffect(() => {
-    const updateCountdown = () => {
-      const newCountdowns = appointments.map((appointment) => {
-        const startTime = convertToDate(appointment.date, appointment.time);
-        return getTimeLeft(startTime);
-      });
-      setCountdowns(newCountdowns);
-    };
-
-    updateCountdown();
-    const timerId = setInterval(updateCountdown, 1000);
-
-    return () => clearInterval(timerId);
-  }, []);
-
-  const [showPopup, setShowPopup] = useState(false);
-  const [currentModalType, setCurrentModalType] = useState("");
-
   const handleShowPopup = (type) => {
     setCurrentModalType(type);
     setShowPopup(true);
@@ -98,12 +77,9 @@ const Appointments = () => {
   const handleClosePopup = () => setShowPopup(false);
 
   const handleToggleDropdown = (appointmentId) => {
-    if (openDropdown === appointmentId) {
-      setOpenDropdown(null);
-    } else {
-      setOpenDropdown(appointmentId);
-    }
+    setOpenDropdown(openDropdown === appointmentId ? null : appointmentId);
   };
+
   useEffect(() => {
     const handleClickOutside = (event) => {
       if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
@@ -112,10 +88,12 @@ const Appointments = () => {
     };
 
     document.addEventListener("mousedown", handleClickOutside);
-    return () => {
-      document.removeEventListener("mousedown", handleClickOutside);
-    };
+    return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
+
+  if (appointments.length === 0) {
+    return <p>No appointment data available.</p>;
+  }
 
   return (
     <div className="appointments-container">
@@ -128,14 +106,11 @@ const Appointments = () => {
       </div>
 
       {appointments.map((appointment, index) => (
-        <div className="appointment-row" key={appointment.id}>
+        <div className="appointment-row" key={index}>
           <div className="appointment-date">{appointment.date}</div>
 
           <div className="appointment-type">
-            <div className="type-primary">{appointment.type}</div>
-            {appointment.typeDetail && (
-              <div className="type-detail">{appointment.typeDetail}</div>
-            )}
+            <div className="type-primary">{appointment.service}</div>
             {countdowns[index] && (
               <div className="countdown">{countdowns[index]}</div>
             )}
@@ -143,7 +118,7 @@ const Appointments = () => {
 
           <div className="appointment-patient">
             <div className="patient-info">
-              <div className="patient-name">{appointment.therapist}</div>
+              <div className="patient-name">{appointment.doctor}</div>
               <div
                 className="view-profile-link"
                 onClick={() => handleShowPopup("Profile")}
@@ -153,7 +128,7 @@ const Appointments = () => {
             </div>
           </div>
 
-          <div className="appointment-time">{appointment.time}</div>
+          <div className="appointment-time">{appointment.startTime}</div>
 
           <div className="appointment-actions">
             <div>
@@ -164,55 +139,28 @@ const Appointments = () => {
                 <Eye size={16} />
                 <span>View Details</span>
               </button>
-
-              {showPopup && (
-                <div className="popup-overlay" onClick={handleClosePopup}>
-                  <div
-                    className="popup-content"
-                    onClick={(e) => e.stopPropagation()}
-                  >
-                    <div className="popup-header">
-                      <h5>
-                        {currentModalType === "Details"
-                          ? "Appointment Details"
-                          : "Therapist Profile"}
-                      </h5>
-                      <button className="close-btn" onClick={handleClosePopup}>
-                        X
-                      </button>
-                    </div>
-                    <div className="popup-body">
-                      {currentModalType === "Details" ? (
-                        <ContentModal />
-                      ) : (
-                        <ProfileModal />
-                      )}
-                    </div>
-                  </div>
-                </div>
-              )}
             </div>
 
             <div className="actions-dropdown" ref={dropdownRef}>
               <button
                 className="action-button more-actions-button"
-                onClick={() => handleToggleDropdown(appointment.id)}
+                onClick={() => handleToggleDropdown(index)}
               >
                 Actions
               </button>
 
-              {openDropdown === appointment.id && (
+              {openDropdown === index && (
                 <div className="dropdown-content">
                   <button
                     className="dropdown-item cancel-button"
-                    onClick={() => handleItemClick("Cancel")}
+                    onClick={() => alert("Cancel Appointment")}
                   >
                     <X size={14} />
                     <span>Cancel</span>
                   </button>
                   <button
                     className="dropdown-item change-button"
-                    onClick={() => handleItemClick("Change Reservation")}
+                    onClick={() => alert("Change Reservation")}
                   >
                     <Calendar size={14} />
                     <span>Change Reservation</span>
@@ -223,6 +171,30 @@ const Appointments = () => {
           </div>
         </div>
       ))}
+
+      {showPopup && (
+        <div className="popup-overlay" onClick={handleClosePopup}>
+          <div className="popup-content" onClick={(e) => e.stopPropagation()}>
+            <div className="popup-header">
+              <h5>
+                {currentModalType === "Details"
+                  ? "Appointment Details"
+                  : "Therapist Profile"}
+              </h5>
+              <button className="close-btn" onClick={handleClosePopup}>
+                X
+              </button>
+            </div>
+            <div className="popup-body">
+              {currentModalType === "Details" ? (
+                <ContentModal />
+              ) : (
+                <ProfileModal />
+              )}
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 };

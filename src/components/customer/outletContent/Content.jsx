@@ -1,87 +1,30 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import ReactPaginate from "react-paginate";
+import axios from "axios";
+import BASE from "../../../constants/base";
 import "./Content.css";
 
 const Content = () => {
   const [sortType, setSortType] = useState("default");
   const [currentPage, setCurrentPage] = useState(0);
+  const [services, setServices] = useState([]);
   const navigate = useNavigate();
 
-  const services = [
-    {
-      id: 1,
-      name: "Deep Cleansing Facial",
-      category_id: 1,
-      gap_day: 7,
-      price: 500000,
-      image: "/images/deep-cleansing.jpg",
-    },
-    {
-      id: 2,
-      name: "Hydrating Facial",
-      category_id: 1,
-      gap_day: 10,
-      price: 600000,
-      image: "/images/hydrating.jpg",
-    },
-    {
-      id: 3,
-      name: "Anti-Acne Facial",
-      category_id: 1,
-      gap_day: 14,
-      price: 550000,
-      image: "/images/anti-acne.jpg",
-    },
-    {
-      id: 4,
-      name: "Body Scrub",
-      category_id: 2,
-      gap_day: 7,
-      price: 400000,
-      image: "/images/body-scrub.jpg",
-    },
-    {
-      id: 5,
-      name: "Aromatherapy Massage",
-      category_id: 2,
-      gap_day: 14,
-      price: 700000,
-      image: "/images/aromatherapy.jpg",
-    },
-    {
-      id: 6,
-      name: "Slimming Treatment",
-      category_id: 2,
-      gap_day: 21,
-      price: 800000,
-      image: "/images/slimming.jpg",
-    },
-    {
-      id: 7,
-      name: "Hair Strengthening",
-      category_id: 3,
-      gap_day: 14,
-      price: 650000,
-      image: "/images/hair-strengthening.jpg",
-    },
-    {
-      id: 8,
-      name: "Dandruff Treatment",
-      category_id: 3,
-      gap_day: 10,
-      price: 450000,
-      image: "/images/dandruff-treatment.jpg",
-    },
-    {
-      id: 9,
-      name: "Scalp Detox",
-      category_id: 3,
-      gap_day: 7,
-      price: 480000,
-      image: "/images/scalp-detox.jpg",
-    },
-  ];
+  useEffect(() => {
+    const fetchServices = async () => {
+      try {
+        const response = await axios.get(
+          `${BASE.BASE_URL}/service/getAllServicePaging?page=0&size=10`
+        );
+        setServices(response.data.data);
+      } catch (error) {
+        console.error("Error fetching services:", error);
+      }
+    };
+
+    fetchServices();
+  }, []);
 
   const getFilteredServices = () => {
     let filtered = [...services];
@@ -90,7 +33,7 @@ const Content = () => {
       JSON.parse(localStorage.getItem("selectedCategories")) || [];
     if (selectedCategories.length) {
       filtered = filtered.filter((service) =>
-        selectedCategories.includes(service.category_id)
+        selectedCategories.includes(service.categoryId)
       );
     }
 
@@ -108,7 +51,13 @@ const Content = () => {
 
   const handleServiceClick = (service) => {
     localStorage.setItem("selectedService", JSON.stringify(service));
+    console.log(service);
     navigate("/customer-service/service-details");
+  };
+
+  const handleBookClick = (id) => {
+    localStorage.setItem("selectedServiceId", id);
+    navigate("/booking");
   };
 
   const sortServices = (services) => {
@@ -145,25 +94,25 @@ const Content = () => {
   return (
     <div className="spa-container">
       <div className="sort-container">
-        <span className="sort-label">Xếp theo:</span>
+        <span className="sort-label">Sort by:</span>
         <div className="sort-buttons">
           <button
             className={`sort-button ${sortType === "default" ? "active" : ""}`}
             onClick={() => setSortType("default")}
           >
-            Mặc định
+            Default
           </button>
           <button
             className={`sort-button ${sortType === "nameAZ" ? "active" : ""}`}
             onClick={() => setSortType("nameAZ")}
           >
-            Tên A-Z
+            Name A-Z
           </button>
           <button
             className={`sort-button ${sortType === "nameZA" ? "active" : ""}`}
             onClick={() => setSortType("nameZA")}
           >
-            Tên Z-A
+            Name Z-A
           </button>
           <button
             className={`sort-button ${
@@ -171,7 +120,7 @@ const Content = () => {
             }`}
             onClick={() => setSortType("priceLowHigh")}
           >
-            Giá thấp đến cao
+            Price Low to High
           </button>
           <button
             className={`sort-button ${
@@ -179,7 +128,7 @@ const Content = () => {
             }`}
             onClick={() => setSortType("priceHighLow")}
           >
-            Giá cao xuống thấp
+            Price High to Low
           </button>
         </div>
       </div>
@@ -187,7 +136,7 @@ const Content = () => {
       <div className="services-grid">
         {currentServices.map((service) => (
           <div
-            key={service.id}
+            key={service.id || service.name} 
             className="service-card"
             onClick={() => handleServiceClick(service)}
           >
@@ -199,8 +148,19 @@ const Content = () => {
               />
             </div>
             <div className="service-info">
-              <h3 className="service-title">Dịch vụ: {service.name}</h3>
-              <p className="service-price">{formatPrice(service.price)}₫</p>
+              <h3 className="service-title">Service: {service.name}</h3>
+              <div className="service-action">
+                <p className="service-price">{formatPrice(service.total)}₫</p>
+                <button
+                  className="book-button"
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    handleBookClick(service.id);
+                  }}
+                >
+                  Book
+                </button>
+              </div>
             </div>
           </div>
         ))}

@@ -84,9 +84,12 @@ const BlogDetails = () => {
 
   return (
     <div className="blog-container">
-      <h1>{post.title}</h1>
-      <img src={post.image} alt={post.title} />
-      <div dangerouslySetInnerHTML={{ __html: post.content }} />
+      <h1 className="blog-title">{post.title}</h1>
+      <img className="blog-image" src={post.image} alt={post.title} />
+      <div
+        className="blog-content"
+        dangerouslySetInnerHTML={{ __html: `<div>${post.content}</div>` }}
+      />
     </div>
   );
 };

@@ -10,8 +10,8 @@ import CheckIn from "./pages/staff/checkin/CheckIn";
 import CheckOut from "./pages/staff/checkout/CheckOut";
 import Therapist from "./pages/therapist/home/Therapist";
 import RecordBooking from "./pages/therapist/RecordBooking/RecordBooking";
-import Schedule from "./pages/therapist/schedule/Schedule"
-import ChangeSchedule from "./pages/therapist/schedule/ChangeShedule";;
+import Schedule from "./pages/therapist/schedule/Schedule";
+import ChangeSchedule from "./pages/therapist/schedule/ChangeShedule";
 import CustomerService from "./pages/customer/customerService/CustomerService";
 import Content from "./components/customer/outletContent/Content";
 import Register from "./pages/customer/register/Register";
@@ -34,6 +34,7 @@ import BlogDetails from "./components/customer/blog/blogDetails/BlogDetails";
 import ServiceDetails from "./components/customer/serviceDetails/ServiceDetails";
 import CustomerPrice from "./pages/customer/customerPrice/CustomerPrice";
 import CustomerQuiz from "./pages/customer/quiz/CustomerQuiz";
+import CustomerPayment from "./pages/customer/customerPayment/CustomerPayment";
 
 function App() {
   return (
@@ -42,7 +43,6 @@ function App() {
         <Route path="/" element={<CustomerLayout />}>
           <Route index element={<Customer />} />
           <Route path="customer-service" element={<CustomerService />}>
-
             <Route index element={<Content />} />
             <Route path="service-details" element={<ServiceDetails />} />
           </Route>
@@ -51,14 +51,21 @@ function App() {
             <Route path="account" element={<Account />} />
             <Route path="appointments" element={<Appointments />} />
           </Route>
-          <Route path="customer-view/therapist" element={<CustomerViewTherapist />} />
-          <Route path="/customer-view/therapist/:id" element={<TherapistDetail />} />
+          <Route
+            path="customer-view/therapist"
+            element={<CustomerViewTherapist />}
+          />
+          <Route
+            path="/customer-view/therapist/:id"
+            element={<TherapistDetail />}
+          />
           <Route path="/booking" element={<Booking />} />
           <Route path="/contact" element={<CustomerContact />} />
           <Route path="blog" element={<CustomerBlog />} />
           <Route path="blog/:id" element={<BlogDetails />} />
           <Route path="/price" element={<CustomerPrice />} />
           <Route path="/quiz" element={<CustomerQuiz />} />
+          <Route path="/payment" element={<CustomerPayment />} />
         </Route>
         <Route path="/login" element={<Login />} />
         <Route path="/registrations/" element={<Register />}>
@@ -75,7 +82,7 @@ function App() {
           )}
         </Route>
         <Route path="/admin" element={<AdminDashboard />}>
-        <Route path="manageAccount" element={<ManageAccount />} />
+          <Route path="manageAccount" element={<ManageAccount />} />
         </Route>
         <Route path="/staff" element={<Staff />}>
           <Route path="checkin" element={<CheckIn />} />
@@ -84,8 +91,8 @@ function App() {
         <Route path="/therapist" element={<Therapist />}>
           <Route path="schedule" element={<Schedule />} />
           <Route path="record" element={<RecordBooking />} />
-        <Route path="changeSchedule" element={<ChangeSchedule />} />
-        <Route path="managerInformation" element={<TherapistProfile />}/>
+          <Route path="changeSchedule" element={<ChangeSchedule />} />
+          <Route path="managerInformation" element={<TherapistProfile />} />
         </Route>
       </Routes>
     </BrowserRouter>

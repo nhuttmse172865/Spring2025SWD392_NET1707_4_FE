@@ -1,92 +1,52 @@
-p,
-h2,
-h3 {
-  text-align: justify;
-  font-family: Arial, sans-serif;
-  font-size: 16px;
-  line-height: 1.6;
-}
-
-h2,
-h3 {
-  color: #ff4f9d;
-  font-weight: bold;
-}
-
-p {
-  color: black;
-  margin-bottom: 15px;
-}
-
-h2 {
-  font-size: 22px;
-  margin-top: 30px;
-  color: #ff4f9d;
-}
-
-h3 {
-  font-size: 20px;
-  color: #ff4f9d;
-}
-
-h2,
-h3 {
-  margin-bottom: 10px;
-}
-
-p strong {
-  font-weight: bold;
-}
-
-#skincare-l-g {
-  color: #ff4f9d;
-}
-
-#v-sao-n-n-ch-m-s-c-da-h-ng-ng-y {
-  color: #ff4f9d;
-}
-
-#t-c-d-ng-c-a-vi-c-skincare-ch-m-s-c-da {
-  color: #ff4f9d;
-}
-
-#c-ch-x-c-nh-t-nh-tr-ng-da-c-a-b-n {
-  color: #1abc9c;
-}
-
-#skincare-v-o-th-i-i-m-n-o-l-t-t-trong-ng-y {
-  color: #16a085;
-}
-
-#quy-tr-nh-skincare-chu-n-t-ng-b-c-t-c-b-n-n-n-ng-cao-cho-da-th-ng {
-  color: #ff4f9d;
-}
-
 .blog-container {
   max-width: 90%;
-  margin: 0 auto;
+  margin: auto;
   padding: 20px;
-  font-family: Arial, sans-serif;
-  margin-top: 20px;
+  margin-top: 50px;
 }
 
-.blog-container h1 {
-  font-size: 2.5rem;
-  color: #333;
-  margin-bottom: 20px;
+.blog-title {
+  font-size: 28px;
+  font-weight: bold;
+  color: black;
   text-align: center;
+  margin-bottom: 15px;
+  font-family: "Poppins", sans-serif;
 }
 
-.blog-container img {
+.blog-image {
   width: 100%;
-  height: 500px;
-  border-radius: 8px;
-  margin-top: 20px;
+  max-height: 400px;
+  object-fit: cover;
+  border-radius: 10px;
+  margin-bottom: 20px;
 }
 
-.blog-container div {
-  font-size: 1rem;
-  line-height: 1.6;
-  color: #555;
-  margin-top: 20px;
+.blog-content {
+  font-size: 16px;
+  line-height: 1.8;
+  text-align: justify;
+  color: black;
+  font-family: "Poppins", sans-serif;
+}
+
+.blog-content h2 {
+  font-size: 22px;
+  margin: 20px 0;
+  color: #ff4f9d;
+  font-family: "Poppins", sans-serif;
+  font-weight: 500;
+}
+
+.blog-content p {
+  margin-bottom: 15px;
+  font-family: "Poppins", sans-serif;
+}
+
+.blog-content h3 {
+  font-size: 18px;
+  margin-top: 15px;
+  color: black;
+  font-family: "Poppins", sans-serif;
+  font-weight: 500;
 }

@@ -117,32 +117,32 @@ try {
                 onCancel={() => setIsModalOpen(false)}
                 footer={[
                     <Button key="cancel" onClick={() => setIsModalOpen(false)}>
-                        Hủy
+                        Cancle
                     </Button>,
                     <Button key="submit" type="primary" onClick={handleSubmit}>
-                        Lưu
+                        Save
                     </Button>,
                 ]}
             >
-                <label>Tên:</label>
+                <label>Name:</label>
                 <Input name="name" value={formData.name} onChange={handleInputChange} />
                 <label>Password:</label>
                 <Input name="password" value={formData.password} onChange={handleInputChange} />
-                <label>Số điện thoại:</label>
+                <label>Phone:</label>
                 <Input name="phone" value={formData.phone} onChange={handleInputChange} />
 
-                <label>Kinh nghiệm (năm):</label>
+                <label>Experience:</label>
                 <Input type="number" name="experience" value={formData.experience} onChange={handleInputChange} />
 
-                <label>Chuyên môn:</label>
+                <label>Specialty:</label>
                 <Input name="specialty" value={formData.specialty} onChange={handleInputChange} />
 
-                <label>Chứng chỉ:</label>
+                <label>Certificate:</label>
                 <Input name="certificate" value={formData.certificate} onChange={handleInputChange} />
 
-                <label>Ảnh:</label>
+                <label>Image:</label>
                 <Upload beforeUpload={() => false}   onChange={handleFileChange} maxCount={1}  >
-                    <Button icon={<UploadOutlined />}>Tải ảnh lên</Button>
+                    <Button icon={<UploadOutlined />}>Upload</Button>
                 </Upload>
             </Modal>
         </div>

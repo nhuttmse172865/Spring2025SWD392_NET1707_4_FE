@@ -33,6 +33,7 @@ const CheckIn = () => {
         // params: { page: currentPage - 1, size: pageSize },
       });
       setProducts(res.data.data.content);
+      console.log(res.data.data.content)
     } catch (error) {
       console.log(error);
     }
@@ -43,7 +44,7 @@ const CheckIn = () => {
     const filtered = products.filter((product) =>
       product.appointment_details.some((detail) =>
         dayjs(detail.day).isSame(selectedDate, "day")
-      )&& product.account.phone.includes(searchPhone) 
+      )&& product?.account?.phone?.includes(searchPhone) 
     );
     setFilteredProducts(filtered);
   };
@@ -61,7 +62,31 @@ const CheckIn = () => {
   setSelectedProduct(product);
     setIsCheckOutModalVisible(true);
  }
+const handleTransfer = async () =>{
+  if(!selectedProduct) return;
+  const appointmentId = selectedProduct.id;
+  const amount = selectedProduct.total;
+  const returnUrl = encodeURIComponent("http://localhost:5173/staff/checkout"); 
 
+
+  try {
+    const response = await axios.get(`${BASE.BASE_URL}/vnpay/create-payment-url`,{
+      params:{
+              appointmentId,
+              amount,
+              returnUrl,
+      }
+    })
+    console.log(response)
+    if (response.data.data ) {
+      window.location.href = response.data.data;
+    } else {
+      console.error("Không lấy được payment URL", response.data);
+    }
+  } catch (error) {
+    console.log(error)
+  }
+}
   return (
     <div className="checkin-container">
       <div className="checkin-header">
@@ -179,7 +204,10 @@ const CheckIn = () => {
         handleCheckOutCancel();
       }}
     >
-       CheckOut
+       Cash
+    </Button>
+    <Button onClick={handleTransfer} style={{marginLeft: "10px"}} type="primary" className="checkout-confirm-btn">
+    Transfer
     </Button>
     </div>
         

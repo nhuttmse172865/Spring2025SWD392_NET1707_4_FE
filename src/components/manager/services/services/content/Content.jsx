@@ -1,10 +1,10 @@
 import React from 'react'
 import Table from '../table/Table'
 
-const Content = () => {
+const Content = ({setShowModal, setItemUpdate}) => {
   return (
     <div>
-        <Table />
+        <Table setShowModal={setShowModal} setItemUpdate={setItemUpdate} />
     </div>
   )
 }

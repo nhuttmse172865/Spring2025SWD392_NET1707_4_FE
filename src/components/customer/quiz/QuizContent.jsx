@@ -197,9 +197,9 @@ const QuizContent = () => {
                 <span className="question-number">
                   Question {currentQuestion + 1} of {questions.length}
                 </span>
-                <h31 className="question-text">
+                <h3 className="question-text">
                   {questions[currentQuestion]}
-                </h31>
+                </h3>
               </div>
 
               <div className="answer-section">

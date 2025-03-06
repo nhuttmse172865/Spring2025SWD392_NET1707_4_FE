@@ -2,25 +2,52 @@ import React from "react";
 import CaculateGridColumn from "../../../../../../helpers/CaculateGridColumn";
 import ICONS from "../../../../../../constants/icons";
 
-const Item = ({ listTitle, active = false }) => {
+const Item = ({ listTitle, active = false, item, index }) => {
   const gridColumnTemplate = CaculateGridColumn(listTitle);
-  
+
   return (
     <ul
       className=" gap-[15px] text-[15px] text-[rgba(0,0,0,0.5)]  hover:bg-[rgba(0,0,0,0.05)]  grid justify-around items-center min-h-[80px] max-h-[100px] rounded-[.375rem] cursor-pointer relative"
       style={{
         gridTemplateColumns: gridColumnTemplate,
-        padding: "10px 13px", 
+        padding: "10px 13px",
         boxShadow: active ? "0px 0px 1px 1px var(--color-primary-50)" : null,
       }}
     >
-      <li>1</li>
-      <li>Name</li>
-      <li>Category</li>
-      <li>Description</li>
-      <li>Issue Skin</li>
-      <li>Skin Type</li>
-      <li>Therapist</li>
+      <li>{index + 1}</li>
+      <li>{item.name}</li>
+      <li>{item.categoryName}</li>
+      <li>{item.description}</li>
+      <li className="flex flex-wrap gap-5">
+        {Array.isArray(item.issueTypeName) &&
+          item.issueTypeName.map((issueSkin, index) => (
+            <span>
+              {`${issueSkin} ${
+                index !== item.issueTypeName.length - 1 ? "," : ""
+              }`}
+            </span>
+          ))}
+      </li>
+      <li className="flex flex-wrap gap-5">
+        {Array.isArray(item.skinTypeName) &&
+          item.skinTypeName.map((skinType, index) => (
+            <span>
+              {`${skinType} ${
+                index !== item.skinTypeName.length - 1 ? "," : ""
+              }`}
+            </span>
+          ))}
+      </li>
+      <li>
+        {Array.isArray(item.therapistsName) &&
+          item.therapistsName.map((therapist, index) => (
+            <span>
+              {`${therapist} ${
+                index !== item.therapistsName.length - 1 ? "," : ""
+              }`}
+            </span>
+          ))}
+      </li>
       <li></li>
       <div
         className="absolute top-0 right-3.5"

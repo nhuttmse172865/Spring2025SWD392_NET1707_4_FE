@@ -212,7 +212,7 @@ const CheckIn = () => {
         >
           {detail.status === "CHECKIN" ? "Checked In" : "Check In"}
         </Button>
-        <Button
+        {/* <Button
       key="checkout"
       className="checkout-confirm-btn"
       type="primary"
@@ -222,7 +222,7 @@ const CheckIn = () => {
       }}
     >
        CheckOut
-    </Button>
+    </Button> */}
     </div>
         
        

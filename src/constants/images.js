@@ -9,8 +9,8 @@ import visa from '../assets/images/visa.png'
 import otherCard from '../assets/images/other.jpg'
 import mastercard from '../assets/images/mastercard.jpg'
 import background from '../assets/images/background.jpg'
-
-
+import vnpay from '../assets/images/vnpay.jpg'
+import Paypal from '../assets/images/Paypal.png'
 const IMAGES = {
   logo,
   bannerLogin,
@@ -22,7 +22,9 @@ const IMAGES = {
   visa,
   otherCard,
   mastercard,
-  background
+  background,
+  vnpay,
+  Paypal
 };
 
 export default IMAGES;

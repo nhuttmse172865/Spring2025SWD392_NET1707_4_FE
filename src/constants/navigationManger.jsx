@@ -5,6 +5,11 @@ import Category from "../pages/manager/services/category/Category";
 import SkinType from "../pages/manager/services/skinType/SkinType";
 import { IssueSkin } from "../pages/manager/services/issueSkin/IssueSkin";
 import Services from "../pages/manager/services/services/Services";
+import Customer from "../pages/manager/account/customer/Customer";
+import Therapist from "../pages/manager/account/therapist/Therapist";
+import Staff from "../pages/manager/account/staff/Staff";
+import BusinessTime from "../pages/manager/schedule/businessTime/BusinessTime";
+import WorkingTime from "../pages/manager/schedule/workingTime/WorkingTime";
 
 const COMPONENTS = {
   DASHBOARD: <Dashboard />,
@@ -12,7 +17,12 @@ const COMPONENTS = {
   SERVICES: <Services />,
   CATEGORY: <Category />,
   SKIN_TYPE: <SkinType />,
-  ISSUE_SKIN: <IssueSkin />
+  ISSUE_SKIN: <IssueSkin />,
+  CUSTOMER: <Customer />,
+  THERAPIST: <Therapist />,
+  STAFF: <Staff />,
+  BUSINESS_TIME: <BusinessTime />,
+  WORKING_TIME: <WorkingTime />
 };
 
 const LIST_NAVIGATION_MANAGER = [
@@ -64,28 +74,33 @@ const LIST_NAVIGATION_MANAGER = [
             path: "/issue-skin",
           },
         ],
-        component:null,
+        component: null,
         path: "menu-services",
       },
       {
-        nameMenu: "Employee",
+        nameMenu: "Account",
         icon: ICONS.employee,
         iconActive: ICONS.employeeActive,
         sortNumber: 3,
         subItems: [
           {
+            name: "Customer",
+            component: COMPONENTS.CUSTOMER,
+            path: "/",
+          },
+          {
             name: "Staff",
-            component: "",
+            component: COMPONENTS.STAFF,
             path: "/staff",
           },
           {
             name: "Therapist",
-            component: "",
+            component: COMPONENTS.THERAPIST,
             path: "/therapist",
           },
         ],
         component: "",
-        path: "menu-employee",
+        path: "menu-account",
       },
       {
         nameMenu: "Schedule",
@@ -95,19 +110,18 @@ const LIST_NAVIGATION_MANAGER = [
         subItems: [
           {
             name: "Business Time",
-            component: "",
+            component: COMPONENTS.BUSINESS_TIME,
             path: "/business-time",
           },
           {
             name: "Working Time",
-            component: "",
+            component:  COMPONENTS.WORKING_TIME,
             path: "/working-time",
           },
         ],
         component: "",
         path: "menu-schedule",
       },
-      
     ].sort((a, b) => a.sortNumber - b.sortNumber),
     sortNumber: 0,
   },

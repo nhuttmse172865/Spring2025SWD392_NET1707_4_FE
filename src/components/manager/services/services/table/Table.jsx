@@ -1,8 +1,9 @@
-import React from 'react'
-import Header from '../../../../common/table/header/Header';
-import Body from './body/Body';
+import React from "react";
+import Header from "../../../../common/table/header/Header";
+import Body from "./body/Body";
 
-const listTitle = [
+const Table = ({ setShowModal, setItemUpdate }) => {
+  const listTitle = [
     {
       name: "No.",
       column: 0.5,
@@ -13,11 +14,11 @@ const listTitle = [
     },
     {
       name: "Category",
-      column: 2,
+      column: 1.5,
     },
     {
       name: "Description",
-      column: 3,
+      column: 2.5,
     },
     {
       name: "Issue Skin",
@@ -25,11 +26,11 @@ const listTitle = [
     },
     {
       name: "Skin Type",
-      column: 1.5,
+      column:2,
     },
     {
       name: "Therapist",
-      column: 1,
+      column: 1.5,
     },
     {
       name: "",
@@ -37,13 +38,16 @@ const listTitle = [
     },
   ];
 
-const Table = () => {
   return (
-    <div className='mt-5'>
-        <Header listTitle={listTitle} />
-        <Body listTitle={listTitle} />
+    <div className="mt-5">
+      <Header listTitle={listTitle} />
+      <Body
+        listTitle={listTitle}
+        setItemUpdate={setItemUpdate}
+        setShowModal={setShowModal}
+      />
     </div>
-  )
-}
+  );
+};
 
-export default Table
+export default Table;
