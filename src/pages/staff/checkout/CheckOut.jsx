@@ -1,11 +1,230 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
+import "./CheckOut.css"; 
+import { FaQrcode } from "react-icons/fa";
+import { Button, Form, Input, Modal ,Spin,DatePicker ,Pagination} from "antd";
+import { Html5QrcodeScanner } from "html5-qrcode";
+import axios from "axios";
+import BASE from "../../../constants/base";
+import dayjs from "dayjs";
+const CheckIn = () => {
+ 
+  const [isCheckOutModalVisible, setIsCheckOutModalVisible] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const [selectedProduct, setSelectedProduct] = useState(null);
+  const [currentPage, setCurrentPage] = useState(1);
+  const pageSize = 5;
+  const [totalItems, setTotalItems] = useState(0);
+  const [selectedDate, setSelectedDate] = useState(dayjs());
+  const [filteredProducts, setFilteredProducts] = useState([]);
+  const [products, setProducts] = useState([]);
+  const [searchPhone, setSearchPhone] = useState("");
+  useEffect(() => {
+    fetchAppointments();
+  }, [currentPage]);
 
-const CheckOut = () => {
+  useEffect(() => {
+    filterAppointmentsByDate();
+  }, [selectedDate, products,searchPhone]); 
+
+  const fetchAppointments = async () => {
+    setLoading(true);
+    try {
+      const res = await axios.get(`${BASE.BASE_URL}/appointments/getAll`, {
+        // params: { page: currentPage - 1, size: pageSize },
+      });
+      setProducts(res.data.data.content);
+      console.log(res.data.data.content)
+    } catch (error) {
+      console.log(error);
+    }
+    setLoading(false);
+  };
+
+  const filterAppointmentsByDate = () => {
+    const filtered = products.filter((product) =>
+      product.appointment_details.some((detail) =>
+        dayjs(detail.day).isSame(selectedDate, "day")
+      )&& product?.account?.phone?.includes(searchPhone) 
+    );
+    setFilteredProducts(filtered);
+  };
+
+
+
+
+
+  const handleCheckOutCancel = () => {
+    setIsCheckOutModalVisible(false);
+    setSelectedProduct(null);
+  };
+
+ const showAppointmentDetail = (product) =>{
+  setSelectedProduct(product);
+    setIsCheckOutModalVisible(true);
+ }
+const handleTransfer = async () =>{
+  if(!selectedProduct) return;
+  const appointmentId = selectedProduct.id;
+  const amount = selectedProduct.total;
+  const returnUrl = encodeURIComponent("http://localhost:5173/staff/checkout"); 
+
+
+  try {
+    const response = await axios.get(`${BASE.BASE_URL}/vnpay/create-payment-url`,{
+      params:{
+              appointmentId,
+              amount,
+              returnUrl,
+      }
+    })
+    console.log(response)
+    if (response.data.data ) {
+      window.location.href = response.data.data;
+    } else {
+      console.error("Không lấy được payment URL", response.data);
+    }
+  } catch (error) {
+    console.log(error)
+  }
+}
   return (
-    <div>
-      <h1>Check-Out Page</h1>
+    <div className="checkin-container">
+      <div className="checkin-header">
+        <div className="header-actions">
+          
+         
+        </div>
+
+        <div style={{ display: "flex", gap: "20px", marginBottom: "10px" }}>
+        <Input
+            placeholder="Search by phone..."
+            value={searchPhone}
+            onChange={(e) => setSearchPhone(e.target.value)}
+          />
+          <DatePicker
+            value={selectedDate}
+            onChange={(date) => setSelectedDate(date || dayjs())}
+            format="YYYY-MM-DD"
+          />
+       
+        </div>
+      </div>
+{loading ? ( 
+  <div className="loading-container">
+    <Spin size="large"/>
+  </div>
+) : (
+ 
+ <>
+ <table className="checkin-table">
+        <thead>
+          <tr>
+            <th>Name</th>
+            <th>Service</th>
+            <th>Phone</th>
+            <th>Total</th>
+            <th>Day</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+              {filteredProducts.length > 0 ? (
+                filteredProducts.map((product) => (
+                  <tr key={product.id}>
+                    <td>{product.account.name}</td>
+                    <td>{product.service.name}</td>
+                    <td>{product.account.phone}</td>
+                    <td>{product.total}</td>
+                    <td>{dayjs(product.appointment_details[0].day).format("YYYY-MM-DD")}</td>
+                    <td>
+                      <Button
+                        className="checkout-button"
+                        onClick={() => showAppointmentDetail(product)}
+                      >
+                        View detail
+                      </Button>
+                    </td>
+                  </tr>
+                ))
+              ) : (
+                <tr>
+                  <td colSpan="6" style={{ textAlign: "center" }}>
+                    No appointments found
+                  </td>
+                </tr>
+              )}
+            </tbody>
+      </table>
+       
+       <Pagination
+            current={currentPage}
+            pageSize={pageSize}
+            total={totalItems}
+            onChange={(page) => setCurrentPage(page)}
+            style={{ marginTop: "20px", textAlign: "center" }}
+          />
+ </>
+)}
+      
+     
+
+     
+      <Modal
+  title="Information"
+  open={isCheckOutModalVisible}
+  onCancel={handleCheckOutCancel}
+  footer={[
+    <Button key="cancel" className="checkout-cancel-btn" onClick={handleCheckOutCancel}>
+      Cancel
+    </Button>,
+    
+      
+  ]}
+  className="checkout-modal"
+>
+{selectedProduct && selectedProduct.appointment_details.length > 0 ? (
+  <div className="checkout-info">
+    {selectedProduct.appointment_details.map((detail) => (
+      <div key={detail.id} className="appointment-item">
+        <p><strong>Service detail:</strong> {detail.name}</p>
+        <p><strong>Status:</strong> {detail.status}</p>
+        <p><strong>Price:</strong> {detail.price}</p>
+        <p><strong>Start:</strong> {detail.startHour}</p>
+        <p><strong>End:</strong> {detail.endHour}</p>
+
+    <div className="btn-action-checkinout">
+      
+   
+        <Button
+      key="checkout"
+      className="checkout-confirm-btn"
+      type="primary"
+      onClick={() => {
+        setProducts(products.filter((p) => p.id !== selectedProduct.id));
+        handleCheckOutCancel();
+      }}
+    >
+       Cash
+    </Button>
+    <Button onClick={handleTransfer} style={{marginLeft: "10px"}} type="primary" className="checkout-confirm-btn">
+    Transfer
+    </Button>
+    </div>
+        
+       
+      </div>
+    ))}
+  </div>
+) : (
+  <p>No appointment details available</p>
+)}
+
+
+</Modal>
+  
+
     </div>
   );
 };
 
-export default CheckOut;
+export default CheckIn;

@@ -1,68 +1,43 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import './Schedule.css';
-import { Table, Tag } from 'antd';
-
+import { DatePicker, Table, Tag } from 'antd';
+import { jwtDecode } from "jwt-decode";
+import axios from 'axios';
+import BASE from '../../../constants/base';
+import dayjs from 'dayjs';
 const Schedule = () => {
   const [schedule, setSchedule] = useState([
-    {
-      key: '1',
-      date: '2025-02-15',
-      startTime: '09:00',
-      endTime: '10:00',
-      status: 'Pending',
-    },
-    {
-      key: '2',
-      date: '2025-02-15',
-      startTime: '11:00',
-      endTime: '12:00',
-      status: 'Completed',
-    },
-    {
-      key: '3',
-      date: '2025-02-16',
-      startTime: '14:00',
-      endTime: '15:00',
-      status: 'Cancelled',
-    },
-    {
-      key: '3',
-      date: '2025-02-16',
-      startTime: '14:00',
-      endTime: '15:00',
-      status: 'Cancelled',
-    },
-    {
-      key: '3',
-      date: '2025-02-16',
-      startTime: '14:00',
-      endTime: '15:00',
-      status: 'Cancelled',
-    },
 
-    {
-      key: '3',
-      date: '2025-02-16',
-      startTime: '14:00',
-      endTime: '15:00',
-      status: 'Cancelled',
-    },
-    {
-      key: '3',
-      date: '2025-02-16',
-      startTime: '14:00',
-      endTime: '15:00',
-      status: 'Cancelled',
-    },
-    {
-      key: '3',
-      date: '2025-02-16',
-      startTime: '14:00',
-      endTime: '15:00',
-      status: 'Cancelled',
-    },
   ]);
-
+ const [selectedDate, setSelectedDate] = useState(dayjs().format('YYYY-MM-DD'));
+  useEffect(() => {
+    feachSchedule();
+  }, []);
+  const feachSchedule = async () => {
+    const token = localStorage.getItem('customer_information');
+    const decode = jwtDecode(token);
+    const accountId = decode.accountId; 
+  try {
+    const res = await axios.get(`${BASE.BASE_URL}/therapist-working-time/get-by-account-id/${accountId}`);
+    const formatData = res.data.data.map((item) => {
+      return {
+        key: item.id,
+        date: item.day,
+        startTime: item.startHour,
+        endTime: item.endHour,
+        status: item.status,
+      };
+    });
+    setSchedule(formatData);
+    console.log(formatData)
+    
+  } catch (error) {
+    console.log(error);
+    
+  }
+  };
+ const filterSchedule = schedule.filter((item) =>item.date === selectedDate);
+  
   const columns = [
     {
       title: 'Date',
@@ -85,7 +60,7 @@ const Schedule = () => {
       dataIndex: 'status',
       key: 'status',
       render: (status) => {
-        let color = status === 'Completed' ? 'green' : status === 'Pending' ? 'orange' : 'red';
+        let color = status === 'AVAILABLE' ? 'green' : 'red';
         return <Tag color={color}>{status}</Tag>;
       },
     },
@@ -94,7 +69,11 @@ const Schedule = () => {
   return (
     <div className="schedule-page">
       {/* <h2 className="schedule-title">Schedule</h2> */}
-      <Table columns={columns} dataSource={schedule} pagination={false} className="schedule-table" />
+      <DatePicker className="schedule-datepicker" 
+        value={dayjs(selectedDate)}
+        onChange ={(date,dateString) => setSelectedDate(dateString)}
+      />
+      <Table columns={columns} dataSource={filterSchedule} pagination={false} className="schedule-table" />
     </div>
   );
 };
