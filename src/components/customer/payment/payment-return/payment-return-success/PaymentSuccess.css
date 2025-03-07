@@ -1,0 +1,173 @@
+/* Container chung */
+.payment-status-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  background-color: #f5f6fa;
+  padding: 20px;
+}
+
+/* Card chứa nội dung */
+.payment-status-card {
+  background-color: #ffffff;
+  padding: 40px;
+  border-radius: 12px;
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
+  text-align: center;
+  width: 100%;
+  max-width: 30%; /* Độ rộng tối đa là 70% của màn hình */
+  animation: fadeIn 0.5s ease-in-out;
+}
+
+/* Icon trạng thái */
+.status-icon {
+  margin-bottom: 25px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.status-icon.success svg {
+  transition: transform 0.3s ease;
+}
+
+.status-icon.success:hover svg {
+  transform: scale(1.1); /* Hiệu ứng phóng to khi hover */
+}
+
+.status-icon.failure svg {
+  transition: transform 0.3s ease;
+}
+
+.status-icon.failure:hover svg {
+  transform: scale(1.1); /* Hiệu ứng phóng to khi hover */
+}
+
+/* Tiêu đề */
+.payment-status-card h2 {
+  font-size: 28px;
+  margin-bottom: 15px;
+  font-weight: 600;
+  color: #333;
+}
+
+/* Thông điệp chính */
+.status-message {
+  font-size: 18px;
+  color: #555;
+  margin-bottom: 10px;
+}
+
+/* Chi tiết */
+.status-detail {
+  font-size: 14px;
+  color: #777;
+  margin-bottom: 25px;
+  line-height: 1.5;
+}
+
+/* Nút chung */
+.status-button {
+  padding: 12px 24px;
+  border: none;
+  border-radius: 6px;
+  font-size: 16px;
+  cursor: pointer;
+  transition: background-color 0.3s ease, transform 0.2s ease;
+}
+
+/* Nút Success */
+.success-btn {
+  background-color: #28a745;
+  color: #fff;
+}
+
+.success-btn:hover {
+  background-color: #218838;
+  transform: translateY(-2px);
+}
+
+/* Nút Try Again */
+.try-again-btn {
+  background-color: #dc3545;
+  color: #fff;
+  margin-right: 10px;
+}
+
+.try-again-btn:hover {
+  background-color: #c82333;
+  transform: translateY(-2px);
+}
+
+/* Nút Back to Home */
+.status-button:not(.try-again-btn) {
+  background-color: #007bff;
+  color: #fff;
+}
+
+.status-button:not(.try-again-btn):hover {
+  background-color: #0069d9;
+  transform: translateY(-2px);
+}
+
+/* Nhóm nút trong Failure */
+.button-group {
+  display: flex;
+  justify-content: center;
+  gap: 15px;
+}
+
+/* Animation khi xuất hiện */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .payment-status-card {
+    padding: 30px;
+    max-width: 90%; /* Giảm xuống 90% trên màn hình nhỏ hơn */
+  }
+
+  .payment-status-card h2 {
+    font-size: 24px;
+  }
+
+  .status-message {
+    font-size: 16px;
+  }
+
+  .status-detail {
+    font-size: 13px;
+  }
+
+  .status-button {
+    padding: 10px 20px;
+    font-size: 14px;
+  }
+
+  .button-group {
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .status-icon svg {
+    width: 60px;
+    height: 60px;
+  }
+}
+
+@media (max-width: 480px) {
+  .payment-status-card {
+    padding: 20px;
+    max-width: 95%; /* Gần full-width trên mobile */
+  }
+}

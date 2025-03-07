@@ -42,7 +42,7 @@ const Content = () => {
     if (selectedPriceRanges.length) {
       filtered = filtered.filter((service) =>
         selectedPriceRanges.some(
-          (range) => service.price >= range.min && service.price <= range.max
+          (range) => service.total >= range.min && service.total <= range.max
         )
       );
     }
@@ -75,8 +75,15 @@ const Content = () => {
     }
   };
 
+  // const formatPrice = (price) => {
+  //   return new Intl.NumberFormat("vi-VN").format(price);
+  // };
+
   const formatPrice = (price) => {
-    return new Intl.NumberFormat("vi-VN").format(price);
+    return new Intl.NumberFormat("en-US", {
+      style: "currency",
+      currency: "USD",
+    }).format(price);
   };
 
   const servicesPerPage = 6;
@@ -136,7 +143,7 @@ const Content = () => {
       <div className="services-grid">
         {currentServices.map((service) => (
           <div
-            key={service.id || service.name} 
+            key={service.id || service.name}
             className="service-card"
             onClick={() => handleServiceClick(service)}
           >
@@ -150,7 +157,7 @@ const Content = () => {
             <div className="service-info">
               <h3 className="service-title">Service: {service.name}</h3>
               <div className="service-action">
-                <p className="service-price">{formatPrice(service.total)}₫</p>
+                <p className="service-price">{formatPrice(service.total)}</p>
                 <button
                   className="book-button"
                   onClick={(e) => {
