@@ -30,6 +30,7 @@ const BookingPage = () => {
     LOCALSTORAGE_NAME.CUSTOMER_INFORMATION_CACHE,
     ""
   );
+
   useEffect(() => {
     if (customer) {
       try {
@@ -197,8 +198,12 @@ const BookingPage = () => {
 
   const timeSlots = getAvailableTimeSlots();
 
+  const filteredDoctors = therapists.filter((therapist) =>
+    availableTimeSlots.some((slot) => slot.therapistId === therapist.id)
+  );
+
   const handleAppointment = async () => {
-    console.log("Account ID:", accountId); // Debugging log
+    console.log("Account ID:", accountId);
     if (!selectedService || !selectedDoctor || !selectedTime || !selectedDate) {
       alert("Please select all fields before proceeding!");
       return;
@@ -224,7 +229,12 @@ const BookingPage = () => {
     console.log("Appointment Data:", appointmentData);
 
     try {
-      await axios.post(`${BASE.BASE_URL}/appointments/create`, appointmentData);
+      const response = await axios.post(
+        `${BASE.BASE_URL}/appointments/create`,
+        appointmentData
+      );
+      console.log("API Response:", response.data);
+      const appointmentId = response.data.data;
       navigate("/payment", {
         state: {
           service: selectedServiceName,
@@ -232,6 +242,7 @@ const BookingPage = () => {
           date: format(selectedDate, "yyyy-MM-dd"),
           startTime: selectedTimeSlot.start,
           price: selectedServiceData.total,
+          appointmentId: appointmentId,
         },
       });
     } catch (error) {
@@ -239,10 +250,6 @@ const BookingPage = () => {
       alert("Failed to create appointment. Please try again.");
     }
   };
-
-  const filteredDoctors = therapists.filter((therapist) =>
-    availableTimeSlots.some((slot) => slot.therapistId === therapist.id)
-  );
 
   useEffect(() => {
     const storedServiceId = localStorage.getItem("selectedServiceId");
@@ -283,6 +290,12 @@ const BookingPage = () => {
   };
 
   const currentTimeSlot = getCurrentTimeSlot();
+  const formatPrice = (price) => {
+    return new Intl.NumberFormat("en-US", {
+      style: "currency",
+      currency: "USD",
+    }).format(price);
+  };
 
   return (
     <Application theme={theme}>
@@ -333,7 +346,7 @@ const BookingPage = () => {
             <div className="content">
               <h2 className="title">{selectedServiceData.name}</h2>
               <div className="price-time">
-                <span className="price">${selectedServiceData.total}</span>
+                <span>{formatPrice(selectedServiceData?.total || 0)}</span>
                 <span className="time">
                   {" "}
                   · GapDay :{selectedServiceData.gapDay} days
@@ -380,6 +393,7 @@ const BookingPage = () => {
                 variant="single"
                 locale="en-US"
                 className="rainbow-calendar"
+                showAdjacentMonths={true}
                 minDate={new Date(new Date().setDate(new Date().getDate() + 1))}
                 maxDate={new Date(new Date().getFullYear() + 5, 11, 31)}
               />

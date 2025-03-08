@@ -32,6 +32,7 @@ const CheckIn = () => {
       const res = await axios.get(`${BASE.BASE_URL}/appointments/getAll`, {
         // params: { page: currentPage - 1, size: pageSize },
       });
+      console.log(res.data.data.content);
       setProducts(res.data.data.content);
     } catch (error) {
       console.log(error);
@@ -43,7 +44,7 @@ const CheckIn = () => {
     const filtered = products.filter((product) =>
       product.appointment_details.some((detail) =>
         dayjs(detail.day).isSame(selectedDate, "day")
-      )&& product.account.phone.includes(searchPhone) 
+      )&& product?.account?.phone?.includes(searchPhone) 
     );
     setFilteredProducts(filtered);
   };

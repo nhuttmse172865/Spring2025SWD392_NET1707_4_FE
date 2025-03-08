@@ -13,25 +13,50 @@ const Payment = () => {
     return <p>No booking data available.</p>;
   }
 
-  const { service, doctor, date, startTime, price } = data;
-  const [discountRate, setDiscountRate] = useState(0);
+  const { service, doctor, date, startTime, price, appointmentId } = data;
 
+  const [discountRate, setDiscountRate] = useState(0);
   const prepaymentRate = 0.1;
   const discount = price * discountRate;
   const prepayment = price * prepaymentRate;
-  const totalCost = prepayment + discount;
+  const totalCost = prepayment - discount;
+  const totalCostVND = totalCost * 25000;
 
-  const handleContinue = () => {
-    const paymentData = {
-      service,
-      doctor,
-      date,
-      startTime,
-    };
-    const existingData = JSON.parse(localStorage.getItem("paymentData")) || [];
-    existingData.push(paymentData);
-    localStorage.setItem("paymentData", JSON.stringify(existingData));
-    navigate("/customer-detail/appointments", { state: existingData });
+  console.log("Total Cost (VND):", totalCostVND);
+  console.log("Appointment ID:", appointmentId);
+
+  const formatUSD = (amount) => {
+    return new Intl.NumberFormat("en-US", {
+      style: "currency",
+      currency: "USD",
+    }).format(amount);
+  };
+
+  const handleContinue = async () => {
+    try {
+      const response = await fetch(
+        `http://localhost:8080/vnpay/create-payment-url?appointmentId=${appointmentId}&amount=${totalCostVND}&returnUrl=http://localhost:5173/payment-return`,
+        {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+          },
+        }
+      );
+
+      const result = await response.json();
+      if (result.status === 200) {
+        const paymentUrl = result.data;
+        console.log("Payment URL:", paymentUrl);
+        window.location.href = paymentUrl;
+      } else {
+        console.error("Failed to create payment URL:", result.message);
+        alert("Failed to create payment URL: " + result.message);
+      }
+    } catch (error) {
+      console.error("Error during payment initiation:", error);
+      alert("An error occurred while processing your payment.");
+    }
   };
 
   return (
@@ -68,53 +93,11 @@ const Payment = () => {
               <img src={IMAGES.Paypal} alt="PayPal" />
             </label>
           </div>
-
-          <div className="payment-method">
-            <input
-              type="radio"
-              id="credit-card"
-              name="payment"
-              value="credit-card"
-              checked={paymentMethod === "credit-card"}
-              onChange={(e) => setPaymentMethod(e.target.value)}
-            />
-            <label htmlFor="credit-card">
-              <span>Credit card</span>
-              <div className="card-icons">
-                <img src={IMAGES.visa} alt="Visa" />
-                <img src={IMAGES.mastercard} alt="Mastercard" />
-              </div>
-            </label>
-          </div>
-        </div>
-
-        <div className="card-details">
-          <div className="form-group">
-            <label>Name on card *</label>
-            <input type="text" placeholder="e.g. my personal card" />
-          </div>
-
-          <div className="form-group">
-            <label>Card number *</label>
-            <input type="text" placeholder="XXXX XXXX XXXX XXXX" />
-          </div>
-
-          <div className="form-row">
-            <div className="form-group">
-              <label>Expiration *</label>
-              <input type="text" placeholder="MM / YY" />
-            </div>
-            <div className="form-group">
-              <label>Card code *</label>
-              <input type="text" placeholder="XXX" />
-            </div>
-          </div>
         </div>
       </div>
 
       <div className="order-summary">
         <h2>Order Summary</h2>
-
         <div className="summary-details">
           <div className="summary-item">
             <label>Service</label>
@@ -140,19 +123,19 @@ const Payment = () => {
         <div className="pricing-details">
           <div className="price-item">
             <span>Subtotal</span>
-            <span>${price.toFixed(2)}</span>
+            <span>{formatUSD(price)}</span>
           </div>
           <div className="price-item">
             <span>Discount ({(discountRate * 100).toFixed(0)}%)</span>
-            <span>${discount.toFixed(2)}</span>
+            <span>{formatUSD(discount)}</span>
           </div>
           <div className="price-item">
             <span>10% Prepayment</span>
-            <span>${prepayment.toFixed(2)}</span>
+            <span>{formatUSD(prepayment)}</span>
           </div>
           <div className="price-item total">
             <span>Total cost</span>
-            <span>${totalCost.toFixed(2)}</span>
+            <span>{formatUSD(totalCost)}</span>
           </div>
           <button className="continue-btn" onClick={handleContinue}>
             Continue

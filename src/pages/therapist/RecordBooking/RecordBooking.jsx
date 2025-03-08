@@ -6,6 +6,7 @@ import axios from "axios";
 import BASE from "../../../constants/base";
 import { jwtDecode } from "jwt-decode";
 import dayjs from 'dayjs';
+import { set } from "date-fns";
 const RecordBooking = () => {
   const [bookings, setBookings] = useState([
    
@@ -27,6 +28,7 @@ const RecordBooking = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [recordingDetail, setRecordingDetail] = useState(null);
   const [resultValue, setResultValue] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
 
 
   useEffect(() => {
@@ -35,6 +37,7 @@ const RecordBooking = () => {
   const accountId = decoded.accountId; 
   
     const featchBookings = async () => {
+      setIsLoading(true);
       try {
         const res = await axios.get(`${BASE.BASE_URL}/appointment-detail/getByTherapistId/${accountId}`);
         
@@ -49,11 +52,13 @@ const RecordBooking = () => {
         setBookings(fomatBookings);
       } catch (error) {
         console.log(error);
+      }finally{
+        setIsLoading(false);
       }
     }
 featchBookings();
 
-  }, [selectDate,isModalOpen]);
+  }, [selectDate]);
 
   const [isQuizModalOpen, setIsQuizModalOpen] = useState(false);
   const showModal = (booking) => {
@@ -73,23 +78,40 @@ featchBookings();
     setIsModalOpen(false);
   };
   const handleRecordClick = (detail) => {
+    if (detail.status !== "CHECKIN") {
+      message.warning("Only checked-in appointments can be recorded.");
+      return;
+    }
+      
   setRecordingDetail(detail);
   setResultValue(detail?.result || "");
   
   }
   
   const handleSaveResult  = async () => {
+    
   try {
     const response = await axios.post(
       `${BASE.BASE_URL}/appointment-detail/createResult/${recordingDetail.id}`,
       { value: resultValue }
     );
+    setBookings((pre) =>
+    pre.map((booking) =>({
+      ...booking,
+      appointment_details: booking.appointment_details.map((detail) =>
+        detail.id === recordingDetail.id ? 
+      { ...detail, result: resultValue } : detail
+      ),
+    }))
+    )
     message.success("Result recorded successfully!");
     handleCancel();
 
     setRecordingDetail(null);
   } catch (error) {
     console.log(error);
+  }finally {
+    setIsLoading(false);
   }
   }
 
@@ -142,7 +164,7 @@ featchBookings();
         onChange={(date) => setSelectedDate(date)} 
         format="YYYY-MM-DD"
       /> */}
-      <Table  className="record-booking-table"  dataSource={bookings} columns={columns} rowKey="key" />
+      <Table  className="record-booking-table"  dataSource={bookings} columns={columns} rowKey="key"   loading={isLoading} />
 
      <Modal title="Record result"
        open={!!recordingDetail}
@@ -188,7 +210,7 @@ featchBookings();
       
 
       <h3 className="h3-apoidetail">Appointment Details</h3>
-      {selectedBooking.appointment_details?.filter((detail) => detail.status ==="CHECKIN").map((detail, index) => (
+      {selectedBooking.appointment_details?.map((detail, index) => (
         <div key={index} className="appointment-detail">
           <p className="p-record-appointment"><strong>Date:</strong> {detail?.day}</p>
           <p className="p-record-appointment" ><strong>Time:</strong> {detail?.startHour} - {detail?.endHour}</p>

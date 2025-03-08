@@ -35,6 +35,9 @@ import ServiceDetails from "./components/customer/serviceDetails/ServiceDetails"
 import CustomerPrice from "./pages/customer/customerPrice/CustomerPrice";
 import CustomerQuiz from "./pages/customer/quiz/CustomerQuiz";
 import CustomerPayment from "./pages/customer/customerPayment/CustomerPayment";
+import PaymentReturn from "./components/customer/payment/payment-return/PaymentReturn";
+import PaymentSuccess from "./components/customer/payment/payment-return/payment-return-success/PaymentSuccess";
+import PaymentFailure from "./components/customer/payment/payment-return/payment-return-failure/PaymentFailure";
 import Itinerary from "./pages/therapist/CreateRoute/Itinerary";
 
 function App() {
@@ -67,6 +70,9 @@ function App() {
           <Route path="/price" element={<CustomerPrice />} />
           <Route path="/quiz" element={<CustomerQuiz />} />
           <Route path="/payment" element={<CustomerPayment />} />
+          <Route path="/payment-return" element={<PaymentReturn />} />
+          <Route path="/payment-success" element={<PaymentSuccess />} />
+          <Route path="/payment-failure" element={<PaymentFailure />} />
         </Route>
         <Route path="/login" element={<Login />} />
         <Route path="/registrations/" element={<Register />}>

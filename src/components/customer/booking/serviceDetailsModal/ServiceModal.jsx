@@ -218,10 +218,9 @@ const ServiceModal = () => {
   }
 
   return (
-    <div className="service-details-container">
+    <div className="service-details-container1">
     {serviceDetail && serviceDetail.length > 0 ? (
         <div className="service-details-list">
-          <h4 className="service-details-title">Service Details</h4>
           {serviceDetail.map((detail) => {
             const stepsData =
               serviceSteps.find((item) => item.detailId === detail.id)?.steps ||
