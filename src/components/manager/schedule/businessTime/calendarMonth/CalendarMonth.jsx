@@ -3,7 +3,7 @@ import CALENDAR from "../../../../../constants/calendar";
 import ICONS from "../../../../../constants/icons";
 import Day from "./day/Day";
 
-const CalendarMonth = ({ setShowModal, setDateSelected }) => {
+const CalendarMonth = ({ setShowModal, setDateSelected, refreshData }) => {
   const [days, setDays] = useState();
 
   const [todayDate, setTodayDate] = useState(new Date());
@@ -38,10 +38,13 @@ const CalendarMonth = ({ setShowModal, setDateSelected }) => {
     return _days;
   };
 
-  const handleCreateBusinessTime = (day, currentMonth,currentYear) => {
-    setDateSelected(new Date(currentYear,currentMonth,day))
-    setShowModal(true)
-  }
+  const handleCreateBusinessTime = (day, currentMonth, currentYear) => {
+    setDateSelected(new Date(currentYear, currentMonth, day));
+    setShowModal(true);
+  };
+  const clearSelectedDate = () => {
+    setDateSelected();
+  };
 
   const handlePrevMonth = () => {
     setCurrentDate(new Date(currentYear, currentMonth - 1, 1));
@@ -53,7 +56,10 @@ const CalendarMonth = ({ setShowModal, setDateSelected }) => {
     clearSelectedDate();
   };
   useEffect(() => {
-    setDays(getCalendars(currentMonth, currentYear));
+    setDays()
+    setTimeout(() => {
+      setDays(getCalendars(currentMonth, currentYear));
+    }, 500);
   }, [currentDate]);
   return (
     <div className="w-full bg-white rounded-[.375rem] p-2.5 relative">
@@ -104,18 +110,19 @@ const CalendarMonth = ({ setShowModal, setDateSelected }) => {
                   days
                     .slice(rowIndex * 7, rowIndex * 7 + 7)
                     .map((day, dayIndex) => (
-                      <Day 
-                      dayIndex={dayIndex}
-                      firstDayOfMonth={firstDayOfMonth}
-                      daysInMonth={daysInMonth}
-                      rowIndex={rowIndex}
-                      day={day}
-                      currentMonth={currentMonth}
-                      currentYear={currentYear}
-                      todayDate={todayDate}
-                      todayMonth={todayMonth}
-                      todayYear={todayYear}
-                      handleCreateBusinessTime={handleCreateBusinessTime}
+                      <Day
+                        dayIndex={dayIndex}
+                        firstDayOfMonth={firstDayOfMonth}
+                        daysInMonth={daysInMonth}
+                        rowIndex={rowIndex}
+                        day={day}
+                        currentMonth={currentMonth}
+                        currentYear={currentYear}
+                        todayDate={todayDate}
+                        todayMonth={todayMonth}
+                        todayYear={todayYear}
+                        handleCreateBusinessTime={handleCreateBusinessTime}
+                        refreshData={refreshData}
                       />
                     ))}
               </div>

@@ -134,6 +134,7 @@ const Modal = ({ setShowModal }) => {
     try {
       serviceDetails.map(async (item, index) => {
         const images = await handleSaveImage(item.imagesId);
+        console.log(images)
         const imagesIds =
           Array.isArray(images) && images.map((image) => image.id);
         const serviceDetail = {
@@ -157,7 +158,7 @@ const Modal = ({ setShowModal }) => {
         name: name,
         gapDay: gapDay,
         description: description,
-        categoryId: categories,
+        categoryId:  categoriesList.filter((item) =>item.name === categories )[0].id,
         imagesId:
           Array.isArray(imagesService) &&
           imagesService.map((image) => image.id),
@@ -179,6 +180,7 @@ const Modal = ({ setShowModal }) => {
   const handleAddService = async () => {
     setLoading(true);
     const data = await handleFetchData();
+    console.log(data)
     try {
       const response = await axios.post(
         `${BASE.BASE_URL}/service/create`,

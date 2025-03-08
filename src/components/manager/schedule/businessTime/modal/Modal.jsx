@@ -7,7 +7,7 @@ import axios from "axios";
 import BASE from "../../../../../constants/base";
 import formatDate from "../../../../../helpers/FormatDate";
 
-const Modal = ({ handleCloseModal, dateSelected }) => {
+const Modal = ({ handleCloseModal, dateSelected, setRefreshData }) => {
   const [openHour, setOpenHour] = useState();
   const [closeHour, setCloseHour] = useState();
   const [loading,setLoading] = useState(false)
@@ -28,6 +28,7 @@ const Modal = ({ handleCloseModal, dateSelected }) => {
     } catch (error) {
       console.log(error)
     }finally{
+      setRefreshData(prev => !prev)
       setLoading(false)
     }
   };
