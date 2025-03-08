@@ -16,6 +16,7 @@ const HeaderTherapist = () => {
       "/therapist/record": { title: "Record result" },
       "/therapist/changeSchedule": { title: "Change Working Schedule" },
       "/therapist/managerInformation": { title: "Manager Information" },
+      "/therapist/itinerary": { title: "Itinerary" },
     };
     return map[pathname] || { title: "" };
   };

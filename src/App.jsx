@@ -35,6 +35,7 @@ import ServiceDetails from "./components/customer/serviceDetails/ServiceDetails"
 import CustomerPrice from "./pages/customer/customerPrice/CustomerPrice";
 import CustomerQuiz from "./pages/customer/quiz/CustomerQuiz";
 import CustomerPayment from "./pages/customer/customerPayment/CustomerPayment";
+import Itinerary from "./pages/therapist/CreateRoute/Itinerary";
 
 function App() {
   return (
@@ -93,6 +94,7 @@ function App() {
           <Route path="record" element={<RecordBooking />} />
           <Route path="changeSchedule" element={<ChangeSchedule />} />
           <Route path="managerInformation" element={<TherapistProfile />} />
+          <Route path="itinerary" element={<Itinerary />} />
         </Route>
       </Routes>
     </BrowserRouter>
