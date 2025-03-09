@@ -1,7 +1,7 @@
 import React from "react";
 import CaculateGridColumn from "../../../../helpers/CaculateGridColumn";
 
-const Header = ({ listTitle }) => {
+const Header = ({ listTitle, backgroundColor }) => {
   const gridColumnTemplate = CaculateGridColumn(listTitle);
   return (
     <ul
@@ -9,6 +9,7 @@ const Header = ({ listTitle }) => {
       style={{
         gridTemplateColumns: gridColumnTemplate,
         padding: "0 15px",
+        backgroundColor: backgroundColor
       }}
     >
       {Array.isArray(listTitle) &&

@@ -59,3 +59,18 @@
 .therapist-profile-list li {
     margin-bottom: 5px;
 }
+.btn-updateprofile{
+    background-color: #ff66a3;
+    color: white;
+    border: none;
+    padding: 6px 14px;
+    border-radius: 0.37rem;
+    cursor: pointer;
+    transition: background 0.3s ease;
+    font-weight: bold;
+    margin-top: 15px;
+    margin-left: 55px;
+}
+.btn-updateprofile:hover {
+    background-color: #ff3385;
+}

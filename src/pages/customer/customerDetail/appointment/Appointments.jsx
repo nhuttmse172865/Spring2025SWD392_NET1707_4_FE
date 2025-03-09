@@ -1,81 +1,348 @@
+// import React, { useEffect, useState, useRef } from "react";
+// import { Eye, X, Calendar } from "lucide-react";
+// import "./Appointment.css";
+// import ContentModal from "./modal/ContentModal";
+// import useLocalStorage from "use-local-storage";
+// import LOCALSTORAGE_NAME from "../../../../constants/localStorageName";
+
+// const Appointments = () => {
+//   const [appointments, setAppointments] = useState([]);
+//   const [accountId, setAccountId] = useState(null);
+//   const [customer, setCustomer] = useLocalStorage(
+//     LOCALSTORAGE_NAME.CUSTOMER_INFORMATION_CACHE,
+//     ""
+//   );
+
+//   const calculateTotalPrice = (serviceDetails) => {
+//     return serviceDetails.reduce((total, detail) => total + detail.price, 0);
+//   };
+
+//   const getTherapistsFromDetails = (appointmentDetails) => {
+//     const uniqueTherapists = new Map();
+//     appointmentDetails.forEach((detail) => {
+//       if (detail.therapist) {
+//         uniqueTherapists.set(
+//           detail.therapist.id,
+//           `${detail.therapist.account.name}`
+//         );
+//       }
+//     });
+//     return Array.from(uniqueTherapists.values()).join(", ");
+//   };
+
+//   useEffect(() => {
+//     if (accountId) {
+//       fetch(`http://localhost:8080/appointments/account/${accountId}`)
+//         .then((response) => response.json())
+//         .then((result) => {
+//           if (result.status === 200) {
+//             const initialAppointments = result.data
+//               .filter((appointment) => appointment.status === "CONFIRMED")
+//               .map((appointment) => ({
+//                 id: appointment.id,
+//                 date: new Date().toISOString().split("T")[0],
+//                 service: appointment.service.name,
+//                 totalPrice: `$${calculateTotalPrice(
+//                   appointment.service.service_details
+//                 )}`,
+//                 therapists: "Loading...",
+//               }));
+//             setAppointments(initialAppointments);
+
+//             // Fetch chi tiết cho từng appointment
+//             const fetchDetails = async () => {
+//               const updatedAppointments = await Promise.all(
+//                 initialAppointments.map(async (appt) => {
+//                   try {
+//                     const response = await fetch(
+//                       `http://localhost:8080/appointments/${appt.id}`
+//                     );
+//                     const detailResult = await response.json();
+//                     if (detailResult.status === 200) {
+//                       return {
+//                         ...appt,
+//                         therapists: getTherapistsFromDetails(
+//                           detailResult.data.appointment_details
+//                         ),
+//                       };
+//                     }
+//                     return appt;
+//                   } catch (error) {
+//                     console.error(
+//                       `Error fetching details for ${appt.id}:`,
+//                       error
+//                     );
+//                     return { ...appt, therapists: "Error loading therapists" };
+//                   }
+//                 })
+//               );
+//               setAppointments(updatedAppointments);
+//             };
+//             fetchDetails();
+//           }
+//         })
+//         .catch((error) => {
+//           console.error("Error fetching appointments:", error);
+//         });
+//     }
+//   }, [accountId]);
+
+//   useEffect(() => {
+//     if (customer) {
+//       try {
+//         const token = customer;
+//         const base64Url = token.split(".")[1];
+//         const base64 = base64Url.replace(/-/g, "+").replace(/_/g, "/");
+//         const jsonPayload = decodeURIComponent(
+//           atob(base64)
+//             .split("")
+//             .map((c) => `%${("00" + c.charCodeAt(0).toString(16)).slice(-2)}`)
+//             .join("")
+//         );
+
+//         const decodedData = JSON.parse(jsonPayload);
+//         console.log("Decoded Data:", decodedData);
+//         console.log("Customer ID:", decodedData.accountId);
+//         setAccountId(decodedData.accountId);
+//       } catch (error) {
+//         console.error("Invalid JWT Token", error);
+//       }
+//     }
+//   }, [customer]);
+
+//   const [openDropdown, setOpenDropdown] = useState(null);
+//   const dropdownRef = useRef(null);
+//   const [selectedAppointment, setSelectedAppointment] = useState(null);
+
+//   const handleShowPopup = (appointment) => setSelectedAppointment(appointment);
+//   const handleClosePopup = () => setSelectedAppointment(null);
+
+//   const handleToggleDropdown = (appointmentId) => {
+//     setOpenDropdown(openDropdown === appointmentId ? null : appointmentId);
+//   };
+
+//   useEffect(() => {
+//     const handleClickOutside = (event) => {
+//       if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
+//         setOpenDropdown(null);
+//       }
+//     };
+//     document.addEventListener("mousedown", handleClickOutside);
+//     return () => document.removeEventListener("mousedown", handleClickOutside);
+//   }, []);
+
+//   return (
+//     <div className="appointments-container">
+//       <div className="appointments-header">
+//         <div className="header-date">DATE</div>
+//         <div className="header-service">SERVICE</div>
+//         <div className="header-price">TOTAL PRICE</div>
+//         <div className="header-therapists">THERAPISTS</div>
+//         <div className="header-actions"></div>
+//       </div>
+
+//       {appointments.map((appointment) => (
+//         <div className="appointment-row" key={appointment.id}>
+//           <div className="appointment-date">{appointment.date}</div>
+//           <div className="appointment-service">{appointment.service}</div>
+//           <div className="appointment-price">{appointment.totalPrice}</div>
+//           <div className="appointment-therapists">{appointment.therapists}</div>
+//           <div className="appointment-actions">
+//             <button
+//               className="action-button view-details-button"
+//               onClick={() => handleShowPopup(appointment)}
+//             >
+//               <Eye size={16} />
+//               <span>View Details</span>
+//             </button>
+
+//             <div className="actions-dropdown" ref={dropdownRef}>
+//               <button
+//                 className="action-button more-actions-button"
+//                 onClick={() => handleToggleDropdown(appointment.id)}
+//               >
+//                 Actions
+//               </button>
+//               {openDropdown === appointment.id && (
+//                 <div className="dropdown-content">
+//                   <button
+//                     className="dropdown-item cancel-button"
+//                     onClick={() =>
+//                       alert(`Cancel Appointment ID: ${appointment.id}`)
+//                     }
+//                   >
+//                     <X size={14} />
+//                     <span>Cancel</span>
+//                   </button>
+//                   <button
+//                     className="dropdown-item change-button"
+//                     onClick={() =>
+//                       alert(`Change Reservation ID: ${appointment.id}`)
+//                     }
+//                   >
+//                     <Calendar size={14} />
+//                     <span>Change Reservation</span>
+//                   </button>
+//                 </div>
+//               )}
+//             </div>
+//           </div>
+//         </div>
+//       ))}
+
+//       {selectedAppointment && (
+//         <div className="popup-overlay" onClick={handleClosePopup}>
+//           <div className="popup-content" onClick={(e) => e.stopPropagation()}>
+//             <div className="popup-header">
+//               <h5>Appointment Details</h5>
+//               <button className="close-btn" onClick={handleClosePopup}>
+//                 X
+//               </button>
+//             </div>
+//             <div className="popup-body">
+//               <ContentModal appointment={selectedAppointment} />
+//             </div>
+//           </div>
+//         </div>
+//       )}
+//     </div>
+//   );
+// };
+
+// export default Appointments;
+
 import React, { useEffect, useState, useRef } from "react";
 import { Eye, X, Calendar } from "lucide-react";
+import ReactPaginate from "react-paginate"; // Add this import
 import "./Appointment.css";
 import ContentModal from "./modal/ContentModal";
-import ProfileModal from "./modal/ProfileModal";
+import useLocalStorage from "use-local-storage";
+import LOCALSTORAGE_NAME from "../../../../constants/localStorageName";
 
 const Appointments = () => {
   const [appointments, setAppointments] = useState([]);
-  const [countdowns, setCountdowns] = useState([]);
+  const [accountId, setAccountId] = useState(null);
+  const [customer, setCustomer] = useLocalStorage(
+    LOCALSTORAGE_NAME.CUSTOMER_INFORMATION_CACHE,
+    ""
+  );
+  // Add pagination states
+  const [currentPage, setCurrentPage] = useState(0);
+  const ITEMS_PER_PAGE = 4;
+
+  const calculateTotalPrice = (serviceDetails) => {
+    return serviceDetails.reduce((total, detail) => total + detail.price, 0);
+  };
+
+  const getTherapistsFromDetails = (appointmentDetails) => {
+    const uniqueTherapists = new Map();
+    appointmentDetails.forEach((detail) => {
+      if (detail.therapist) {
+        uniqueTherapists.set(
+          detail.therapist.id,
+          `${detail.therapist.account.name}`
+        );
+      }
+    });
+    return Array.from(uniqueTherapists.values()).join(", ");
+  };
+
+  useEffect(() => {
+    if (accountId) {
+      fetch(`http://localhost:8080/appointments/account/${accountId}`)
+        .then((response) => response.json())
+        .then((result) => {
+          if (result.status === 200) {
+            const initialAppointments = result.data
+              .filter((appointment) => appointment.status === "CONFIRMED")
+              .map((appointment) => ({
+                id: appointment.id,
+                date: new Date().toISOString().split("T")[0],
+                service: appointment.service.name,
+                totalPrice: `$${calculateTotalPrice(
+                  appointment.service.service_details
+                )}`,
+                therapists: "Loading...",
+              }));
+            setAppointments(initialAppointments);
+
+            const fetchDetails = async () => {
+              const updatedAppointments = await Promise.all(
+                initialAppointments.map(async (appt) => {
+                  try {
+                    const response = await fetch(
+                      `http://localhost:8080/appointments/${appt.id}`
+                    );
+                    const detailResult = await response.json();
+                    if (detailResult.status === 200) {
+                      return {
+                        ...appt,
+                        therapists: getTherapistsFromDetails(
+                          detailResult.data.appointment_details
+                        ),
+                      };
+                    }
+                    return appt;
+                  } catch (error) {
+                    console.error(
+                      `Error fetching details for ${appt.id}:`,
+                      error
+                    );
+                    return { ...appt, therapists: "Error loading therapists" };
+                  }
+                })
+              );
+              setAppointments(updatedAppointments);
+            };
+            fetchDetails();
+          }
+        })
+        .catch((error) => {
+          console.error("Error fetching appointments:", error);
+        });
+    }
+  }, [accountId]);
+
+  useEffect(() => {
+    if (customer) {
+      try {
+        const token = customer;
+        const base64Url = token.split(".")[1];
+        const base64 = base64Url.replace(/-/g, "+").replace(/_/g, "/");
+        const jsonPayload = decodeURIComponent(
+          atob(base64)
+            .split("")
+            .map((c) => `%${("00" + c.charCodeAt(0).toString(16)).slice(-2)}`)
+            .join("")
+        );
+
+        const decodedData = JSON.parse(jsonPayload);
+        setAccountId(decodedData.accountId);
+      } catch (error) {
+        console.error("Invalid JWT Token", error);
+      }
+    }
+  }, [customer]);
+
   const [openDropdown, setOpenDropdown] = useState(null);
   const dropdownRef = useRef(null);
-  const [showPopup, setShowPopup] = useState(false);
-  const [currentModalType, setCurrentModalType] = useState("");
+  const [selectedAppointment, setSelectedAppointment] = useState(null);
 
-  useEffect(() => {
-    const storedData = JSON.parse(localStorage.getItem("paymentData"));
-    if (storedData) {
-      setAppointments(Array.isArray(storedData) ? storedData : [storedData]);
-    }
-  }, []);
+  // Pagination calculations
+  const pageCount = Math.ceil(appointments.length / ITEMS_PER_PAGE);
+  const offset = currentPage * ITEMS_PER_PAGE;
+  const currentAppointments = appointments.slice(
+    offset,
+    offset + ITEMS_PER_PAGE
+  );
 
-  const convertToDate = (dateStr, timeStr) => {
-    if (!dateStr || !timeStr) return null;
-    const formattedDate = new Date(`${dateStr}T${timeStr}:00`);
-    return isNaN(formattedDate.getTime()) ? null : formattedDate;
+  const handlePageClick = (event) => {
+    setCurrentPage(event.selected);
+    setOpenDropdown(null); // Close any open dropdowns when changing pages
   };
 
-  useEffect(() => {
-    const updateCountdown = () => {
-      const newCountdowns = appointments.map((appointment) => {
-        const startTime = convertToDate(
-          appointment.date,
-          appointment.startTime
-        );
-        if (!startTime) return "Invalid date!";
-
-        const currentTime = new Date();
-        const diff = startTime - currentTime;
-
-        if (diff <= 0) return "Time's up!";
-
-        const hours = Math.floor(diff / (1000 * 60 * 60));
-        const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
-        const seconds = Math.floor((diff % (1000 * 60)) / 1000);
-
-        return `${hours} : ${minutes.toString().padStart(2, "0")} : ${seconds
-          .toString()
-          .padStart(2, "0")} hours`;
-      });
-
-      setCountdowns(newCountdowns);
-    };
-
-    updateCountdown();
-    const timerId = setInterval(updateCountdown, 1000);
-
-    return () => clearInterval(timerId);
-  }, [appointments]);
-
-  const getTimeLeft = (startTime) => {
-    const diff = startTime - new Date();
-    if (diff <= 0) return "Time's up!";
-
-    const hours = Math.floor(diff / (1000 * 60 * 60));
-    const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
-    const seconds = Math.floor((diff % (1000 * 60)) / 1000);
-
-    return `${hours} : ${minutes.toString().padStart(2, "0")} : ${seconds
-      .toString()
-      .padStart(2, "0")} hours`;
-  };
-
-  const handleShowPopup = (type) => {
-    setCurrentModalType(type);
-    setShowPopup(true);
-  };
-  const handleClosePopup = () => setShowPopup(false);
-
+  const handleShowPopup = (appointment) => setSelectedAppointment(appointment);
+  const handleClosePopup = () => setSelectedAppointment(null);
   const handleToggleDropdown = (appointmentId) => {
     setOpenDropdown(openDropdown === appointmentId ? null : appointmentId);
   };
@@ -86,81 +353,58 @@ const Appointments = () => {
         setOpenDropdown(null);
       }
     };
-
     document.addEventListener("mousedown", handleClickOutside);
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
-
-  if (appointments.length === 0) {
-    return <p>No appointment data available.</p>;
-  }
 
   return (
     <div className="appointments-container">
       <div className="appointments-header">
         <div className="header-date">DATE</div>
-        <div className="header-type">SERVICE</div>
-        <div className="header-patient">THERAPIST PROFILE</div>
-        <div className="header-time">TIME SCHEDULED</div>
+        <div className="header-service">SERVICE</div>
+        <div className="header-price">TOTAL PRICE</div>
+        <div className="header-therapists">THERAPISTS</div>
         <div className="header-actions"></div>
       </div>
 
-      {appointments.map((appointment, index) => (
-        <div className="appointment-row" key={index}>
+      {currentAppointments.map((appointment) => (
+        <div className="appointment-row" key={appointment.id}>
           <div className="appointment-date">{appointment.date}</div>
-
-          <div className="appointment-type">
-            <div className="type-primary">{appointment.service}</div>
-            {countdowns[index] && (
-              <div className="countdown">{countdowns[index]}</div>
-            )}
-          </div>
-
-          <div className="appointment-patient">
-            <div className="patient-info">
-              <div className="patient-name">{appointment.doctor}</div>
-              <div
-                className="view-profile-link"
-                onClick={() => handleShowPopup("Profile")}
-              >
-                View Profile
-              </div>
-            </div>
-          </div>
-
-          <div className="appointment-time">{appointment.startTime}</div>
-
+          <div className="appointment-service">{appointment.service}</div>
+          <div className="appointment-price">{appointment.totalPrice}</div>
+          <div className="appointment-therapists">{appointment.therapists}</div>
           <div className="appointment-actions">
-            <div>
-              <button
-                className="action-button view-details-button"
-                onClick={() => handleShowPopup("Details")}
-              >
-                <Eye size={16} />
-                <span>View Details</span>
-              </button>
-            </div>
+            <button
+              className="action-button view-details-button"
+              onClick={() => handleShowPopup(appointment)}
+            >
+              <Eye size={16} />
+              <span>View Details</span>
+            </button>
 
             <div className="actions-dropdown" ref={dropdownRef}>
               <button
                 className="action-button more-actions-button"
-                onClick={() => handleToggleDropdown(index)}
+                onClick={() => handleToggleDropdown(appointment.id)}
               >
                 Actions
               </button>
-
-              {openDropdown === index && (
+              {openDropdown === appointment.id && (
                 <div className="dropdown-content">
                   <button
                     className="dropdown-item cancel-button"
-                    onClick={() => alert("Cancel Appointment")}
+                    onClick={() =>
+                      alert(`Cancel Appointment ID: ${appointment.id}`)
+                    }
                   >
                     <X size={14} />
                     <span>Cancel</span>
                   </button>
                   <button
                     className="dropdown-item change-button"
-                    onClick={() => alert("Change Reservation")}
+                    onClick={() =>
+                      alert(`Change Reservation ID: ${appointment.id}`)
+                    }
                   >
                     <Calendar size={14} />
                     <span>Change Reservation</span>
@@ -172,25 +416,40 @@ const Appointments = () => {
         </div>
       ))}
 
-      {showPopup && (
+      {/* Add Pagination Component */}
+      {appointments.length > ITEMS_PER_PAGE && (
+        <ReactPaginate
+          previousLabel={"<"}
+          nextLabel={">"}
+          breakLabel={"..."}
+          pageCount={pageCount}
+          marginPagesDisplayed={2}
+          pageRangeDisplayed={5}
+          onPageChange={handlePageClick}
+          containerClassName={"pagination"}
+          activeClassName={"active"}
+          pageClassName={"page-item"}
+          pageLinkClassName={"page-link"}
+          previousClassName={"page-item"}
+          nextClassName={"page-item"}
+          previousLinkClassName={"page-link"}
+          nextLinkClassName={"page-link"}
+          breakClassName={"page-item"}
+          breakLinkClassName={"page-link"}
+        />
+      )}
+
+      {selectedAppointment && (
         <div className="popup-overlay" onClick={handleClosePopup}>
           <div className="popup-content" onClick={(e) => e.stopPropagation()}>
             <div className="popup-header">
-              <h5>
-                {currentModalType === "Details"
-                  ? "Appointment Details"
-                  : "Therapist Profile"}
-              </h5>
+              <h5>Appointment Details</h5>
               <button className="close-btn" onClick={handleClosePopup}>
                 X
               </button>
             </div>
             <div className="popup-body">
-              {currentModalType === "Details" ? (
-                <ContentModal />
-              ) : (
-                <ProfileModal />
-              )}
+              <ContentModal appointment={selectedAppointment} />
             </div>
           </div>
         </div>

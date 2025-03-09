@@ -33,7 +33,7 @@ const ChangeSchedule = () => {
       <Calendar fullscreen={false} onSelect={onSelectDate} />
 
     
-      <Modal
+      {/* <Modal
         title="Change Working Schedule"
         open={isModalOpen}
         onCancel={handleCancel}
@@ -64,7 +64,7 @@ const ChangeSchedule = () => {
             </Button>
           </Form.Item>
         </Form>
-      </Modal>
+      </Modal> */}
     </div>
   );
 };

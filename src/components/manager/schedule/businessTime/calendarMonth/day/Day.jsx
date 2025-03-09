@@ -14,31 +14,50 @@ const Day = ({
   todayDate,
   todayMonth,
   todayYear,
-  handleCreateBusinessTime
+  handleCreateBusinessTime,
+  refreshData,
 }) => {
-  const [businessTimes, setBusinessTimes] = useState();
+  const [earliestOpenHour, setEarliestOpenHour] = useState();
+  const [latestCloseHour, setLatestCloseHour] = useState();
 
   const handleFetchBusinessTime = async () => {
+    if (
+      (rowIndex < 1 && dayIndex < firstDayOfMonth - 1) ||
+      dayIndex + rowIndex * 7 > daysInMonth + firstDayOfMonth - 2
+    )
+      return;
     try {
+      console.log(formatDate(new Date(currentYear, currentMonth, day)));
+
       const response = await axios.get(
         `${BASE.BASE_URL}/store-business-time/find-by-day?day=${formatDate(
-          currentYear,
-          currentMonth,
-          day
+          new Date(currentYear, currentMonth, day)
         )}`
       );
+
       if (!response || response.status !== 200) throw new Error();
-      setBusinessTimes(response.data.data);
+      const data = response.data.data;
+      const earliestOpenHour = data.reduce((earliest, current) =>
+        current.openHour < earliest.openHour ? current : earliest
+      ).openHour;
+      const latestCloseHour = data.reduce((latest, current) =>
+        current.closeHour > latest.closeHour ? current : latest
+      ).closeHour;
+      console.log(response.data.data);
+
+      setEarliestOpenHour(earliestOpenHour);
+      setLatestCloseHour(latestCloseHour);
     } catch (error) {
       console.log(error);
     }
   };
 
   useEffect(() => {
-    if (!businessTimes) {
-        handleFetchBusinessTime()
-    }
-  }, [currentMonth,currentYear,day]);
+    setEarliestOpenHour();
+    setLatestCloseHour();
+
+    handleFetchBusinessTime();
+  }, [currentMonth, currentYear, day, refreshData]);
 
   return (
     <div
@@ -75,11 +94,21 @@ const Day = ({
       >
         {day}
       </span>
-      {businessTimes && Array.isArray(businessTimes) && businessTimes.map((item) =>(
-        <div>
-            
+      {earliestOpenHour && latestCloseHour && (
+        <div
+          className="w-full absolute top-[30px] p-2.5"
+          style={{
+            height: "calc(100% - 30px)",
+          }}
+        >
+          <div className="w-full bg-(--color-primary-10) rounded-[.375rem] px-2.5">
+            <span className="text-(--color-primary-100) text-[14px]">{`${earliestOpenHour.slice(
+              0,
+              5
+            )} - ${latestCloseHour.slice(0, 5)}`}</span>
+          </div>
         </div>
-      ))}
+      )}
     </div>
   );
 };

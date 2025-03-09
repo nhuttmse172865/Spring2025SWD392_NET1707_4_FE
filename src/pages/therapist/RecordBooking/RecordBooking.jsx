@@ -1,25 +1,17 @@
-import React, { useState } from "react";
-import { Table, Button, Modal, Input } from "antd";
+import React, { useEffect, useState } from "react";
+import { Table, Button, Modal, Input, DatePicker, message } from "antd";
 import "./RecordBooking.css";
 import ElevatedButton from "../../../components/common/button/elevated/ElevatedButton";
-
+import axios from "axios";
+import BASE from "../../../constants/base";
+import { jwtDecode } from "jwt-decode";
+import dayjs from 'dayjs';
+import { set } from "date-fns";
 const RecordBooking = () => {
   const [bookings, setBookings] = useState([
-    {
-      id: 1,
-      patientName: "Alex Sander",
-      startTime: "09:00",
-      endTime: "09:30",
-      date: "2023-10-15",
-    },
-    {
-      id: 2,
-      patientName: "MOI Gomes",
-      startTime: "10:00",
-      endTime: "10:30",
-      date: "2023-10-15",
-    },
+   
   ]);
+  const [selectDate,setSelectedDate] = useState(dayjs());
   const [questions] = useState([
     { question: "What is React?", answer: "A JavaScript library for building UI." },
     { question: "What is JSX?", answer: "A syntax extension for JavaScript." },
@@ -34,13 +26,43 @@ const RecordBooking = () => {
   ]);
   const [selectedBooking, setSelectedBooking] = useState(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [formData, setFormData] = useState({
-    diagnosis: "",
-    treatment: "",
-    notes: "",
-  });
+  const [recordingDetail, setRecordingDetail] = useState(null);
+  const [resultValue, setResultValue] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
+
+
+  useEffect(() => {
+  const token = localStorage.getItem("customer_information");
+  const decoded = jwtDecode(token);
+  const accountId = decoded.accountId; 
+  
+    const featchBookings = async () => {
+      setIsLoading(true);
+      try {
+        const res = await axios.get(`${BASE.BASE_URL}/appointment-detail/getByTherapistId/${accountId}`);
+        
+        console.log(res.data.data);
+        const fomatBookings = res.data.data.map((booking,index) => ({
+        key: index,
+        patientName:booking?.cusName,
+        phone:booking?.phone,
+        date:booking?.day,
+        appointment_details: booking?.appointment?.appointment_details || [],
+        }));
+        setBookings(fomatBookings);
+      } catch (error) {
+        console.log(error);
+      }finally{
+        setIsLoading(false);
+      }
+    }
+featchBookings();
+
+  }, [selectDate]);
+
   const [isQuizModalOpen, setIsQuizModalOpen] = useState(false);
   const showModal = (booking) => {
+    
     setSelectedBooking(booking);
     setIsModalOpen(true);
   };
@@ -55,10 +77,43 @@ const RecordBooking = () => {
   const handleCancel = () => {
     setIsModalOpen(false);
   };
+  const handleRecordClick = (detail) => {
+    if (detail.status !== "CHECKIN") {
+      message.warning("Only checked-in appointments can be recorded.");
+      return;
+    }
+      
+  setRecordingDetail(detail);
+  setResultValue(detail?.result || "");
+  
+  }
+  
+  const handleSaveResult  = async () => {
+    
+  try {
+    const response = await axios.post(
+      `${BASE.BASE_URL}/appointment-detail/createResult/${recordingDetail.id}`,
+      { value: resultValue }
+    );
+    setBookings((pre) =>
+    pre.map((booking) =>({
+      ...booking,
+      appointment_details: booking.appointment_details.map((detail) =>
+        detail.id === recordingDetail.id ? 
+      { ...detail, result: resultValue } : detail
+      ),
+    }))
+    )
+    message.success("Result recorded successfully!");
+    handleCancel();
 
-  const handleChange = (e) => {
-    setFormData({ ...formData, [e.target.name]: e.target.value });
-  };
+    setRecordingDetail(null);
+  } catch (error) {
+    console.log(error);
+  }finally {
+    setIsLoading(false);
+  }
+  }
 
   
   const columns = [
@@ -68,10 +123,15 @@ const RecordBooking = () => {
       key: "patientName",
     },
     {
-      title: "Time",
-      key: "time",
-      render: (record) => `${record.startTime} - ${record.endTime}`,
+      title: "Phone",
+      dataIndex: "phone",
+      key: "phone",
     },
+    // {
+    //   title: "Time",
+    //   key: "time",
+    //   render: (record) => `${record.startTime} - ${record.endTime}`,
+    // },
     {
       title: "Date",
       dataIndex: "date",
@@ -82,13 +142,16 @@ const RecordBooking = () => {
       key: "action",
       render: (record) => (
         <>
-          <Button className="record-button" type="primary" onClick={() => showModal(record)}>
+          {/* <Button className="record-button" type="primary" onClick={() => showModal(record)}>
             Record
           </Button>
           <Button className="record-button" type="primary" onClick={showQuizModal} style={{ marginLeft: 8 }}>
             View Quiz
-          </Button>
-        </>
+          </Button> */}
+          <Button className="viewdetail-button" type="primary" onClick={() => showModal(record)} style={{ marginLeft: 8 }}>
+            View detail
+          </Button> 
+                 </>
       ),
     },
     
@@ -96,42 +159,28 @@ const RecordBooking = () => {
 
   return (
     <div className="record-booking-container">
-      <Table  className="record-booking-table"  dataSource={bookings} columns={columns} rowKey="id" />
+    {/* <DatePicker
+        value={selectDate}
+        onChange={(date) => setSelectedDate(date)} 
+        format="YYYY-MM-DD"
+      /> */}
+      <Table  className="record-booking-table"  dataSource={bookings} columns={columns} rowKey="key"   loading={isLoading} />
 
-     
-      <Modal
-        title={`Record - ${selectedBooking?.patientName || ""}`}
-        open={isModalOpen}
-        onOk={handleOk}
-        onCancel={handleCancel}
-        okText="Record"
+     <Modal title="Record result"
+       open={!!recordingDetail}
+        onOk={handleSaveResult}
+        onCancel={() => setRecordingDetail(null)}
+        okText="Save"
         cancelText="Cancel"
-      >
-        <label className="record-booking-label">Diagnose:</label>
-        <Input
-          name="diagnosis"
-          value={formData.diagnosis}
-          onChange={handleChange}
-          placeholder="Enter diagnosis"
-          className="input-record"
-        />
-        <label>Treatment:</label>
-        <Input
-          name="treatment"
-          value={formData.treatment}
-          onChange={handleChange}
-          placeholder="Enter treatment"
-          className="input-record"
-        />
-        <label>Note:</label>
-        <Input.TextArea
-          name="notes"
-          value={formData.notes}
-          onChange={handleChange}
-          placeholder="Enter additional notes"
-          className="input-record"
-        />
-      </Modal>
+     >
+  <Input.TextArea
+    value={resultValue}
+    onChange={(e) => setResultValue(e.target.value)}
+    placeholder="Enter result..."
+    rows={4}
+  />
+     </Modal>
+      
       <Modal title="View Quiz " open={isQuizModalOpen} onCancel={handleQuizCancel} footer={null}>
         <div className="quiz-modal-container">
           
@@ -148,6 +197,35 @@ const RecordBooking = () => {
          
         </div>
       </Modal>
+      <Modal
+  // title={`Appointment Details `}
+  open={isModalOpen}
+  onOk={handleOk}
+  onCancel={handleCancel}
+  okText="Close"
+  cancelText="Cancel"
+>
+  {selectedBooking && (
+    <>
+      
+
+      <h3 className="h3-apoidetail">Appointment Details</h3>
+      {selectedBooking.appointment_details?.map((detail, index) => (
+        <div key={index} className="appointment-detail">
+          <p className="p-record-appointment"><strong>Date:</strong> {detail?.day}</p>
+          <p className="p-record-appointment" ><strong>Time:</strong> {detail?.startHour} - {detail?.endHour}</p>
+          <p className="p-record-appointment"><strong>Service:</strong> {detail?.name}</p>
+          <p className="p-record-appointment" ><strong>Result:</strong> {detail?.result || "Not recorded" }</p>
+          {/* <p><strong>StaRtus:</strong> {detail?.status}</p> */}
+          <Button className="record-button"  disabled={!!detail.result} onClick={() => handleRecordClick(detail)}>Record result</Button>
+         <br />
+        </div>
+      ))}
+    </>
+  )
+  }
+</Modal>
+
     </div>
   );
 };

@@ -5,7 +5,7 @@ import Content from "../../../../components/manager/account/customer/content/Con
 const Customer = () => {
   return (
     <div className="mt-10">
-      <ToolBar isShowElevatedButton={false} />
+      <ToolBar isShowElevatedButton={false} isShowOulineButton={false} />
       <div>
         <Content />
       </div>
