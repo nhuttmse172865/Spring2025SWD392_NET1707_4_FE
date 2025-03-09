@@ -1,110 +1,128 @@
 .price-container {
-  max-width: 90%;
+  max-width: 1200px;
   margin: 0 auto;
-  padding: 1.5rem;
+  padding: 20px;
+  font-family: Arial, sans-serif;
 }
 
 .price-title {
-  font-size: 2rem;
-  text-align: center;
+  text-align: flex-end;
+  font-size: 32px;
   color: black;
-  font-family: "Playfair Display", serif;
+  margin-bottom: 20px;
 }
 
 .price-categories {
   display: flex;
   flex-direction: column;
-  gap: 2rem;
+  gap: 20px;
 }
 
 .category-card {
-  background: white;
+  background: #f8f9fa;
+  padding: 20px;
   border-radius: 8px;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-  overflow: hidden;
-  padding: 1.5rem;
 }
 
 .category-title {
-  font-size: 1.5rem;
-  font-weight: 600;
-  margin-bottom: 1rem;
-  color: black;
-  font-family: "Poppins", sans-serif;
+  font-size: 24px;
+  color: #ff4f9d;
+  margin-bottom: 10px;
+  font-weight: bold;
 }
 
 .service-table {
-  width: 100%;
-  border: 1px solid #e2e8f0;
-  border-radius: 6px;
+  background: #fff;
+  border-radius: 8px;
   overflow: hidden;
+  border: 1px solid #ddd;
 }
 
 .table-header {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  background-color: #f7fafc;
-  border-bottom: 1px solid #e2e8f0;
+  display: flex;
+  background: #ff4f9d;
+  color: white;
+  padding: 10px;
+  font-weight: bold;
 }
 
 .header-cell {
-  padding: 1rem;
-  font-weight: 600;
-  color: black;
-  font-family: "Poppins", sans-serif;
+  flex: 1;
+  text-align: end;
+}
+.header-cell1 {
+  flex: 1;
+  text-align: start;
 }
 
-.header-cell:last-child {
+.service-list {
+  display: flex;
+  flex-direction: column;
+}
+
+.service-item {
+  border-bottom: 1px solid #ddd;
+}
+
+.service-header {
+  display: flex;
+  justify-content: space-between;
+  padding: 10px;
+  cursor: pointer;
+  transition: background 0.3s;
+}
+
+.service-header:hover {
+  background: #f1f1f1;
+}
+
+.service-name {
+  flex: 1;
+  font-weight: bold;
+}
+
+.service-price {
+  flex: 1;
   text-align: right;
+  color: #ff4f9d;
+  font-weight: bold;
 }
 
-.table-row {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  border-bottom: 1px solid #e2e8f0;
-  transition: background-color 0.2s;
+.service-details {
+  background: #f9f9f9;
+  padding: 10px;
 }
 
-.table-row:last-child {
+.service-details h4 {
+  margin: 5px 0;
+  font-size: 18px;
+  color: #555;
+}
+
+.detail-item {
+  padding: 5px 0;
+  border-bottom: 1px solid #ddd;
+}
+
+.detail-item:last-child {
   border-bottom: none;
 }
 
-.table-row:hover {
-  background-color: #f8fafc;
+.detail-name {
+  font-weight: bold;
 }
 
-.service-cell {
-  padding: 1rem;
-  color: black;
-  font-family: "Poppins", sans-serif;
+.detail-price {
+  color: #28a745;
+  font-weight: bold;
 }
 
-.price-cell {
-  padding: 1rem;
-  text-align: right;
-  color: black;
-  font-family: "Poppins", sans-serif;
-}
-
-@media (max-width: 768px) {
-  .price-container {
-    padding: 1rem;
-  }
-
-  .category-card {
-    padding: 1rem;
-  }
-
-  .category-title {
-    font-size: 1.25rem;
-  }
-
-  .header-cell,
-  .service-cell,
-  .price-cell {
-    padding: 0.75rem;
-    font-size: 0.875rem;
-  }
+.detail-description {
+  display: block;
+  font-size: 14px;
+  color: #666;
+  margin-top: 3px;
 }
 
 .treatment-timeline {
@@ -242,4 +260,77 @@
   .step-number .number {
     font-size: 1.5rem;
   }
+}
+.service-item {
+  cursor: pointer;
+}
+
+.service-details-dropdown {
+  padding: 10px;
+  background-color: #f9f9f9;
+  border: 1px solid #ddd;
+  margin-top: 5px;
+}
+
+.service-details-dropdown ul {
+  list-style-type: none;
+  padding: 0;
+}
+
+.service-details-dropdown li {
+  margin: 5px 0;
+}
+
+.modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.modal-content {
+  background: white;
+  padding: 20px;
+  border-radius: 8px;
+  width: 50%;
+  text-align: center;
+}
+
+
+
+.service-item {
+  cursor: pointer;
+  padding: 10px;
+  border-bottom: 1px solid #ddd;
+}
+
+.service-item:hover {
+  background-color: #f1f1f1;
+}
+
+.service-details-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-bottom: 20px;
+}
+
+.service-details-table th,
+.service-details-table td {
+  padding: 10px;
+  border: 1px solid #ddd;
+  text-align: left;
+}
+
+.service-details-table th {
+  background-color: #f4f4f4;
+  font-weight: bold;
+}
+
+.service-details-table td strong {
+  color: #333;
 }
