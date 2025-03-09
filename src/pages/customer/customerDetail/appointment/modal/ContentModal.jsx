@@ -6,7 +6,6 @@ const ContentModal = ({ appointment }) => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
-  // Fetch chi tiết appointment từ API
   useEffect(() => {
     if (!appointment) return;
 

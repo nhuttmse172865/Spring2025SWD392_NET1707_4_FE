@@ -192,7 +192,7 @@ const Content = () => {
                 <div className="doctor-card-back">
                   <h3 className="doctor-name">{doctor.name}</h3>
                   <p className="doctor-description">{doctor.description}</p>
-                  <button className="doctor-button">Xem thêm</button>
+                  <button className="doctor-button">View More</button>
                 </div>
               </div>
             </div>
