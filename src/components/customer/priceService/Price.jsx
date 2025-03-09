@@ -1,59 +1,76 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import "./Price.css";
 
 const Price = () => {
-  const categories = [
-    { id: 1, name: "Facial Treatment" },
-    { id: 2, name: "Body Care" },
-    { id: 3, name: "Hair Treatment" },
-    { id: 4, name: "Acne Treatment" },
-    { id: 5, name: "Anti-Aging" },
-    { id: 6, name: "Laser Therapy" },
-  ];
+  const [categories, setCategories] = useState([]);
+  const [services, setServices] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [expandedService, setExpandedService] = useState(null);
+  const [showModal, setShowModal] = useState(false);
+  const [selectedService, setSelectedService] = useState(null);
 
-  const services = [
-    {
-      id: 1,
-      name: "Deep Cleansing Facial",
-      category_id: 1,
-      gap_day: 7,
-      price: 500000,
-      image: "/images/deep-cleansing.jpg",
-    },
-    {
-      id: 2,
-      name: "Hydrating Facial",
-      category_id: 1,
-      gap_day: 10,
-      price: 600000,
-      image: "/images/hydrating.jpg",
-    },
-    {
-      id: 3,
-      name: "Anti-Acne Facial",
-      category_id: 1,
-      gap_day: 14,
-      price: 550000,
-      image: "/images/anti-acne.jpg",
-    },
-    {
-      id: 4,
-      name: "Body Scrub",
-      category_id: 2,
-      gap_day: 7,
-      price: 400000,
-      image: "/images/body-scrub.jpg",
-    },
-    {
-      id: 5,
-      name: "Aromatherapy Massage",
-      category_id: 2,
-      gap_day: 14,
-      price: 700000,
-      image: "/images/aromatherapy.jpg",
-    },
-    // ... other services
-  ];
+  useEffect(() => {
+    const fetchCategories = async () => {
+      try {
+        const response = await fetch("http://localhost:8080/category/getAll");
+        const result = await response.json();
+        if (result.status === 200) {
+          setCategories(result.data);
+        }
+      } catch (error) {
+        console.error("Error fetching categories:", error);
+      }
+    };
+
+    fetchCategories();
+  }, []);
+
+  useEffect(() => {
+    const fetchServicesAndDetails = async () => {
+      try {
+        const allServices = [];
+        for (const category of categories) {
+          const response = await fetch(
+            `http://localhost:8080/service/getServicesByCategory?id=${category.id}`
+          );
+          const result = await response.json();
+          if (result.status === 200) {
+            const servicesWithDetails = await Promise.all(
+              result.data.map(async (service) => {
+                const detailResponse = await fetch(
+                  `http://localhost:8080/service-detail/getByServiceId?id=${service.id}`
+                );
+                const detailResult = await detailResponse.json();
+                const totalPrice =
+                  detailResult.status === 200
+                    ? detailResult.data.reduce(
+                        (sum, detail) => sum + detail.price,
+                        0
+                      )
+                    : 0;
+
+                return {
+                  ...service,
+                  price: totalPrice,
+                  details: detailResult.status === 200 ? detailResult.data : [],
+                };
+              })
+            );
+            allServices.push(...servicesWithDetails);
+          }
+        }
+        setServices(allServices);
+        setLoading(false);
+      } catch (error) {
+        console.error("Error fetching services or details:", error);
+        setLoading(false);
+      }
+    };
+
+    if (categories.length > 0) {
+      fetchServicesAndDetails();
+    }
+  }, [categories]);
 
   const steps = [
     {
@@ -104,22 +121,36 @@ const Price = () => {
     },
   ];
 
-  const formatPrice = (price) => {
-    return new Intl.NumberFormat("vi-VN", {
+  const formatPrice = (price) =>
+    new Intl.NumberFormat("en-US", {
       style: "currency",
-      currency: "VND",
+      currency: "USD",
     }).format(price);
+
+  const toggleDetails = (serviceId) => {
+    setExpandedService(expandedService === serviceId ? null : serviceId);
+  };
+
+  if (loading) {
+    return <div>Loading...</div>;
+  }
+  const handleShowModal = (service) => {
+    setSelectedService(service);
+    setShowModal(true);
+  };
+
+  const handleCloseModal = () => {
+    setShowModal(false);
+    setSelectedService(null);
   };
 
   return (
     <div className="price-container">
-      <h1 className="price-title">Treatment Pricing Table</h1>
       <div className="price-categories">
         {categories.map((category) => {
           const categoryServices = services.filter(
-            (service) => service.category_id === category.id
+            (service) => service.categoryId === category.id
           );
-
           if (categoryServices.length === 0) return null;
 
           return (
@@ -128,40 +159,71 @@ const Price = () => {
 
               <div className="service-table">
                 <div className="table-header">
-                  <div className="header-cell">Treatment Service</div>
+                  <div className="header-cell1">Treatment Service</div>
                   <div className="header-cell">Service Price</div>
                 </div>
 
-                {categoryServices.map((service) => (
-                  <div key={service.id} className="table-row">
-                    <div className="service-cell">{service.name}</div>
-                    <div className="price-cell">
-                      {formatPrice(service.price)}
+                <div className="service-list">
+                  {categoryServices.map((service) => (
+                    <div
+                      key={service.id}
+                      className="service-item"
+                      onClick={() => handleShowModal(service)}
+                    >
+                      <div className="service-name">{service.name}</div>
+                      <div className="service-price">
+                        {formatPrice(service.price)}
+                      </div>
                     </div>
-                  </div>
-                ))}
+                  ))}
+                </div>
               </div>
             </div>
           );
         })}
       </div>
 
+      {/* Modal Popup */}
+      {showModal && selectedService && (
+        <div className="modal" onClick={handleCloseModal}>
+          <div className="modal-content" onClick={(e) => e.stopPropagation()}>
+            <table className="service-details-table">
+              <thead>
+                <tr>
+                  <th>Name</th>
+                  <th>Price</th>
+                  <th>Description</th>
+                </tr>
+              </thead>
+              <tbody>
+                {selectedService.details.map((detail) => (
+                  <tr key={detail.id}>
+                    <td>
+                      <strong>{detail.name}</strong>
+                    </td>
+                    <td>{formatPrice(detail.price)}</td>
+                    <td>{detail.description}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        </div>
+      )}
+
       <div className="treatment-timeline">
         <h1 className="timeline-title">
           Acne Treatment & Consultation Process at O2 SKIN
         </h1>
-
         <div className="timeline-container">
           {steps.map((step, index) => (
             <div key={index} className="timeline-step">
               <div className="step-number">
                 <div className="number">{step.number}</div>
               </div>
-
               <div className="step-icon">
                 <span className="icon">{step.icon}</span>
               </div>
-
               <div className="step-content">
                 <h3>{step.title}</h3>
                 <p>{step.description}</p>

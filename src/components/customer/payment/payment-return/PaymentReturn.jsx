@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
+import "./PaymentReturn.css";
 
 const PaymentReturn = () => {
   const location = useLocation();
@@ -56,7 +57,6 @@ const PaymentReturn = () => {
         );
 
         if (updateStatusResponse.status === 200) {
-          console.log("Appointment status updated to CONFIRMED");
           navigate("/payment-success");
         } else {
           console.error("Failed to update appointment status");
@@ -82,16 +82,10 @@ const PaymentReturn = () => {
   }, []);
 
   return (
-    <div>
-      <h2>
-        {isProcessing ? "Processing your payment..." : "Payment Processed"}
-      </h2>
-      <p>
-        {isProcessing
-          ? "Please wait while we verify your transaction."
-          : "Redirecting you shortly..."}
-      </p>
-    </div>
+<div className={`payment-status ${isProcessing ? "processing" : "completed"}`}>
+  <h2>{isProcessing ? "Processing your payment..." : "Payment Processed"}</h2>
+  <p>{isProcessing ? "Please wait while we verify your transaction." : "Redirecting you shortly..."}</p>
+</div>
   );
 };
 

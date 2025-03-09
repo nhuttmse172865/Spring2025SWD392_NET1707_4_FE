@@ -79,35 +79,35 @@
 
 /* Nút Success */
 .success-btn {
-  background-color: #28a745;
+  background-color: #ff4f9d;
   color: #fff;
 }
 
 .success-btn:hover {
-  background-color: #218838;
+  background-color: #ff4f9d;
   transform: translateY(-2px);
 }
 
 /* Nút Try Again */
 .try-again-btn {
-  background-color: #dc3545;
+  background-color: #ff4f9d;
   color: #fff;
   margin-right: 10px;
 }
 
 .try-again-btn:hover {
-  background-color: #c82333;
+  background-color: #ff4f9d;
   transform: translateY(-2px);
 }
 
 /* Nút Back to Home */
 .status-button:not(.try-again-btn) {
-  background-color: #007bff;
+  background-color: #ff4f9d;
   color: #fff;
 }
 
 .status-button:not(.try-again-btn):hover {
-  background-color: #0069d9;
+  background-color: #ff4f9d;
   transform: translateY(-2px);
 }
 
