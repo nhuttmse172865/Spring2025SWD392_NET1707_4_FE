@@ -42,6 +42,7 @@
 
 .therapist-profile-section {
     margin-bottom: 20px;
+    
 }
 
 .therapist-profile-title {
@@ -49,11 +50,14 @@
     padding: 10px;
     font-size: 18px;
     font-weight: bold;
+    text-align: start;
 }
 
 .therapist-profile-list {
     padding: 10px;
     list-style: none;
+    background-color: white;
+    border-radius: 10px;
 }
 
 .therapist-profile-list li {
