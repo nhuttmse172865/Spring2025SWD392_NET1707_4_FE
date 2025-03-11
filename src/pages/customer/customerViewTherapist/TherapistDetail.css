@@ -1,12 +1,14 @@
 .therapist-detail-container{
     padding: 40px;
-    max-width: 1000px;
+    max-width: 1500px;
     font-family: 'Poppins', sans-serif;
     margin: auto;
     box-shadow: 0 4px 10px rgba(168, 165, 167, 0.2);
 }
 .therapist-detail-content {
-    display: flex;
+    display: inline-block;
+    margin-left: 10px;
+    font-size: 16px;
     gap: 30px;
 }
 .therapist-image img {
@@ -17,6 +19,7 @@
 
 .therapist-detail-info{
     flex :1;
+    
 }
 .therapist-detail-name{
     font-size: 26px;
@@ -33,10 +36,12 @@ margin-bottom: 20px;
 .therapist-detail-table td {
     padding: 8px 15px;
     border-bottom: 1px solid #ddd;
+    text-align: left;
     
 }
 .therapist-detail-section{
     margin-bottom: 20px;
+    
 }
 .therapist-section-title{
   
@@ -44,8 +49,8 @@ margin-bottom: 20px;
     padding: 10px;
     font-size: 18px;
     font-weight: bold;
+   text-align: left;
   
-
 }
 .therapist-section-list{
     padding: 10px;

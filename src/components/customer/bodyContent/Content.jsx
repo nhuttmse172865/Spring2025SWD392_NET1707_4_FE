@@ -1,41 +1,30 @@
 
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import './Content.css';
 import { CheckCircle } from "lucide-react";
 import IMAGES from "../../../constants/images";
 import { useNavigate } from 'react-router-dom';
 import { Button } from 'antd';
+import axios from 'axios';
+import BASE from '../../../constants/base';
 
 const Content = () => {
   const navigate  = useNavigate();
-  const doctors = [
-    {
-      id: 1,
-      name: 'Emely jonson',
-      role: 'Chuyên viên massage',
-      description: 'Chuyên gia với hơn 5 năm kinh nghiệm trong lĩnh vực massage trị liệu. Được đào tạo chuyên sâu về các phương pháp massage.'
-    },
-    {
-      id: 2,
-      name: 'Lola Jonson',
-      role: 'Chuyên viên chăm sóc da',
-      description: 'Chuyên gia thẩm mỹ với kinh nghiệm trong việc điều trị các vấn đề về da. Thành thạo nhiều kỹ thuật chăm sóc da tiên tiến.'
-    },
-    {
-      id: 3,
-      name: 'Rose Marian',
-      role: 'Chuyên viên chăm sóc da',
-      description: 'Chuyên gia với chứng chỉ quốc tế về thẩm mỹ và chăm sóc da. Có kinh nghiệm trong việc điều trị mọi loại da.'
-    },
-    {
-      id: 4,
-      name: 'Rose Marian',
-      role: 'Chuyên viên chăm sóc da',
-      description: 'Chuyên gia thẩm mỹ với nhiều năm kinh nghiệm trong lĩnh vực chăm sóc da cao cấp. Thành thạo các kỹ thuật điều trị da hiện đại.'
+const [doctor,setDoctor] = useState([]);
+ useEffect(()=>{
+featchDoctor();
+ },[])
+
+  const featchDoctor = async () =>{
+
+    try {
+      const res = await axios.get(`${BASE.BASE_URL}/therapist-working-time/get-all`);
+      setDoctor(res.data.data)
+      console.log(res.data.data)
+    } catch (error) {
+      console.log(error)
     }
-  ];
-
-
+  }
   const services = [
     {
       icon: <CheckCircle color="white" size={24} />,
@@ -179,20 +168,20 @@ const Content = () => {
     </button>
   </div>
         <div className="doctor-container">
-          {doctors.map((doctor) => (
+          {doctor.map((doctor) => (
             <div key={doctor.id} className="doctor-card">
               <div className="doctor-card-inner">
                 <div className="doctor-card-front">
                   <div className="doctor-image">
-                    <img src={IMAGES.skinBackground1}  alt={doctor.name} />
+                  <img src={doctor.therapist.images?.[0]?.url || IMAGES.skinBackground1} alt={doctor.therapist.name} />
                   </div>
-                  <h3 className="doctor-name">{doctor.name}</h3>
+                  <h3 className="doctor-name">{doctor.therapist.account.name}</h3>
                   <p className="doctor-role">{doctor.role}</p>
                 </div>
                 <div className="doctor-card-back">
                   <h3 className="doctor-name">{doctor.name}</h3>
-                  <p className="doctor-description">{doctor.description}</p>
-                  <button className="doctor-button">Xem thêm</button>
+                  <p className="doctor-description">{doctor.therapist.speciality}</p>
+                  <button className="doctor-button"   onClick={() => navigate(`/customer-view/therapist/${doctor.id}`, { state: {therapist:doctor.therapist} })}>View more</button>
                 </div>
               </div>
             </div>
