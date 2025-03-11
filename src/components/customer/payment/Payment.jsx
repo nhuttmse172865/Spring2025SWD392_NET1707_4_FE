@@ -34,6 +34,27 @@ const Payment = () => {
 
   const handleContinue = async () => {
     try {
+      if (totalCostVND === 0) {
+        // Nếu totalCostVND = 0, cập nhật trạng thái appointment
+        const updateResponse = await fetch(
+          `http://localhost:8080/appointments/${appointmentId}/status?status=CONFIRMED`,
+          {
+            method: "PUT",
+            headers: {
+              Accept: "*/*",
+            },
+          }
+        );
+
+        if (updateResponse.ok) {
+          window.location.href = "/payment-success";
+        } else {
+          console.error("Failed to update appointment status");
+          alert("Failed to confirm appointment.");
+        }
+        return;
+      }
+
       const response = await fetch(
         `http://localhost:8080/vnpay/create-payment-url?appointmentId=${appointmentId}&amount=${totalCostVND}&returnUrl=http://localhost:5173/payment-return`,
         {
@@ -147,8 +168,3 @@ const Payment = () => {
 };
 
 export default Payment;
-
-
-
-
-
