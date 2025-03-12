@@ -1,11 +1,11 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useMemo, useCallback } from "react";
 import { useNavigate } from "react-router-dom";
 import ReactPaginate from "react-paginate";
 import axios from "axios";
 import BASE from "../../../constants/base";
 import "./Content.css";
 
-const Content = () => {
+const Content = React.memo(() => {
   const [sortType, setSortType] = useState("default");
   const [currentPage, setCurrentPage] = useState(0);
   const [services, setServices] = useState([]);
@@ -26,7 +26,7 @@ const Content = () => {
     fetchServices();
   }, []);
 
-  const getFilteredServices = () => {
+  const filteredServices = useMemo(() => {
     let filtered = [...services];
 
     const selectedCategories =
@@ -46,97 +46,85 @@ const Content = () => {
         )
       );
     }
+
     return filtered;
-  };
+  }, [services]);
 
-  const handleServiceClick = (service) => {
-    localStorage.setItem("selectedService", JSON.stringify(service));
-    console.log(service);
-    navigate("/customer-service/service-details");
-  };
-
-  const handleBookClick = (id) => {
-    localStorage.setItem("selectedServiceId", id);
-    navigate("/booking");
-  };
-
-  const sortServices = (services) => {
+  const sortedServices = useMemo(() => {
     switch (sortType) {
       case "nameAZ":
-        return [...services].sort((a, b) => a.name.localeCompare(b.name));
+        return [...filteredServices].sort((a, b) =>
+          a.name.localeCompare(b.name)
+        );
       case "nameZA":
-        return [...services].sort((a, b) => b.name.localeCompare(a.name));
+        return [...filteredServices].sort((a, b) =>
+          b.name.localeCompare(a.name)
+        );
       case "priceLowHigh":
-        return [...services].sort((a, b) => a.price - b.price);
+        return [...filteredServices].sort((a, b) => a.price - b.price);
       case "priceHighLow":
-        return [...services].sort((a, b) => b.price - a.price);
+        return [...filteredServices].sort((a, b) => b.price - a.price);
       default:
-        return services;
+        return filteredServices;
     }
-  };
+  }, [filteredServices, sortType]);
 
-  // const formatPrice = (price) => {
-  //   return new Intl.NumberFormat("vi-VN").format(price);
-  // };
+  const handleServiceClick = useCallback(
+    (service) => {
+      localStorage.setItem("selectedService", JSON.stringify(service));
+      console.log(service);
+      navigate("/customer-service/service-details");
+    },
+    [navigate]
+  );
 
-  const formatPrice = (price) => {
+  const handleBookClick = useCallback(
+    (id) => {
+      localStorage.setItem("selectedServiceId", id);
+      navigate("/booking");
+    },
+    [navigate]
+  );
+
+  const formatPrice = useCallback((price) => {
     return new Intl.NumberFormat("en-US", {
       style: "currency",
       currency: "USD",
     }).format(price);
-  };
+  }, []);
 
   const servicesPerPage = 6;
-  const pageCount = Math.ceil(getFilteredServices().length / servicesPerPage);
+  const pageCount = Math.ceil(sortedServices.length / servicesPerPage);
+  const currentServices = useMemo(() => {
+    const start = currentPage * servicesPerPage;
+    const end = start + servicesPerPage;
+    return sortedServices.slice(start, end);
+  }, [sortedServices, currentPage]);
 
-  const handlePageClick = (data) => {
+  const handlePageClick = useCallback((data) => {
     setCurrentPage(data.selected);
-  };
-
-  const currentServices = sortServices(getFilteredServices()).slice(
-    currentPage * servicesPerPage,
-    (currentPage + 1) * servicesPerPage
-  );
+  }, []);
 
   return (
     <div className="spa-container">
       <div className="sort-container">
         <span className="sort-label">Sort by:</span>
         <div className="sort-buttons">
-          <button
-            className={`sort-button ${sortType === "default" ? "active" : ""}`}
-            onClick={() => setSortType("default")}
-          >
-            Default
-          </button>
-          <button
-            className={`sort-button ${sortType === "nameAZ" ? "active" : ""}`}
-            onClick={() => setSortType("nameAZ")}
-          >
-            Name A-Z
-          </button>
-          <button
-            className={`sort-button ${sortType === "nameZA" ? "active" : ""}`}
-            onClick={() => setSortType("nameZA")}
-          >
-            Name Z-A
-          </button>
-          <button
-            className={`sort-button ${
-              sortType === "priceLowHigh" ? "active" : ""
-            }`}
-            onClick={() => setSortType("priceLowHigh")}
-          >
-            Price Low to High
-          </button>
-          <button
-            className={`sort-button ${
-              sortType === "priceHighLow" ? "active" : ""
-            }`}
-            onClick={() => setSortType("priceHighLow")}
-          >
-            Price High to Low
-          </button>
+          {[
+            { type: "default", label: "Default" },
+            { type: "nameAZ", label: "Name A-Z" },
+            { type: "nameZA", label: "Name Z-A" },
+            { type: "priceLowHigh", label: "Price Low to High" },
+            { type: "priceHighLow", label: "Price High to Low" },
+          ].map(({ type, label }) => (
+            <button
+              key={type}
+              className={`sort-button ${sortType === type ? "active" : ""}`}
+              onClick={() => setSortType(type)}
+            >
+              {label}
+            </button>
+          ))}
         </div>
       </div>
 
@@ -152,6 +140,7 @@ const Content = () => {
                 src={service.image}
                 alt={service.name}
                 className="service-image"
+                loading="lazy"
               />
             </div>
             <div className="service-info">
@@ -189,6 +178,6 @@ const Content = () => {
       />
     </div>
   );
-};
+});
 
 export default Content;

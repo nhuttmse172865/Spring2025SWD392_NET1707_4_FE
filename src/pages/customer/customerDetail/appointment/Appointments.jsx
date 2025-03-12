@@ -345,7 +345,6 @@ const Appointments = () => {
       (total, detail) => total + (detail.price || 0),
       0
     );
-    // Chỉ tính 10% của tổng giá trị và đổi sang VND
     return totalUSD * 25000 * 0.1;
   };
 
@@ -379,9 +378,10 @@ const Appointments = () => {
                   appointment.status === "CONFIRMED" ||
                   appointment.status === "PENDING"
               )
+
               .map((appointment) => ({
                 id: appointment.id,
-                date: new Date().toISOString().split("T")[0],
+                date: appointment.createdTime.split("T")[0],
                 service: appointment.service.name,
                 totalPrice: calculateTotalPriceUSD(
                   appointment.service.service_details
@@ -392,6 +392,7 @@ const Appointments = () => {
                 therapists: getTherapistsFromDetails(appointment),
                 status: appointment.status,
               }));
+            console.log("Initial Appointments:", initialAppointments);
             setAppointments(initialAppointments);
           }
         })
@@ -453,8 +454,6 @@ const Appointments = () => {
       alert("Invalid appointment data. Please try again.");
       return;
     }
-    console.log("Total Cost VND (10%):", totalCostVND);
-    console.log("Initiating Re-deposit for:", { appointmentId, totalCostVND });
 
     try {
       const response = await fetch(

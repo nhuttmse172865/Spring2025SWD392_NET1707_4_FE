@@ -22,9 +22,6 @@ const Payment = () => {
   const totalCost = prepayment - discount;
   const totalCostVND = totalCost * 25000;
 
-  console.log("Total Cost (VND):", totalCostVND);
-  console.log("Appointment ID:", appointmentId);
-
   const formatUSD = (amount) => {
     return new Intl.NumberFormat("en-US", {
       style: "currency",
