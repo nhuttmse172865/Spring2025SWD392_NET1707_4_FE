@@ -14,7 +14,7 @@ const Services = () => {
     <div className="mt-10">
       <ToolBar   handleOnClickElevated={() => setShowModal(true)}/>
       <div>
-        <Content setShowModal={setShowModal} setItemUpdate={setItemUpdate} />
+        <Content setShowModal={setShowModal} setItemUpdate={setItemUpdate} setShowModalUpdate={setShowModalUpdate} />
       </div>
       {showModal && (
         <Popup>
@@ -24,7 +24,7 @@ const Services = () => {
       {
         showModalUpdate && (
           <Popup>
-            <ModalUpdate />
+            <ModalUpdate itemUpdate={itemUpdate} setShowModalUpdate={setShowModalUpdate} />
           </Popup>
         )
       }

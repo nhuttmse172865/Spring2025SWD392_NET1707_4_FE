@@ -1,8 +1,11 @@
-import React from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import Header from "../../../../common/table/header/Header";
 import Body from "./body/Body";
+import Paging from "../../../../common/paging/Paging";
+import axios from "axios";
+import BASE from "../../../../../constants/base";
 
-const Table = ({ setShowModal, setItemUpdate }) => {
+const Table = ({ setShowModal, setItemUpdate, setShowModalUpdate }) => {
   const listTitle = [
     {
       name: "No.",
@@ -38,6 +41,23 @@ const Table = ({ setShowModal, setItemUpdate }) => {
     },
   ];
 
+  const [page, setPage] = useState(0);
+  const [numberRows,setNumberRow] = useState();
+
+  const handleFetchNumberRow = useCallback(async () => {
+    try{
+      const response = await axios.get(`${BASE.BASE_URL}/service/count`)
+      if(!response || response.status !== 200) throw new Error()
+      setNumberRow(Number(response.data.data))
+    }catch(error){
+      console.log(error)
+    }
+  },[])
+
+  useEffect(() => {
+    handleFetchNumberRow()
+  },[handleFetchNumberRow])
+
   return (
     <div className="mt-5">
       <Header listTitle={listTitle} />
@@ -45,7 +65,10 @@ const Table = ({ setShowModal, setItemUpdate }) => {
         listTitle={listTitle}
         setItemUpdate={setItemUpdate}
         setShowModal={setShowModal}
+        page={page}
+        setShowModalUpdate={setShowModalUpdate}
       />
+      <Paging page={page} setPage={setPage} numberPages={Math.ceil(numberRows/7)}/>
     </div>
   );
 };

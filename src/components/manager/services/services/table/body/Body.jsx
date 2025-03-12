@@ -1,34 +1,44 @@
-import React, { useEffect, useState } from "react";
+import React, { useCallback, useEffect, useRef, useState } from "react";
 import Item from "../item/Item";
 import axios from "axios";
 import BASE from "../../../../../../constants/base";
 
-const Body = ({ listTitle, setItemUpdate, setShowModal }) => {
+const Body = ({ listTitle, setItemUpdate, setShowModal, page, setShowModalUpdate }) => {
   const [listServices, setListServices] = useState();
+  const abortControllerRef = useRef(null);
 
-  const handleFetchServices = async () => {
+  const handleFetchService = useCallback(async () => {
+    if (abortControllerRef.current) {
+      abortControllerRef.current.abort();
+    }
+    abortControllerRef.current = new AbortController();
+    const signal = abortControllerRef.current.signal;
+    setListServices();
     try {
       const response = await axios.get(
-        `${BASE.BASE_URL}/service/getAllServicePaging?page=0&size=10`
+        `${BASE.BASE_URL}/service/getAllServicePaging?page=${page}&size=7`,
+        { signal }
       );
       if (!response || response.status !== 200) throw new Error();
       setListServices(response.data.data);
     } catch (error) {
       console.log(error);
-    } finally {
     }
-  };
+  }, [page]);
 
   useEffect(() => {
-    if (!listServices) {
-      handleFetchServices();
-    }
-  }, []);
+    handleFetchService();
+    return () => {
+      if (abortControllerRef.current) {
+        abortControllerRef.current.abort();
+      }
+    };
+  }, [handleFetchService]);
 
   return (
     <div
       className="bg-white rounded-[.375rem] mt-1 scroll-hidden overflow-x-hidden p-0.5 flex flex-col gap-2.5"
-      style={{ height: "calc(100vh - 184px - 3.5rem" }}
+      style={{ height: "calc(100vh - 250px - 3.5rem" }}
     >
       {listServices &&
         listServices.map((item, index) => (
@@ -38,6 +48,8 @@ const Body = ({ listTitle, setItemUpdate, setShowModal }) => {
             setItemUpdate={setItemUpdate}
             item={item}
             index={index}
+            page={page}
+            setShowModalUpdate={setShowModalUpdate}
           />
         ))}
     </div>

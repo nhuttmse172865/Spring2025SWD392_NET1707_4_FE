@@ -1,6 +1,7 @@
-import React from "react";
+import React, { useState } from "react";
 import Header from "../../../common/table/header/Header";
 import Body from "./body/Body";
+import Paging from "../../../common/paging/Paging";
 
 const Table = () => {
   const listTitle = [
@@ -10,7 +11,7 @@ const Table = () => {
     },
     {
       name: "Customer",
-      column: 2,
+      column: 2.5,
     },
     {
       name: "Service",
@@ -22,21 +23,30 @@ const Table = () => {
     },
     {
       name: "Date",
-      column: 2,
+      column: 1.5,
     },
     {
       name: "Price",
-      column: 2,
+      column: 1.5,
     },
     {
       name: "Status",
-      column: 1.5,
+      column: 1,
     },
   ];
+
+  const [page, setPage] = useState(0);
+  const [totalPages, setTotalPages] = useState();
+
   return (
     <div className="mt-5">
       <Header listTitle={listTitle} />
-      <Body listTitle={listTitle} />
+      <Body listTitle={listTitle} setTotalPages={setTotalPages} page={page} />
+      <Paging
+        page={page}
+        setPage={setPage}
+        numberPages={totalPages}
+      />
     </div>
   );
 };
