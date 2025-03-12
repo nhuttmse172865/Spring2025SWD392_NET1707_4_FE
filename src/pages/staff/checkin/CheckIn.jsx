@@ -156,7 +156,7 @@ useEffect(() => {
                     <td>{product.account.name}</td>
                     <td>{product.service.name}</td>
                     <td>{product.account.phone}</td>
-                    <td>{product.total}</td>
+                    <td>{product.total}$</td>
                     <td>{dayjs(product.createdTime).add(1,'day').format("YYYY-MM-DD")}</td>
                     <td>
                       <Button

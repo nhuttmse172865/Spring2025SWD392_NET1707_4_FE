@@ -14,6 +14,7 @@ const HeaderStaff = () => {
       "/staff": { title: "Dashboard" },
       "/staff/checkin": { title: "CheckIn" },
       "/staff/checkout": { title: "CheckOut" },
+      
     };
     return map[pathname] || { title: "" };
   };
