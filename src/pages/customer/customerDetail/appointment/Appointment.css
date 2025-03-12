@@ -10,7 +10,8 @@
 }
 
 .appointments-header {
-  display: flex;
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr 1fr 1fr 1fr;
   padding: 16px 24px;
   background-color: white;
   border-bottom: 1px solid #e9ecef;
@@ -24,7 +25,8 @@
 }
 
 .appointment-row {
-  display: flex;
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr 1fr 1fr 1fr; 
   padding: 20px 24px;
   align-items: center;
   border-bottom: 1px solid #e9ecef;
@@ -35,8 +37,8 @@
 .header-service,
 .header-price,
 .header-therapists,
+.header-status,
 .header-actions {
-  flex: 1;
   text-align: left;
   font-size: 14px;
   font-family: "Poppins", sans-serif;
@@ -45,8 +47,8 @@
 .appointment-service,
 .appointment-price,
 .appointment-therapists,
+.appointment-status,
 .appointment-actions {
-  flex: 1;
   text-align: left;
   font-size: 14px;
   font-family: "Poppins", sans-serif;
@@ -61,6 +63,21 @@
 .appointment-actions {
   display: flex;
   gap: 8px;
+}
+
+.appointment-status {
+  display: flex;
+  align-items: center;
+}
+
+.status-confirmed {
+  color: black;
+  font-weight: 500;
+}
+
+.status-pending {
+  color: black;
+  font-weight: 500;
 }
 
 .action-button {
@@ -121,13 +138,16 @@
   background-color: #f5f5f5;
 }
 
-.appointment-row:nth-child(2) .patient-avatar {
-  background-color: #2ecc71;
+.redeposit-button {
+  background-color: transparent;
+  color: #000000;
+  justify-content: flex-start;
+  width: 100%;
+  text-align: left;
 }
 
-.appointment-row:nth-child(3) .patient-avatar,
-.appointment-row:nth-child(4) .patient-avatar {
-  background-color: #9b59b6;
+.redeposit-button:hover {
+  background-color: #f5f5f5;
 }
 
 .actions-dropdown {
@@ -166,6 +186,7 @@
   }
 
   .appointment-row {
+    display: flex;
     flex-direction: column;
     align-items: flex-start;
     gap: 12px;
@@ -173,9 +194,10 @@
   }
 
   .appointment-date,
-  .appointment-type,
-  .appointment-patient,
-  .appointment-time,
+  .appointment-service,
+  .appointment-price,
+  .appointment-therapists,
+  .appointment-status,
   .appointment-actions {
     width: 100%;
   }
@@ -197,6 +219,7 @@
     right: 0;
   }
 }
+
 .popup-overlay {
   position: fixed;
   top: 0;
@@ -220,10 +243,9 @@
   gap: 5px;
 }
 
-.page-item a{
+.page-item a {
   margin: 0 5px;
   border-color: white;
-
 }
 
 .page-link {
@@ -249,4 +271,3 @@
   color: #ff4f9d;
   border-color: white;
 }
-

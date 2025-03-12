@@ -10,6 +10,7 @@ import Therapist from "../pages/manager/account/therapist/Therapist";
 import Staff from "../pages/manager/account/staff/Staff";
 import BusinessTime from "../pages/manager/schedule/businessTime/BusinessTime";
 import WorkingTime from "../pages/manager/schedule/workingTime/WorkingTime";
+import Appointment from "../pages/manager/appointment/Appointment";
 
 const COMPONENTS = {
   DASHBOARD: <Dashboard />,
@@ -22,7 +23,8 @@ const COMPONENTS = {
   THERAPIST: <Therapist />,
   STAFF: <Staff />,
   BUSINESS_TIME: <BusinessTime />,
-  WORKING_TIME: <WorkingTime />
+  WORKING_TIME: <WorkingTime />,
+  APPOINTMENT: <Appointment />
 };
 
 const LIST_NAVIGATION_MANAGER = [
@@ -44,7 +46,7 @@ const LIST_NAVIGATION_MANAGER = [
         iconActive: ICONS.appointmentActive,
         sortNumber: 1,
         subItems: [],
-        component: null,
+        component: COMPONENTS.APPOINTMENT,
         path: "menu-appointment",
       },
       {

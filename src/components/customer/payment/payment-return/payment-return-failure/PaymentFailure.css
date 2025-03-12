@@ -79,35 +79,59 @@
 
 /* Nút Success */
 .success-btn {
+<<<<<<< HEAD
   background-color: #28a745;
+=======
+  background-color: #ff4f9d;
+>>>>>>> 1fa9e8b8d4a63fd4704a0335458ecb77c28dd764
   color: #fff;
 }
 
 .success-btn:hover {
+<<<<<<< HEAD
   background-color: #218838;
+=======
+  background-color: #ff4f9d;
+>>>>>>> 1fa9e8b8d4a63fd4704a0335458ecb77c28dd764
   transform: translateY(-2px);
 }
 
 /* Nút Try Again */
 .try-again-btn {
+<<<<<<< HEAD
   background-color: #dc3545;
+=======
+  background-color: #ff4f9d;
+>>>>>>> 1fa9e8b8d4a63fd4704a0335458ecb77c28dd764
   color: #fff;
   margin-right: 10px;
 }
 
 .try-again-btn:hover {
+<<<<<<< HEAD
   background-color: #c82333;
+=======
+  background-color: #ff4f9d;
+>>>>>>> 1fa9e8b8d4a63fd4704a0335458ecb77c28dd764
   transform: translateY(-2px);
 }
 
 /* Nút Back to Home */
 .status-button:not(.try-again-btn) {
+<<<<<<< HEAD
   background-color: #007bff;
+=======
+  background-color: #ff4f9d;
+>>>>>>> 1fa9e8b8d4a63fd4704a0335458ecb77c28dd764
   color: #fff;
 }
 
 .status-button:not(.try-again-btn):hover {
+<<<<<<< HEAD
   background-color: #0069d9;
+=======
+  background-color: #ff4f9d;
+>>>>>>> 1fa9e8b8d4a63fd4704a0335458ecb77c28dd764
   transform: translateY(-2px);
 }
 

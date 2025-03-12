@@ -13,7 +13,7 @@ const Itinerary = () => {
   const [services, setServices] = useState([]);
   const [selectedService, setSelectedService] = useState(null);
   const [availableTherapists, setAvailableTherapists] = useState([]);
-  const [bookingSummaries, setBookingSummaries] = useState([]); // Changed to array
+  const [bookingSummaries, setBookingSummaries] = useState([]); 
 
   const generateTimeSlotsForRange = (startHour, endHour) => {
     const slots = [];
@@ -87,6 +87,7 @@ const Itinerary = () => {
       therapistId: therapist.therapistId,
       date: formattedDate,
       time: time,
+      price: service?.price || 0, 
     };
   
     // Kiểm tra nếu đã có booking cho service này -> cập nhật lại
@@ -101,20 +102,31 @@ const Itinerary = () => {
     });
   };
   
-  
+
 
   const handleRemoveBooking = (bookingId) => {
     setBookingSummaries(prev => prev.filter(booking => booking.id !== bookingId));
   };
 
-  const handleBook = () => {
-    if (bookingSummaries.length > 0) {
-      console.log('Bookings confirmed:', bookingSummaries);
-      // Here you can add your booking API call
-      // For example:
-      // await axios.post(`${BASE.BASE_URL}/bookings`, bookingSummaries);
-      alert(`Confirmed ${bookingSummaries.length} bookings!`);
-      setBookingSummaries([]); // Clear after booking
+  const handleBook = async () => {
+    const apoimentID = localStorage.getItem('selectedAppointmentId');
+    const bookingData = bookingSummaries.map(booking => ({
+      startHour: booking.time,
+      endHour: dayjs(booking.time, 'HH:mm:ss').add(1, 'hour').format('HH:mm:ss'),
+      day: booking.date,
+      therapistId: booking.therapistId,
+      name: booking.service,
+      price: booking.price,
+    }));
+    try {
+      const res = await axios.post(`${BASE.BASE_URL}/appointment-detail/create/${apoimentID}`, bookingData);
+      Modal.success({
+        title: 'Success',
+        content: 'Create successful!',
+      });
+      setBookingSummaries([]);
+    } catch (error) {
+      console.error('Error  appointments:', error)
     }
   };
 
@@ -126,6 +138,7 @@ const Itinerary = () => {
     try {
       const res = await axios.get(`${BASE.BASE_URL}/service-detail/get-all`);
       setServices(res.data.data);
+      console.log(res.data.data);
     } catch (error) {
       console.log(error);
     }
@@ -214,6 +227,7 @@ const Itinerary = () => {
                 <p><strong>Therapist:</strong> {booking.therapist}</p>
                 <p><strong>Date:</strong> {booking.date}</p>
                 <p><strong>Time:</strong> {booking.time}</p>
+                <p><strong>Price: </strong> {booking.price}$</p>
                 <button 
                   className="btn-remove-booking"
                   onClick={() => handleRemoveBooking(booking.id)}

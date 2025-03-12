@@ -27,6 +27,7 @@
     "react-qr-scanner": "^1.0.0-alpha.11",
     "react-rainbow-components": "^1.32.0",
     "react-router-dom": "^7.1.5",
+    "react-toastify": "^11.0.5",
     "tailwindcss": "^4.0.3",
     "use-local-storage": "^3.0.0",
     "use-local-storage-state": "^19.5.0"

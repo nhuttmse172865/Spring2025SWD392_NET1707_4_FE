@@ -71,17 +71,23 @@ const CheckIn = () => {
     localStorage.removeItem('pendingDetailId'); 
   };
 
- const showAppointmentDetail = (product) =>{
-  setSelectedProduct(product);
-    setIsCheckOutModalVisible(true);
-
- }
+  const showAppointmentDetail = async (product) => {
+    setLoading(true);
+    try {
+      const res = await axios.get(`${BASE.BASE_URL}/appointments/${product.id}`);
+      setSelectedProduct(res.data.data); 
+      setIsCheckOutModalVisible(true);
+    } catch (error) {
+      console.error("Error fetching appointment details:", error);
+    }
+    setLoading(false);
+  };
  const handleTransfer = async (detail) => {
   if (!selectedProduct || !detail) return;
 
   const appointmentId = selectedProduct.id; 
   const appointment_detailsId = detail.id;
-  const amount = detail.price * 25000; 
+  const amount = detail.price * 25000 *0.9; 
   const returnUrl = encodeURIComponent("http://localhost:5173/staff/checkout");
 
   //save local
@@ -200,7 +206,7 @@ const handleCashPayment = async (detail) => {
  
     const paymentResponse = await axios.post(`${BASE.BASE_URL}/payment/create`, {
       appointmentId: selectedProduct.id,
-      amount: detail.price * 25000, 
+      amount: detail.price * 25000* 0.9, 
       transactionCode: "14837441", 
       method: "CASH", 
       payTime: "20250309213832",
@@ -274,14 +280,14 @@ const handleCashPayment = async (detail) => {
           </tr>
         </thead>
         <tbody>
-              {filteredProducts.length > 0 ? (
+              {filteredProducts ? (
                 filteredProducts.map((product) => (
                   <tr key={product.id}>
                     <td>{product.account.name}</td>
                     <td>{product.service.name}</td>
                     <td>{product.account.phone}</td>
-                    <td>{product.total} $</td>
-                    <td>{dayjs(product.appointment_details[0].day).format("YYYY-MM-DD")}</td>
+                    <td>{product.amount} $</td>
+                    <td>{dayjs(product.createdTime).format("YYYY-MM-DD")}</td>
                     <td>
                       <Button
                         className="checkout-button"
@@ -328,7 +334,7 @@ const handleCashPayment = async (detail) => {
   ]}
   className="checkout-modal"
 >
-{selectedProduct && selectedProduct.appointment_details.length > 0 ? (
+{selectedProduct && selectedProduct.appointment_details ? (
   <div className="checkout-info">
     {selectedProduct.appointment_details.map((detail) => (
       <div key={detail.id} className="appointment-item">
@@ -344,6 +350,7 @@ const handleCashPayment = async (detail) => {
         <p><strong>Start:</strong> {detail.startHour}</p>
         <p><strong>End:</strong> {detail.endHour}</p>
         <p><strong>Day:</strong> {detail.day}</p>
+        <p><strong>Therapist:</strong> {detail.therapist?.account?.name}</p>
     <div className="btn-action-checkinout">
       
    

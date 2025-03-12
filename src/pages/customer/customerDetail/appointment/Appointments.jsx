@@ -1,5 +1,6 @@
 // import React, { useEffect, useState, useRef } from "react";
-// import { Eye, X, Calendar } from "lucide-react";
+// import { Eye, X, Calendar, DollarSign } from "lucide-react";
+// import ReactPaginate from "react-paginate";
 // import "./Appointment.css";
 // import ContentModal from "./modal/ContentModal";
 // import useLocalStorage from "use-local-storage";
@@ -12,22 +13,41 @@
 //     LOCALSTORAGE_NAME.CUSTOMER_INFORMATION_CACHE,
 //     ""
 //   );
+//   const [currentPage, setCurrentPage] = useState(0);
+//   const ITEMS_PER_PAGE = 4;
 
-//   const calculateTotalPrice = (serviceDetails) => {
-//     return serviceDetails.reduce((total, detail) => total + detail.price, 0);
+//   const calculateTotalPriceUSD = (serviceDetails) => {
+//     const totalUSD = serviceDetails.reduce(
+//       (total, detail) => total + (detail.price || 0),
+//       0
+//     );
+//     return totalUSD.toLocaleString("en-US", {
+//       style: "currency",
+//       currency: "USD",
+//     });
 //   };
 
-//   const getTherapistsFromDetails = (appointmentDetails) => {
-//     const uniqueTherapists = new Map();
-//     appointmentDetails.forEach((detail) => {
-//       if (detail.therapist) {
-//         uniqueTherapists.set(
-//           detail.therapist.id,
-//           `${detail.therapist.account.name}`
-//         );
+//   const calculateTotalPriceVND = (serviceDetails) => {
+//     const totalUSD = serviceDetails.reduce(
+//       (total, detail) => total + (detail.price || 0),
+//       0
+//     );
+//     return totalUSD * 25000;
+//   };
+
+//   const getTherapistsFromDetails = (appointment) => {
+//     if (
+//       appointment.service &&
+//       appointment.service.service_therapists &&
+//       appointment.service.service_therapists.length > 0
+//     ) {
+//       // Lấy therapist đầu tiên (hoặc chọn ngẫu nhiên)
+//       const firstTherapist = appointment.service.service_therapists[0];
+//       if (firstTherapist && firstTherapist.therapist && firstTherapist.therapist.account) {
+//         return firstTherapist.therapist.account.name;
 //       }
-//     });
-//     return Array.from(uniqueTherapists.values()).join(", ");
+//     }
+//     return "N/A";
 //   };
 
 //   useEffect(() => {
@@ -37,48 +57,25 @@
 //         .then((result) => {
 //           if (result.status === 200) {
 //             const initialAppointments = result.data
-//               .filter((appointment) => appointment.status === "CONFIRMED")
+//               .filter(
+//                 (appointment) =>
+//                   appointment.status === "CONFIRMED" ||
+//                   appointment.status === "PENDING"
+//               )
 //               .map((appointment) => ({
 //                 id: appointment.id,
-//                 date: new Date().toISOString().split("T")[0],
+//                 date: new Date().toISOString().split("T")[0], // Có thể cần sửa lại để lấy đúng ngày từ API
 //                 service: appointment.service.name,
-//                 totalPrice: `$${calculateTotalPrice(
+//                 totalPrice: calculateTotalPriceUSD(
 //                   appointment.service.service_details
-//                 )}`,
-//                 therapists: "Loading...",
+//                 ),
+//                 totalPriceVND: calculateTotalPriceVND(
+//                   appointment.service.service_details
+//                 ),
+//                 therapists: getTherapistsFromDetails(appointment), // Truyền toàn bộ appointment
+//                 status: appointment.status,
 //               }));
 //             setAppointments(initialAppointments);
-
-//             // Fetch chi tiết cho từng appointment
-//             const fetchDetails = async () => {
-//               const updatedAppointments = await Promise.all(
-//                 initialAppointments.map(async (appt) => {
-//                   try {
-//                     const response = await fetch(
-//                       `http://localhost:8080/appointments/${appt.id}`
-//                     );
-//                     const detailResult = await response.json();
-//                     if (detailResult.status === 200) {
-//                       return {
-//                         ...appt,
-//                         therapists: getTherapistsFromDetails(
-//                           detailResult.data.appointment_details
-//                         ),
-//                       };
-//                     }
-//                     return appt;
-//                   } catch (error) {
-//                     console.error(
-//                       `Error fetching details for ${appt.id}:`,
-//                       error
-//                     );
-//                     return { ...appt, therapists: "Error loading therapists" };
-//                   }
-//                 })
-//               );
-//               setAppointments(updatedAppointments);
-//             };
-//             fetchDetails();
 //           }
 //         })
 //         .catch((error) => {
@@ -101,8 +98,6 @@
 //         );
 
 //         const decodedData = JSON.parse(jsonPayload);
-//         console.log("Decoded Data:", decodedData);
-//         console.log("Customer ID:", decodedData.accountId);
 //         setAccountId(decodedData.accountId);
 //       } catch (error) {
 //         console.error("Invalid JWT Token", error);
@@ -114,11 +109,67 @@
 //   const dropdownRef = useRef(null);
 //   const [selectedAppointment, setSelectedAppointment] = useState(null);
 
+//   const pageCount = Math.ceil(appointments.length / ITEMS_PER_PAGE);
+//   const offset = currentPage * ITEMS_PER_PAGE;
+//   const currentAppointments = appointments.slice(
+//     offset,
+//     offset + ITEMS_PER_PAGE
+//   );
+
+//   const handlePageClick = (event) => {
+//     setCurrentPage(event.selected);
+//     setOpenDropdown(null);
+//   };
+
 //   const handleShowPopup = (appointment) => setSelectedAppointment(appointment);
 //   const handleClosePopup = () => setSelectedAppointment(null);
-
 //   const handleToggleDropdown = (appointmentId) => {
 //     setOpenDropdown(openDropdown === appointmentId ? null : appointmentId);
+//   };
+
+//   const handleReDeposit = async (appointmentId, totalCostVND) => {
+//     if (!appointmentId || !totalCostVND) {
+//       console.error("Invalid appointment ID or total cost:", {
+//         appointmentId,
+//         totalCostVND,
+//       });
+//       alert("Invalid appointment data. Please try again.");
+//       return;
+//     }
+//     console.log("Total Cost VND:", totalCostVND);
+//     console.log("Initiating Re-deposit for:", { appointmentId, totalCostVND });
+
+//     try {
+//       const response = await fetch(
+//         `http://localhost:8080/vnpay/create-payment-url?appointmentId=${appointmentId}&amount=${totalCostVND}&returnUrl=http://localhost:5173/payment-return`,
+//         {
+//           method: "GET",
+//           headers: {
+//             "Content-Type": "application/json",
+//           },
+//         }
+//       );
+
+//       const result = await response.json();
+//       console.log("API Response:", result);
+
+//       if (result.status === 200 && result.data) {
+//         const paymentUrl = result.data;
+//         console.log("Redirecting to Payment URL:", paymentUrl);
+//         window.location.href = paymentUrl;
+//       } else {
+//         console.error("Failed to create payment URL:", result.message);
+//         alert(`Failed to initiate payment: ${result.message}`);
+//       }
+//     } catch (error) {
+//       console.error("Error during payment initiation:", error);
+//       alert("An error occurred while processing your payment.");
+//     }
+//   };
+
+//   const handleCancel = (appointmentId) => {
+//     console.log("Cancel clicked for Appointment ID:", appointmentId);
+//     alert(`Cancel Appointment ID: ${appointmentId}`);
 //   };
 
 //   useEffect(() => {
@@ -127,8 +178,8 @@
 //         setOpenDropdown(null);
 //       }
 //     };
-//     document.addEventListener("mousedown", handleClickOutside);
-//     return () => document.removeEventListener("mousedown", handleClickOutside);
+//     document.addEventListener("click", handleClickOutside);
+//     return () => document.removeEventListener("click", handleClickOutside);
 //   }, []);
 
 //   return (
@@ -138,47 +189,73 @@
 //         <div className="header-service">SERVICE</div>
 //         <div className="header-price">TOTAL PRICE</div>
 //         <div className="header-therapists">THERAPISTS</div>
+//         <div className="header-status">STATUS</div>
 //         <div className="header-actions"></div>
 //       </div>
 
-//       {appointments.map((appointment) => (
+//       {currentAppointments.map((appointment) => (
 //         <div className="appointment-row" key={appointment.id}>
 //           <div className="appointment-date">{appointment.date}</div>
 //           <div className="appointment-service">{appointment.service}</div>
 //           <div className="appointment-price">{appointment.totalPrice}</div>
 //           <div className="appointment-therapists">{appointment.therapists}</div>
+//           <div className="appointment-status">
+//             <span className={`status-${appointment.status.toLowerCase()}`}>
+//               {appointment.status}
+//             </span>
+//           </div>
 //           <div className="appointment-actions">
 //             <button
 //               className="action-button view-details-button"
 //               onClick={() => handleShowPopup(appointment)}
 //             >
 //               <Eye size={16} />
-//               <span>View Details</span>
+//               <span>Details</span>
 //             </button>
 
 //             <div className="actions-dropdown" ref={dropdownRef}>
 //               <button
 //                 className="action-button more-actions-button"
-//                 onClick={() => handleToggleDropdown(appointment.id)}
+//                 onClick={(e) => {
+//                   e.stopPropagation();
+//                   handleToggleDropdown(appointment.id);
+//                 }}
 //               >
 //                 Actions
 //               </button>
 //               {openDropdown === appointment.id && (
 //                 <div className="dropdown-content">
+//                   {appointment.status === "PENDING" && (
+//                     <button
+//                       className="dropdown-item redeposit-button"
+//                       onClick={(e) => {
+//                         e.stopPropagation();
+//                         handleReDeposit(
+//                           appointment.id,
+//                           appointment.totalPriceVND
+//                         );
+//                       }}
+//                     >
+//                       <DollarSign size={14} />
+//                       <span>Re-deposit</span>
+//                     </button>
+//                   )}
 //                   <button
 //                     className="dropdown-item cancel-button"
-//                     onClick={() =>
-//                       alert(`Cancel Appointment ID: ${appointment.id}`)
-//                     }
+//                     onClick={(e) => {
+//                       e.stopPropagation();
+//                       handleCancel(appointment.id);
+//                     }}
 //                   >
 //                     <X size={14} />
 //                     <span>Cancel</span>
 //                   </button>
 //                   <button
 //                     className="dropdown-item change-button"
-//                     onClick={() =>
-//                       alert(`Change Reservation ID: ${appointment.id}`)
-//                     }
+//                     onClick={(e) => {
+//                       e.stopPropagation();
+//                       alert(`Change Reservation ID: ${appointment.id}`);
+//                     }}
 //                   >
 //                     <Calendar size={14} />
 //                     <span>Change Reservation</span>
@@ -189,6 +266,28 @@
 //           </div>
 //         </div>
 //       ))}
+
+//       {appointments.length > ITEMS_PER_PAGE && (
+//         <ReactPaginate
+//           previousLabel={"<"}
+//           nextLabel={">"}
+//           breakLabel={"..."}
+//           pageCount={pageCount}
+//           marginPagesDisplayed={2}
+//           pageRangeDisplayed={5}
+//           onPageChange={handlePageClick}
+//           containerClassName={"pagination"}
+//           activeClassName={"active"}
+//           pageClassName={"page-item"}
+//           pageLinkClassName={"page-link"}
+//           previousClassName={"page-item"}
+//           nextClassName={"page-item"}
+//           previousLinkClassName={"page-link"}
+//           nextLinkClassName={"page-link"}
+//           breakClassName={"page-item"}
+//           breakLinkClassName={"page-link"}
+//         />
+//       )}
 
 //       {selectedAppointment && (
 //         <div className="popup-overlay" onClick={handleClosePopup}>
@@ -211,9 +310,10 @@
 
 // export default Appointments;
 
+//---------------------------------------------
 import React, { useEffect, useState, useRef } from "react";
-import { Eye, X, Calendar } from "lucide-react";
-import ReactPaginate from "react-paginate"; // Add this import
+import { Eye, X, Calendar, DollarSign } from "lucide-react";
+import ReactPaginate from "react-paginate";
 import "./Appointment.css";
 import ContentModal from "./modal/ContentModal";
 import useLocalStorage from "use-local-storage";
@@ -226,25 +326,45 @@ const Appointments = () => {
     LOCALSTORAGE_NAME.CUSTOMER_INFORMATION_CACHE,
     ""
   );
-  // Add pagination states
   const [currentPage, setCurrentPage] = useState(0);
   const ITEMS_PER_PAGE = 4;
 
-  const calculateTotalPrice = (serviceDetails) => {
-    return serviceDetails.reduce((total, detail) => total + detail.price, 0);
+  const calculateTotalPriceUSD = (serviceDetails) => {
+    const totalUSD = serviceDetails.reduce(
+      (total, detail) => total + (detail.price || 0),
+      0
+    );
+    return totalUSD.toLocaleString("en-US", {
+      style: "currency",
+      currency: "USD",
+    });
   };
 
-  const getTherapistsFromDetails = (appointmentDetails) => {
-    const uniqueTherapists = new Map();
-    appointmentDetails.forEach((detail) => {
-      if (detail.therapist) {
-        uniqueTherapists.set(
-          detail.therapist.id,
-          `${detail.therapist.account.name}`
-        );
+  const calculateTotalPriceVND = (serviceDetails) => {
+    const totalUSD = serviceDetails.reduce(
+      (total, detail) => total + (detail.price || 0),
+      0
+    );
+    // Chỉ tính 10% của tổng giá trị và đổi sang VND
+    return totalUSD * 25000 * 0.1;
+  };
+
+  const getTherapistsFromDetails = (appointment) => {
+    if (
+      appointment.service &&
+      appointment.service.service_therapists &&
+      appointment.service.service_therapists.length > 0
+    ) {
+      const firstTherapist = appointment.service.service_therapists[0];
+      if (
+        firstTherapist &&
+        firstTherapist.therapist &&
+        firstTherapist.therapist.account
+      ) {
+        return firstTherapist.therapist.account.name;
       }
-    });
-    return Array.from(uniqueTherapists.values()).join(", ");
+    }
+    return "N/A";
   };
 
   useEffect(() => {
@@ -254,47 +374,25 @@ const Appointments = () => {
         .then((result) => {
           if (result.status === 200) {
             const initialAppointments = result.data
-              .filter((appointment) => appointment.status === "CONFIRMED")
+              .filter(
+                (appointment) =>
+                  appointment.status === "CONFIRMED" ||
+                  appointment.status === "PENDING"
+              )
               .map((appointment) => ({
                 id: appointment.id,
                 date: new Date().toISOString().split("T")[0],
                 service: appointment.service.name,
-                totalPrice: `$${calculateTotalPrice(
+                totalPrice: calculateTotalPriceUSD(
                   appointment.service.service_details
-                )}`,
-                therapists: "Loading...",
+                ),
+                totalPriceVND: calculateTotalPriceVND(
+                  appointment.service.service_details
+                ),
+                therapists: getTherapistsFromDetails(appointment),
+                status: appointment.status,
               }));
             setAppointments(initialAppointments);
-
-            const fetchDetails = async () => {
-              const updatedAppointments = await Promise.all(
-                initialAppointments.map(async (appt) => {
-                  try {
-                    const response = await fetch(
-                      `http://localhost:8080/appointments/${appt.id}`
-                    );
-                    const detailResult = await response.json();
-                    if (detailResult.status === 200) {
-                      return {
-                        ...appt,
-                        therapists: getTherapistsFromDetails(
-                          detailResult.data.appointment_details
-                        ),
-                      };
-                    }
-                    return appt;
-                  } catch (error) {
-                    console.error(
-                      `Error fetching details for ${appt.id}:`,
-                      error
-                    );
-                    return { ...appt, therapists: "Error loading therapists" };
-                  }
-                })
-              );
-              setAppointments(updatedAppointments);
-            };
-            fetchDetails();
           }
         })
         .catch((error) => {
@@ -328,7 +426,6 @@ const Appointments = () => {
   const dropdownRef = useRef(null);
   const [selectedAppointment, setSelectedAppointment] = useState(null);
 
-  // Pagination calculations
   const pageCount = Math.ceil(appointments.length / ITEMS_PER_PAGE);
   const offset = currentPage * ITEMS_PER_PAGE;
   const currentAppointments = appointments.slice(
@@ -338,7 +435,7 @@ const Appointments = () => {
 
   const handlePageClick = (event) => {
     setCurrentPage(event.selected);
-    setOpenDropdown(null); // Close any open dropdowns when changing pages
+    setOpenDropdown(null);
   };
 
   const handleShowPopup = (appointment) => setSelectedAppointment(appointment);
@@ -347,14 +444,59 @@ const Appointments = () => {
     setOpenDropdown(openDropdown === appointmentId ? null : appointmentId);
   };
 
+  const handleReDeposit = async (appointmentId, totalCostVND) => {
+    if (!appointmentId || !totalCostVND) {
+      console.error("Invalid appointment ID or total cost:", {
+        appointmentId,
+        totalCostVND,
+      });
+      alert("Invalid appointment data. Please try again.");
+      return;
+    }
+    console.log("Total Cost VND (10%):", totalCostVND);
+    console.log("Initiating Re-deposit for:", { appointmentId, totalCostVND });
+
+    try {
+      const response = await fetch(
+        `http://localhost:8080/vnpay/create-payment-url?appointmentId=${appointmentId}&amount=${totalCostVND}&returnUrl=http://localhost:5173/payment-return`,
+        {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+          },
+        }
+      );
+
+      const result = await response.json();
+      console.log("API Response:", result);
+
+      if (result.status === 200 && result.data) {
+        const paymentUrl = result.data;
+        console.log("Redirecting to Payment URL:", paymentUrl);
+        window.location.href = paymentUrl;
+      } else {
+        console.error("Failed to create payment URL:", result.message);
+        alert(`Failed to initiate payment: ${result.message}`);
+      }
+    } catch (error) {
+      console.error("Error during payment initiation:", error);
+      alert("An error occurred while processing your payment.");
+    }
+  };
+
+  const handleCancel = (appointmentId) => {
+    console.log("Cancel clicked for Appointment ID:", appointmentId);
+    alert(`Cancel Appointment ID: ${appointmentId}`);
+  };
+
   useEffect(() => {
     const handleClickOutside = (event) => {
       if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
         setOpenDropdown(null);
       }
     };
-    document.addEventListener("mousedown", handleClickOutside);
-    return () => document.removeEventListener("mousedown", handleClickOutside);
+    document.addEventListener("click", handleClickOutside);
+    return () => document.removeEventListener("click", handleClickOutside);
   }, []);
 
   return (
@@ -364,6 +506,7 @@ const Appointments = () => {
         <div className="header-service">SERVICE</div>
         <div className="header-price">TOTAL PRICE</div>
         <div className="header-therapists">THERAPISTS</div>
+        <div className="header-status">STATUS</div>
         <div className="header-actions"></div>
       </div>
 
@@ -373,38 +516,63 @@ const Appointments = () => {
           <div className="appointment-service">{appointment.service}</div>
           <div className="appointment-price">{appointment.totalPrice}</div>
           <div className="appointment-therapists">{appointment.therapists}</div>
+          <div className="appointment-status">
+            <span className={`status-${appointment.status.toLowerCase()}`}>
+              {appointment.status}
+            </span>
+          </div>
           <div className="appointment-actions">
             <button
               className="action-button view-details-button"
               onClick={() => handleShowPopup(appointment)}
             >
               <Eye size={16} />
-              <span>View Details</span>
+              <span>Details</span>
             </button>
 
             <div className="actions-dropdown" ref={dropdownRef}>
               <button
                 className="action-button more-actions-button"
-                onClick={() => handleToggleDropdown(appointment.id)}
+                onClick={(e) => {
+                  e.stopPropagation();
+                  handleToggleDropdown(appointment.id);
+                }}
               >
                 Actions
               </button>
               {openDropdown === appointment.id && (
                 <div className="dropdown-content">
+                  {appointment.status === "PENDING" && (
+                    <button
+                      className="dropdown-item redeposit-button"
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        handleReDeposit(
+                          appointment.id,
+                          appointment.totalPriceVND
+                        );
+                      }}
+                    >
+                      <DollarSign size={14} />
+                      <span>Re-deposit</span>
+                    </button>
+                  )}
                   <button
                     className="dropdown-item cancel-button"
-                    onClick={() =>
-                      alert(`Cancel Appointment ID: ${appointment.id}`)
-                    }
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      handleCancel(appointment.id);
+                    }}
                   >
                     <X size={14} />
                     <span>Cancel</span>
                   </button>
                   <button
                     className="dropdown-item change-button"
-                    onClick={() =>
-                      alert(`Change Reservation ID: ${appointment.id}`)
-                    }
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      alert(`Change Reservation ID: ${appointment.id}`);
+                    }}
                   >
                     <Calendar size={14} />
                     <span>Change Reservation</span>
@@ -416,7 +584,6 @@ const Appointments = () => {
         </div>
       ))}
 
-      {/* Add Pagination Component */}
       {appointments.length > ITEMS_PER_PAGE && (
         <ReactPaginate
           previousLabel={"<"}

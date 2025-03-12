@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { Application, Calendar } from "react-rainbow-components";
-import { addMinutes, format, parse } from "date-fns";
+import { addMinutes, format, parse, isSameDay } from "date-fns";
 import { useNavigate } from "react-router-dom";
 import { Eye } from "lucide-react";
 import ServiceModal from "./serviceDetailsModal/ServiceModal";
@@ -9,6 +9,9 @@ import BASE from "../../../constants/base";
 import useLocalStorage from "use-local-storage";
 import LOCALSTORAGE_NAME from "../../../constants/localStorageName";
 import "./BookingPage.css";
+// Import React Toastify
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 const theme = {
   rainbow: {
@@ -26,7 +29,7 @@ const theme = {
 const BookingPage = () => {
   const navigate = useNavigate();
   const [accountId, setAccountId] = useState(null);
-  const [customer, setCustomer] = useLocalStorage(
+  const [customer] = useLocalStorage(
     LOCALSTORAGE_NAME.CUSTOMER_INFORMATION_CACHE,
     ""
   );
@@ -45,8 +48,6 @@ const BookingPage = () => {
         );
 
         const decodedData = JSON.parse(jsonPayload);
-        console.log("Decoded Data:", decodedData);
-        console.log("Customer ID:", decodedData.accountId);
         setAccountId(decodedData.accountId);
       } catch (error) {
         console.error("Invalid JWT Token", error);
@@ -54,7 +55,7 @@ const BookingPage = () => {
     }
   }, [customer]);
 
-  const [selectedDate, setSelectedDate] = useState(new Date());
+  const [selectedDate, setSelectedDate] = useState(null);
   const [selectedTime, setSelectedTime] = useState(null);
   const [selectedService, setSelectedService] = useState("");
   const [selectedDoctor, setSelectedDoctor] = useState("");
@@ -69,6 +70,7 @@ const BookingPage = () => {
   const [services, setServices] = useState([]);
   const [availableTimeSlots, setAvailableTimeSlots] = useState([]);
   const [therapists, setTherapists] = useState([]);
+  const [availableDates, setAvailableDates] = useState([]);
 
   useEffect(() => {
     const fetchServices = async () => {
@@ -93,7 +95,6 @@ const BookingPage = () => {
         );
 
         const therapistsData = response.data.data.content;
-
         const transformedDoctors = therapistsData.map((therapist) => ({
           id: therapist.id,
           name: therapist.account ? therapist.account.name : "Unknown",
@@ -111,8 +112,44 @@ const BookingPage = () => {
   }, []);
 
   useEffect(() => {
+    const fetchAllAvailableDates = async () => {
+      if (!selectedService) {
+        setAvailableDates([]);
+        setAvailableTimeSlots([]);
+        return;
+      }
+
+      try {
+        const response = await axios.get(
+          `${BASE.BASE_URL}/therapist-working-time/get-by-available-time?serviceId=${selectedService}`
+        );
+
+        const timeSlots = response.data.data || [];
+        const datesWithSlots = new Set();
+
+        timeSlots.forEach((therapist) => {
+          therapist.availableTimeSlots.forEach((slot) => {
+            const date = new Date(slot.day);
+            datesWithSlots.add(format(date, "yyyy-MM-dd"));
+          });
+        });
+
+        setAvailableDates([...datesWithSlots].map((date) => new Date(date)));
+      } catch (error) {
+        console.error("Error fetching available dates:", error);
+        setAvailableDates([]);
+      }
+    };
+
+    fetchAllAvailableDates();
+  }, [selectedService]);
+
+  useEffect(() => {
     const fetchAvailableTimeSlots = async () => {
-      if (!selectedService || !selectedDate) return;
+      if (!selectedService || !selectedDate) {
+        setAvailableTimeSlots([]);
+        return;
+      }
       try {
         const response = await axios.get(
           `${
@@ -122,9 +159,10 @@ const BookingPage = () => {
             "yyyy-MM-dd"
           )}`
         );
-        setAvailableTimeSlots(response.data.data);
+        setAvailableTimeSlots(response.data.data || []);
       } catch (error) {
         console.error("Error fetching available time slots:", error);
+        setAvailableTimeSlots([]);
       }
     };
 
@@ -146,7 +184,6 @@ const BookingPage = () => {
 
     while (current < endTime) {
       const potentialEndTime = addMinutes(current, duration);
-
       if (potentialEndTime > endTime) break;
 
       const startTimeStr = format(current, "HH:mm");
@@ -158,7 +195,6 @@ const BookingPage = () => {
 
       current = addMinutes(current, 15);
     }
-
     return slots;
   };
 
@@ -183,36 +219,36 @@ const BookingPage = () => {
       }
     });
 
-    uniqueSlots.forEach((slot) => {
-      slots.push(JSON.parse(slot));
-    });
-
+    uniqueSlots.forEach((slot) => slots.push(JSON.parse(slot)));
     slots.sort(
       (a, b) =>
         parse(a.start, "HH:mm", new Date()) -
         parse(b.start, "HH:mm", new Date())
     );
-
     return slots;
   };
 
   const timeSlots = getAvailableTimeSlots();
-
   const filteredDoctors = therapists.filter((therapist) =>
     availableTimeSlots.some((slot) => slot.therapistId === therapist.id)
   );
 
+  const isDateDisabled = (date) => {
+    if (!selectedService) return false;
+    return !availableDates.some((availableDate) =>
+      isSameDay(new Date(availableDate), date)
+    );
+  };
+
   const handleAppointment = async () => {
-    console.log("Account ID:", accountId);
     if (!selectedService || !selectedDoctor || !selectedTime || !selectedDate) {
-      alert("Please select all fields before proceeding!");
+      toast.error("Please select all fields before proceeding!");
       return;
     }
 
     const selectedTimeSlot = timeSlots.find(
       (slot) => slot.display === selectedTime
     );
-
     const selectedDoctorName = therapists.find(
       (therapist) => therapist.id === parseInt(selectedDoctor)
     )?.name;
@@ -226,15 +262,15 @@ const BookingPage = () => {
           startHour: selectedTimeSlot.start,
         }
       : null;
-    console.log("Appointment Data:", appointmentData);
 
     try {
       const response = await axios.post(
         `${BASE.BASE_URL}/appointments/create`,
         appointmentData
       );
-      console.log("API Response:", response.data);
       const appointmentId = response.data.data;
+
+      toast.success("Appointment created successfully!");
       navigate("/payment", {
         state: {
           service: selectedServiceName,
@@ -247,7 +283,8 @@ const BookingPage = () => {
       });
     } catch (error) {
       console.error("Error creating appointment:", error);
-      alert("Failed to create appointment. Please try again.");
+      // Thay alert bằng toast.error
+      toast.error("Failed to create appointment. Please try again.");
     }
   };
 
@@ -270,6 +307,11 @@ const BookingPage = () => {
 
   const handleDoctorChange = (e) => {
     setSelectedDoctor(e.target.value);
+    setSelectedTime(null);
+  };
+
+  const handleDateChange = (date) => {
+    setSelectedDate(date);
     setSelectedTime(null);
   };
 
@@ -324,7 +366,7 @@ const BookingPage = () => {
               className="form-select1"
               value={selectedDoctor}
               onChange={handleDoctorChange}
-              disabled={!selectedService}
+              disabled={!selectedService || !selectedDate}
             >
               <option value="">Select a doctor</option>
               {filteredDoctors.map((doctor) => (
@@ -371,7 +413,7 @@ const BookingPage = () => {
                       {currentModalType === "Details" ? "Service Details" : ""}
                     </h5>
                     <button className="close-btn" onClick={handleClosePopup}>
-                      X
+                      x
                     </button>
                   </div>
                   <div className="popup-body1">
@@ -389,31 +431,41 @@ const BookingPage = () => {
             <div className="calendar-container">
               <Calendar
                 value={selectedDate}
-                onChange={setSelectedDate}
+                onChange={handleDateChange}
                 variant="single"
                 locale="en-US"
                 className="rainbow-calendar"
                 showAdjacentMonths={true}
                 minDate={new Date(new Date().setDate(new Date().getDate() + 1))}
                 maxDate={new Date(new Date().getFullYear() + 5, 11, 31)}
+                isDateDisabled={isDateDisabled}
               />
             </div>
           </div>
           <div className="form-group1">
             <label className="form-label">Select Time</label>
-            <div className="time-picker">
-              {timeSlots.map((slot, index) => (
-                <button
-                  key={index}
-                  className={`time-button ${
-                    selectedTime === slot.display ? "selected" : ""
-                  }`}
-                  onClick={() => setSelectedTime(slot.display)}
-                >
-                  {slot.display}
-                </button>
-              ))}
-            </div>
+
+            {!selectedService || !selectedDate ? (
+              <p className="no-slots-message">
+                Please select service and date first
+              </p>
+            ) : timeSlots.length === 0 ? (
+              <p className="no-slots-message">No available time slots</p>
+            ) : (
+              <div className="time-picker">
+                {timeSlots.map((slot, index) => (
+                  <button
+                    key={index}
+                    className={`time-button ${
+                      selectedTime === slot.display ? "selected" : ""
+                    }`}
+                    onClick={() => setSelectedTime(slot.display)}
+                  >
+                    {slot.display}
+                  </button>
+                ))}
+              </div>
+            )}
           </div>
         </div>
 
@@ -460,6 +512,18 @@ const BookingPage = () => {
           Get Appointment
         </button>
       </div>
+      {/* Thêm ToastContainer vào JSX */}
+      <ToastContainer
+        position="top-right"
+        autoClose={5000}
+        hideProgressBar={false}
+        newestOnTop={false}
+        closeOnClick
+        rtl={false}
+        pauseOnFocusLoss
+        draggable
+        pauseOnHover
+      />
     </Application>
   );
 };
