@@ -82,7 +82,7 @@
   font-weight: bold;
 }
 
-.service-price {
+.service-price1 {
   flex: 1;
   text-align: right;
   color: #ff4f9d;
@@ -300,8 +300,6 @@
   width: 50%;
   text-align: center;
 }
-
-
 
 .service-item {
   cursor: pointer;

@@ -283,7 +283,6 @@ const BookingPage = () => {
       });
     } catch (error) {
       console.error("Error creating appointment:", error);
-      // Thay alert bằng toast.error
       toast.error("Failed to create appointment. Please try again.");
     }
   };
@@ -512,7 +511,6 @@ const BookingPage = () => {
           Get Appointment
         </button>
       </div>
-      {/* Thêm ToastContainer vào JSX */}
       <ToastContainer
         position="top-right"
         autoClose={5000}
