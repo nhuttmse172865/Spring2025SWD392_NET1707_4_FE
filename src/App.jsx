@@ -39,6 +39,8 @@ import PaymentReturn from "./components/customer/payment/payment-return/PaymentR
 import PaymentSuccess from "./components/customer/payment/payment-return/payment-return-success/PaymentSuccess";
 import PaymentFailure from "./components/customer/payment/payment-return/payment-return-failure/PaymentFailure";
 import Itinerary from "./pages/therapist/CreateRoute/Itinerary";
+import Test from "./pages/staff/test";
+import CheckOutTherapist from "./pages/staff/checkout/CheckOutTherapist";
 
 function App() {
   return (
@@ -94,6 +96,8 @@ function App() {
         <Route path="/staff" element={<Staff />}>
           <Route path="checkin" element={<CheckIn />} />
           <Route path="checkout" element={<CheckOut />} />
+          <Route path="checkoutTherapist" element={<CheckOutTherapist />} />
+          <Route path="datngu" element={<Test />} />
         </Route>
         <Route path="/therapist" element={<Therapist />}>
           <Route path="schedule" element={<Schedule />} />

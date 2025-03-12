@@ -1,14 +1,15 @@
 import React, { useEffect, useState } from "react";
 import ICONS from "../../../constants/icons";
 import { useLocation, useNavigate } from "react-router-dom";
-import useMapPath from "../../../hook/useMapPath";
 
 const HeaderTherapist = () => {
-  const location = useLocation()
+  const location = useLocation();
   const [isHaveMessage, setIsHaveMessage] = useState(true);
   const [isHaveNotification, setIsHaveNotification] = useState(true);
-  const [title,setTitle] = useState();
+  const [title, setTitle] = useState();
+  const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const navigate = useNavigate();
+
   const useMapPath = (pathname) => {
     const map = {
       "/therapist": { title: "Dashboard" },
@@ -20,17 +21,20 @@ const HeaderTherapist = () => {
     };
     return map[pathname] || { title: "" };
   };
-  
+
   useEffect(() => {
-    const item = useMapPath(location.pathname)
+    const item = useMapPath(location.pathname);
     setTitle(item.title);
-  },[location.pathname])
+  }, [location.pathname]);
+
+  const handleLogout = () => {
+    localStorage.removeItem("token");
+    navigate("/");
+  };
 
   return (
     <div className="h-[60px] flex items-center pl-5 pr-10 justify-between bg-white rounded-3xl mt-2.5">
-      <h6 className="text-[16px] font-medium text-[rgba(0,0,0,0.7)]">
-        {title}
-      </h6>
+      <h6 className="text-[16px] font-medium text-[rgba(0,0,0,0.7)]">{title}</h6>
       <div className="flex gap-10">
         <div className="flex gap-2 relative">
           <div className="relative flex w-[35px] h-[35px] items-center justify-center rounded-[.375rem] cursor-pointer">
@@ -52,8 +56,32 @@ const HeaderTherapist = () => {
             <img src={ICONS.notification} alt="" />
           </div>
         </div>
-        <div className="flex w-[35px] h-[35px] bg-[rgba(0,0,0,0.05)] items-center justify-center rounded-[.375rem] cursor-pointer" onClick={()=> navigate("/therapist/managerInformation")}>
-          <img src="" alt="" />
+        
+        {/* Avatar + Dropdown */}
+        <div className="relative">
+          <div
+            className="flex w-[35px] h-[35px] bg-[rgba(0,0,0,0.05)] items-center justify-center rounded-[.375rem] cursor-pointer"
+            onClick={() => setIsDropdownOpen(!isDropdownOpen)}
+          >
+            <img src="" alt="" />
+          </div>
+
+          {isDropdownOpen && (
+            <div className="absolute right-0 mt-2 w-[150px] bg-white shadow-md rounded-md p-2 z-10">
+              <button
+                className="w-full text-left px-3 py-2 hover:bg-gray-100 text-black"
+                onClick={() => navigate("/therapist/managerInformation")}
+              >
+                Manager Information
+              </button>
+              <button
+                className="w-full text-left px-3 py-2 hover:bg-gray-100 text-red-500"
+                onClick={handleLogout}
+              >
+                Logout
+              </button>
+            </div>
+          )}
         </div>
       </div>
     </div>

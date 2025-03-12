@@ -30,7 +30,7 @@ const ChangeSchedule = () => {
   return (
     <div className="schedule-container">
       {/* <h1 className="schedule-title">Doctor's Working Schedule</h1> */}
-      <Calendar fullscreen={false} onSelect={onSelectDate} />
+      <Calendar fullscreen={false} onSelect={onSelectDate} className="calendar-changeschedule" />
 
     
       {/* <Modal
