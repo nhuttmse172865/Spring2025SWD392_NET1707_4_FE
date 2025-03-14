@@ -70,9 +70,77 @@ function findModifiedObjects(arr1, arr2) {
   return modifiedObjects;
 }
 
+function findArrayDifferences(arr1, arr2) {
+  const differences = {
+    added: [],
+    removed: [],
+    modified: [],
+  };
+  const arr1Map = new Map(arr1.map((obj) => [obj.id, obj]));
+  for (const obj2 of arr2) {
+    const obj1 = arr1Map.get(obj2.id);
+
+    if (!obj1) {
+      differences.added.push(obj2);
+    } else {
+      if (!deepCompareObjects(obj1, obj2)) {
+        differences.modified.push(obj2);
+      }
+      arr1Map.delete(obj2.id);
+    }
+  }
+  for (const obj1 of arr1Map.values()) {
+    differences.removed.push(obj1);
+  }
+  return differences;
+}
+
+function deepCloneArray(arr) {
+  if (!Array.isArray(arr)) {
+    return arr;
+  }
+
+  return arr.map((item) => {
+    if (typeof item === "object" && item !== null) {
+      if (Array.isArray(item)) {
+        return deepCloneArray(item);
+      } else {
+        return deepCloneObject(item);
+      }
+    } else {
+      return item;
+    }
+  });
+}
+
+function deepCloneObject(obj) {
+  if (typeof obj !== "object" || obj === null) {
+    return obj;
+  }
+
+  const clone = Array.isArray(obj) ? [] : {};
+
+  for (const key in obj) {
+    if (Object.prototype.hasOwnProperty.call(obj, key)) {
+      const value = obj[key];
+      if (typeof value === "object" && value !== null) {
+        clone[key] = Array.isArray(value)
+          ? deepCloneArray(value)
+          : deepCloneObject(value);
+      } else {
+        clone[key] = value;
+      }
+    }
+  }
+
+  return clone;
+}
+
 const DEEP_COMPARE_OBJECTS = {
   findModifiedObjects,
   deepCompareObjects,
+  findArrayDifferences,
+  deepCloneArray
 };
 
 export default DEEP_COMPARE_OBJECTS;

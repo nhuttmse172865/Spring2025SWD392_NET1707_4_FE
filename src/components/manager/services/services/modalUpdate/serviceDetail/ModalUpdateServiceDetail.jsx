@@ -7,7 +7,12 @@ import axios from "axios";
 import BASE from "../../../../../../constants/base";
 import DEEP_COMPARE_OBJECTS from "../../../../../../helpers/DeepCompareObject";
 
-const ModalUpdateServiceDetail = ({ setShowModalUpdate, itemUpdate }) => {
+const ModalUpdateServiceDetail = ({
+  setShowModalUpdate,
+  itemUpdate,
+  setRefreshData,
+  serviceId
+}) => {
   const [loading, setLoading] = useState(false);
   const [serviceDetailId, setServiceDetailId] = useState();
   const [name, setName] = useState();
@@ -32,6 +37,12 @@ const ModalUpdateServiceDetail = ({ setShowModalUpdate, itemUpdate }) => {
     event.target.value = null;
     setRefreshImage((prev) => !prev);
   };
+
+  const handleDeleteImage = (index) => {
+    
+    setImages(images.filter((_,_index) => _index !== index))
+    setRefreshImage(prev => !prev)
+  }
 
   const handleFetchSteps = async () => {
     try {
@@ -61,7 +72,8 @@ const ModalUpdateServiceDetail = ({ setShowModalUpdate, itemUpdate }) => {
     setPrice(itemUpdate.price);
     setDuration(itemUpdate.duration);
     setSteps(itemUpdate.steps);
-    setImages(itemUpdate.images);
+    setImages([...itemUpdate.images]);
+    console.log(itemUpdate, "itemUpdate.images");
   }, []);
 
   const handleSaveImage = async (data) => {
@@ -99,11 +111,12 @@ const ModalUpdateServiceDetail = ({ setShowModalUpdate, itemUpdate }) => {
       id: serviceDetailId,
       day_order: itemUpdate.day_order,
     };
+
     const serviceDetailChange = DEEP_COMPARE_OBJECTS.deepCompareObjects(
       data,
       itemUpdate
     );
-    if (serviceDetailChange) {
+    if (!serviceDetailChange) {
       const dataUpdate = {
         day_order: itemUpdate.day_order,
         duration: duration,
@@ -120,7 +133,7 @@ const ModalUpdateServiceDetail = ({ setShowModalUpdate, itemUpdate }) => {
           if (item instanceof File) {
             image.push(item);
           } else {
-            imagesIdAvailable.push(item);
+            imagesIdAvailable.push(item.id);
           }
         });
       const imagesIds = await handleSaveImage(image);
@@ -131,6 +144,7 @@ const ModalUpdateServiceDetail = ({ setShowModalUpdate, itemUpdate }) => {
         });
       dataUpdate.imagesId = imagesIdAvailable;
       try {
+        console.log(dataUpdate);
         const response = await axios.put(
           `${BASE.BASE_URL}/service-detail/update?id=${serviceDetailId}`,
           dataUpdate
@@ -140,14 +154,47 @@ const ModalUpdateServiceDetail = ({ setShowModalUpdate, itemUpdate }) => {
         console.log(error);
       }
     }
-
-    const stepsChange = DEEP_COMPARE_OBJECTS.findModifiedObjects(
+    const arrayDifference = DEEP_COMPARE_OBJECTS.findArrayDifferences(
       stepsList,
       steps
     );
-    if (stepsChange && stepsChange.length > 0) {
+    if(arrayDifference.removed.length > 0){
       await Promise.all(
-        stepsChange.map(async (item) => {
+        arrayDifference.removed.map( async item => {
+          try {
+            const response = await axios.delete(
+              `${BASE.BASE_URL}/service-detail-step?id=${item.id}`,
+              data
+            );
+            if (!response || response.status !== 200) throw new Error();
+          } catch (error) {
+            console.log(error);
+          }
+        })
+      )
+    }
+    if(arrayDifference.added.length > 0){
+      await Promise.all(
+        arrayDifference.added.map( async item => {
+          const data = {
+            name: item.name,
+            stepNumber: item.stepNumber,
+          };
+          try {
+            const response = await axios.post(
+              `${BASE.BASE_URL}/service-detail-step?serviceDetailId=${serviceId}`,
+              data
+            );
+            if (!response || response.status !== 200) throw new Error();
+          } catch (error) {
+            console.log(error);
+          }
+        })
+      )
+    }
+    if(arrayDifference.modified.length > 0){
+      await Promise.all(
+        arrayDifference.modified.map(async (item) => {
           const data = {
             name: item.name,
             stepNumber: item.stepNumber,
@@ -160,12 +207,11 @@ const ModalUpdateServiceDetail = ({ setShowModalUpdate, itemUpdate }) => {
             if (!response || response.status !== 200) throw new Error();
           } catch (error) {
             console.log(error);
-          } finally {
           }
         })
       );
     }
-
+    setRefreshData((prev) => !prev);
     setLoading(false);
     setShowModalUpdate(false);
   };
@@ -196,6 +242,8 @@ const ModalUpdateServiceDetail = ({ setShowModalUpdate, itemUpdate }) => {
                   index={index}
                   handleChangeImage={handleAddImage}
                   refreshImage={refreshImage}
+                  handleDeleteImage={handleDeleteImage}
+                  showDeleteImage={true}
                 />
               ))}
             <InputImage
