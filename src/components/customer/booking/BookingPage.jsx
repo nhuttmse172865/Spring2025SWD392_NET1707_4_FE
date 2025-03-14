@@ -9,7 +9,6 @@ import BASE from "../../../constants/base";
 import useLocalStorage from "use-local-storage";
 import LOCALSTORAGE_NAME from "../../../constants/localStorageName";
 import "./BookingPage.css";
-// Import React Toastify
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
@@ -71,6 +70,8 @@ const BookingPage = () => {
   const [availableTimeSlots, setAvailableTimeSlots] = useState([]);
   const [therapists, setTherapists] = useState([]);
   const [availableDates, setAvailableDates] = useState([]);
+  const [showDoctorConfirmation, setShowDoctorConfirmation] = useState(false);
+  const [wantDoctor, setWantDoctor] = useState(null); // null: undecided, true: yes, false: no
 
   useEffect(() => {
     const fetchServices = async () => {
@@ -160,6 +161,9 @@ const BookingPage = () => {
           )}`
         );
         setAvailableTimeSlots(response.data.data || []);
+        if (wantDoctor === null) {
+          setShowDoctorConfirmation(true); // Show confirmation popup
+        }
       } catch (error) {
         console.error("Error fetching available time slots:", error);
         setAvailableTimeSlots([]);
@@ -199,8 +203,8 @@ const BookingPage = () => {
   };
 
   const getAvailableTimeSlots = () => {
-    let slots = [];
     const uniqueSlots = new Set();
+    let slots = [];
 
     availableTimeSlots.forEach((therapist) => {
       if (
@@ -213,18 +217,30 @@ const BookingPage = () => {
             timeSlot.endHour
           );
           generatedSlots.forEach((slot) => {
-            uniqueSlots.add(JSON.stringify(slot));
+            uniqueSlots.add(slot.start);
           });
         });
       }
     });
 
-    uniqueSlots.forEach((slot) => slots.push(JSON.parse(slot)));
+    slots = [...uniqueSlots].map((startTime) => {
+      const endTime = format(
+        addMinutes(parse(startTime, "HH:mm", new Date()), 15),
+        "HH:mm"
+      );
+      return {
+        start: startTime,
+        end: endTime,
+        display: startTime,
+      };
+    });
+
     slots.sort(
       (a, b) =>
         parse(a.start, "HH:mm", new Date()) -
         parse(b.start, "HH:mm", new Date())
     );
+
     return slots;
   };
 
@@ -241,7 +257,7 @@ const BookingPage = () => {
   };
 
   const handleAppointment = async () => {
-    if (!selectedService || !selectedDoctor || !selectedTime || !selectedDate) {
+    if (!selectedService || !selectedTime || !selectedDate) {
       toast.error("Please select all fields before proceeding!");
       return;
     }
@@ -300,6 +316,7 @@ const BookingPage = () => {
     setSelectedService(newServiceId);
     setSelectedDoctor("");
     setSelectedTime(null);
+    setWantDoctor(null); 
     localStorage.removeItem("selectedServiceID");
     localStorage.setItem("selectedServiceID", newServiceId);
   };
@@ -312,6 +329,32 @@ const BookingPage = () => {
   const handleDateChange = (date) => {
     setSelectedDate(date);
     setSelectedTime(null);
+    setSelectedDoctor("");
+    setWantDoctor(null);
+  };
+
+  const handleTimeSlotSelect = (slot) => {
+    setSelectedTime(slot.display);
+    if (wantDoctor === false) {
+      const therapistForSlot = availableTimeSlots.find((therapist) =>
+        therapist.availableTimeSlots.some(
+          (ts) =>
+            parse(ts.startHour, "HH:mm:ss", new Date()) <=
+              parse(slot.start, "HH:mm", new Date()) &&
+            parse(ts.endHour, "HH:mm:ss", new Date()) >
+              parse(slot.start, "HH:mm", new Date())
+        )
+      );
+      setSelectedDoctor(therapistForSlot?.therapistId || "");
+    }
+  };
+
+  const handleDoctorConfirmation = (choice) => {
+    setWantDoctor(choice);
+    setShowDoctorConfirmation(false);
+    if (!choice) {
+      setSelectedDoctor("");
+    }
   };
 
   const selectedServiceData = services.find((s) => s.id === selectedService);
@@ -359,22 +402,24 @@ const BookingPage = () => {
             </select>
           </div>
 
-          <div className="form-group">
-            <label className="form-label">Select Doctor</label>
-            <select
-              className="form-select1"
-              value={selectedDoctor}
-              onChange={handleDoctorChange}
-              disabled={!selectedService || !selectedDate}
-            >
-              <option value="">Select a doctor</option>
-              {filteredDoctors.map((doctor) => (
-                <option key={doctor.id} value={doctor.id}>
-                  {doctor.name}
-                </option>
-              ))}
-            </select>
-          </div>
+          {wantDoctor !== false && (
+            <div className="form-group">
+              <label className="form-label">Select Doctor</label>
+              <select
+                className="form-select1"
+                value={selectedDoctor}
+                onChange={handleDoctorChange}
+                disabled={!selectedService || !selectedDate}
+              >
+                <option value="">Select a doctor</option>
+                {filteredDoctors.map((doctor) => (
+                  <option key={doctor.id} value={doctor.id}>
+                    {doctor.name}
+                  </option>
+                ))}
+              </select>
+            </div>
+          )}
         </div>
 
         {selectedServiceData && (
@@ -451,14 +496,19 @@ const BookingPage = () => {
             ) : timeSlots.length === 0 ? (
               <p className="no-slots-message">No available time slots</p>
             ) : (
-              <div className="time-picker">
+              <div
+                className={`time-picker ${
+                  wantDoctor === true && !selectedDoctor ? "blurred" : ""
+                }`}
+              >
                 {timeSlots.map((slot, index) => (
                   <button
                     key={index}
                     className={`time-button ${
                       selectedTime === slot.display ? "selected" : ""
                     }`}
-                    onClick={() => setSelectedTime(slot.display)}
+                    onClick={() => handleTimeSlotSelect(slot)}
+                    disabled={wantDoctor === true && !selectedDoctor}
                   >
                     {slot.display}
                   </button>
@@ -511,6 +561,34 @@ const BookingPage = () => {
           Get Appointment
         </button>
       </div>
+
+      {showDoctorConfirmation && (
+        <div className="popup-overlay1">
+          <div className="popup-content2">
+            <div className="popup-header1">
+              <h5>Doctor Selection</h5>
+            </div>
+            <div className="popup-body1">
+              <p>Do you want to select a specific doctor?</p>
+              <div className="confirmation-buttons">
+                <button
+                  className="btn btn-primary"
+                  onClick={() => handleDoctorConfirmation(true)}
+                >
+                  Yes
+                </button>
+                <button
+                  className="btn btn-secondary"
+                  onClick={() => handleDoctorConfirmation(false)}
+                >
+                  No
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+
       <ToastContainer
         position="top-right"
         autoClose={5000}

@@ -1,5 +1,5 @@
 .booking-container {
-  width: 80%;
+  width: 95%;
   margin: 0.5px auto;
   padding: 20px;
 }
@@ -311,6 +311,16 @@ input[type="date"]:focus {
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
   animation: slideUp 0.3s ease-in-out;
 }
+.popup-content2 {
+  background-color: white;
+  border-radius: 8px;
+  width: 90%;
+  max-width: 30%;
+  height: auto;
+  padding: 30px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  animation: slideUp 0.3s ease-in-out;
+}
 .ezXnrZ {
   color: black !important;
 }
@@ -337,4 +347,34 @@ table tr:hover {
   white-space: normal;
   width: 100%;
   box-sizing: border-box;
+}
+
+.blurred {
+  filter: blur(3px);
+  pointer-events: none;
+}
+
+.confirmation-buttons {
+  display: flex;
+  gap: 10px;
+  justify-content: center;
+  margin-top: 20px;
+}
+
+.btn {
+  padding: 8px 16px;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.btn-primary {
+  background-color: #ff4f9d;
+  color: white;
+  border: none;
+}
+
+.btn-secondary {
+  background-color: #ccc;
+  color: black;
+  border: none;
 }
