@@ -8,7 +8,7 @@ import BASE from "../../../constants/base";
 import dayjs from "dayjs";
 import { useSearchParams } from "react-router-dom";
 const process = import.meta.env.REACT_APP_TUVAN;
-const CheckIn = () => {
+const CheckOutTherapist = () => {
  
   const [isCheckOutModalVisible, setIsCheckOutModalVisible] = useState(false);
   const [loading, setLoading] = useState(false);
@@ -20,7 +20,7 @@ const CheckIn = () => {
   const [filteredProducts, setFilteredProducts] = useState([]);
   const [products, setProducts] = useState([]);
   const [searchPhone, setSearchPhone] = useState("");
-  
+ 
   const [searchParams] = useSearchParams();
   useEffect(() => {
     fetchAppointments();
@@ -392,4 +392,4 @@ const handleCashPayment = async (detail) => {
   );
 };
 
-export default CheckIn;
+export default CheckOutTherapist;

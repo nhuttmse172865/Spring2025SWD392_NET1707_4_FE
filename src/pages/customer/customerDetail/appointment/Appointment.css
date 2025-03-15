@@ -43,7 +43,6 @@
   font-size: 14px;
   font-family: "Poppins", sans-serif;
 }
-
 .appointment-date,
 .appointment-service,
 .appointment-price,
@@ -236,7 +235,6 @@
   z-index: 999;
   animation: fadeIn 0.3s ease-in-out;
 }
-
 .pagination {
   display: flex;
   justify-content: center;
@@ -268,7 +266,6 @@
   color: white;
   border-color: #007bff;
 }
-
 .page-item.disabled a {
   background-color: white;
   color: #ff4f9d;

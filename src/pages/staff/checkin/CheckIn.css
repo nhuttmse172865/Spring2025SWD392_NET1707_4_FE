@@ -48,6 +48,7 @@
   text-align: left;
   border-bottom: 1px solid #ffd1dc;
   text-align: center;
+  color: #d63384;
 }
 
 .checkin-table th {
@@ -127,6 +128,7 @@
   .checkin-table td {
       padding: 8px;
       font-size: 12px;
+      
   }
 
   .checkout-button, 

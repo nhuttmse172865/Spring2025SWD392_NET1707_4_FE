@@ -5,49 +5,41 @@ const TherapistDetail = () => {
     
     const location = useLocation();
     const navigate = useNavigate();
-    const therapist = location.state;
+    const therapist = location.state?.therapist;
+    if (!therapist) {
+        return <p>No therapist.</p>;
+    }
     return (
     <div className="therapist-detail-container">
         <div className="therapist-detail-content">
             <div className="therapist-image">
-                <img src={therapist.image} alt="therapist" />
+            
+                <img src={therapist.images?.[0]?.url} alt="therapist" />
             </div>
             <div className="therapist-detail-info">
-                <h2 className="therapist-detail-name">{therapist.name}</h2>
-                <table className="therapist-detail-table">
-                    <tbody>
-                        <tr>
-                        <td><strong>Role</strong></td>
-                        <td>{therapist.role}</td>
-                        </tr>
-                        <tr>
-                        <td><strong>Chuyên khoa</strong></td>
-                        <td>{therapist.specialty}</td>
-                        </tr>
-                        <tr>
-                                <td><strong>Ngoại ngữ</strong></td>
-                                <td>{therapist.languages}</td>
-                            </tr>
-                       
-                        </tbody>
-                </table>
-                <div className="therapist-detail-section">
+                <h2 className="therapist-detail-name">Name:   {therapist.account.name}</h2>
+                
+                        <div className="therapist-detail-section">
                     <h3 className="therapist-section-title">
-                        Chứng chỉ
+                    Speciality 
                     </h3>
-                    <ul className="therapist-section-list">
-                        {therapist.certificates.map((certificate, index) => (
-                            <li key={index}>{certificate}</li>
-                        ))}
-                    </ul>
+                    <p className="therapist-section-list">
+                        {therapist.speciality }
+                    </p>
                 </div>
                 <div className="therapist-detail-section">
-                        <h3 className="therapist-section-title">Kinh nghiệm</h3>
-                        <ul className="therapist-section-list">
-                            {therapist.experience.map((exp, index) => (
-                                <li key={index}>{exp}</li>
-                            ))}
-                        </ul>
+                    <h3 className="therapist-section-title">
+                    Certificate 
+                    </h3>
+                    <span className="therapist-section-list">
+                        {therapist.certificate }
+                    </span>
+                </div>
+                <div className="therapist-detail-section">
+                        <h3 className="therapist-section-title">Experience</h3>
+                        <p className="therapist-section-list">
+                            {therapist.experience} year
+                        </p>
                     </div>
             </div>
         </div>

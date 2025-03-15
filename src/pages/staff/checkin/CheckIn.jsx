@@ -22,10 +22,12 @@ const CheckIn = () => {
     fetchAppointments();
   }, [currentPage]);
 
-  useEffect(() => {
-    filterAppointmentsByDate();
-  }, [selectedDate, products,searchPhone]); 
-
+  // useEffect(() => {
+  //   filterAppointmentsByDate();
+  // }, [selectedDate, products,searchPhone]); 
+useEffect(() => {
+    setFilteredProducts(products);
+  }, [products]);
   const fetchAppointments = async () => {
     setLoading(true);
     try {
@@ -42,12 +44,12 @@ const CheckIn = () => {
 
   const filterAppointmentsByDate = () => {
     const filtered = products.filter((product) =>
-      product.appointment_details.some((detail) =>
-        dayjs(detail.day).isSame(selectedDate, "day")
-      )&& product?.account?.phone?.includes(searchPhone) 
+      dayjs(product.createdTime).isSame(selectedDate.subtract(1, "day"), "day") &&
+      product?.account?.phone?.includes(searchPhone)
     );
     setFilteredProducts(filtered);
   };
+  
 
  const handleCheckin = async (appointmentDetailId) => {
   try {
@@ -62,7 +64,7 @@ const CheckIn = () => {
         product.id === selectedProduct.id
           ? {
               ...product,
-              appointment_details: product.appointment_details.map((detail) =>
+              appointment_details: product.appointment_details?.map((detail) =>
                 detail.id === appointmentDetailId
                   ? { ...detail, status: "CHECKIN" } 
                   : detail
@@ -75,7 +77,7 @@ const CheckIn = () => {
     //cập nhật nút checkin
     setSelectedProduct((prevProduct) => ({
       ...prevProduct,
-      appointment_details: prevProduct.appointment_details.map((detail) =>
+      appointment_details: prevProduct.appointment_details?.map((detail) =>
         detail.id === appointmentDetailId
           ? { ...detail, status: "CHECKIN" }
           : detail
@@ -93,10 +95,19 @@ const CheckIn = () => {
     setSelectedProduct(null);
   };
 
- const showAppointmentDetail = (product) =>{
-  setSelectedProduct(product);
-    setIsCheckOutModalVisible(true);
- }
+  const showAppointmentDetail = async (product) => {
+    setLoading(true);
+    try {
+      const res = await axios.get(`${BASE.BASE_URL}/appointments/${product.id}`);
+      setSelectedProduct(res.data.data); 
+      console.log(res.data.data);
+      setIsCheckOutModalVisible(true);
+    } catch (error) {
+      console.error("Error fetching appointment details:", error);
+    }
+    setLoading(false);
+  };
+  
 
   return (
     <div className="checkin-container">
@@ -145,8 +156,8 @@ const CheckIn = () => {
                     <td>{product.account.name}</td>
                     <td>{product.service.name}</td>
                     <td>{product.account.phone}</td>
-                    <td>{product.total}</td>
-                    <td>{dayjs(product.appointment_details[0].day).format("YYYY-MM-DD")}</td>
+                    <td>{product.total}$</td>
+                    <td>{dayjs(product.createdTime).add(1,'day').format("YYYY-MM-DD")}</td>
                     <td>
                       <Button
                         className="checkout-button"
@@ -193,46 +204,32 @@ const CheckIn = () => {
   ]}
   className="checkout-modal"
 >
-{selectedProduct && selectedProduct.appointment_details.length > 0 ? (
-  <div className="checkout-info">
-    {selectedProduct.appointment_details.map((detail) => (
-      <div key={detail.id} className="appointment-item">
-        <p><strong>Service detail:</strong> {detail.name}</p>
-        <p><strong>Status:</strong> {detail.status}</p>
-        <p><strong>Price:</strong> {detail.price}</p>
-        <p><strong>Start:</strong> {detail.startHour}</p>
-        <p><strong>End:</strong> {detail.endHour}</p>
-
-    <div className="btn-action-checkinout">
+{selectedProduct && selectedProduct.appointment_details ? (
+  selectedProduct.appointment_details.map((detail) => (
+    <div key={detail.id} className="appointment-item">
+      <p><strong>Service detail:</strong> {detail.name}</p>
+      <p><strong>Status:</strong> {detail.status}</p>
+      <p><strong>Price:</strong> {detail.price}</p>
+      <p><strong>Start:</strong> {detail.startHour}</p>
+      <p><strong>End:</strong> {detail.endHour}</p>
+      <p><strong>Therapist:</strong> {detail.therapist?.account?.name}</p>
+      <p><strong>Day:</strong> {detail.day}</p>
+     
       
-    <Button
-          type="primary"
-          className="checkout-confirm-btn"
-          onClick={() => handleCheckin(detail.id)}
-          disabled={detail.status === "CHECKIN"} 
-        >
-          {detail.status === "CHECKIN" ? "Checked In" : "Check In"}
-        </Button>
-        {/* <Button
-      key="checkout"
-      className="checkout-confirm-btn"
-      type="primary"
-      onClick={() => {
-        setProducts(products.filter((p) => p.id !== selectedProduct.id));
-        handleCheckOutCancel();
-      }}
-    >
-       CheckOut
-    </Button> */}
+      <Button
+        type="primary"
+        onClick={() => handleCheckin(detail.id)}
+        disabled={detail.status === "CHECKIN" || detail.status === "COMPLETED"}
+        className="checkout-cancel-btn "
+      >
+        {detail.status === "CHECKIN" ? "Checked In" : "Check In"}
+      </Button>
     </div>
-        
-       
-      </div>
-    ))}
-  </div>
+  ))
 ) : (
   <p>No appointment details available</p>
 )}
+
 
 
 </Modal>

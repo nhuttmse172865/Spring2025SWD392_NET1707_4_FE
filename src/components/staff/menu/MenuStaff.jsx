@@ -17,9 +17,11 @@ const MenuStaff = () => {
     navigate("/staff/checkout");
   }else if(name === "Dashboard"){
     navigate("/staff");
-  }
-  ;
+  }else if(name === "checkoutTherapist"){
+    navigate("/staff/checkoutTherapist")
+  
 }
+  }
 
   const handleHoverItem = (index) => {
     setItemHover(index);
@@ -33,6 +35,8 @@ const MenuStaff = () => {
     { name: "Dashboard", icon: ICONS.dashboard, iconActive: ICONS.dashboardActive },
     { name: "Check-in", icon: ICONS.services, iconActive: ICONS.servicesActive },
     { name: "Check-out", icon: ICONS.services, iconActive: ICONS.servicesActive },
+    // { name: "datngu", icon: ICONS.services, iconActive: ICONS.servicesActive },
+    { name: "checkoutTherapist", icon: ICONS.services, iconActive: ICONS.servicesActive },
   ];
 
   return (
