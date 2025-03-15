@@ -84,163 +84,121 @@ const CheckOutTherapist = () => {
     }
     setLoading(false);
   };
- const handleTransfer = async (detail) => {
-  if (!selectedProduct || !detail) return;
-
-  const appointmentId = selectedProduct.id; 
-  const appointment_detailsId = detail.id;
-  const amount = detail.price * 25000 *0.9; 
-  const returnUrl = encodeURIComponent("http://localhost:5173/staff/checkout");
-
-  //save local
-  localStorage.setItem('pendingDetailId', detail.id);
-  const fullUrl = `${BASE.BASE_URL}/vnpay/create-payment-url?appointmentId=${appointmentId}&detailId=${detail.id}&amount=${amount}&returnUrl=${returnUrl}`;
-  console.log("Generated API URL:", fullUrl);
-
-  try {
-    const response = await axios.get(
-      `${BASE.BASE_URL}/vnpay/create-payment-url?appointmentId=${appointmentId}&detailId=${detail.id}&amount=${amount}&returnUrl=${returnUrl}`
-    );
+  const handleTransfer = async (appointmentId) => {
+    if (!selectedProduct) return;
     
-
-    console.log("VNPay response:", response);
-    if (response.data.data) {
-     
-      setTimeout(() => {
-        window.location.href = response.data.data;
-      }, 5000); 
-    } else {
-      console.error("Không lấy được payment URL", response.data);
-    }
-  } catch (error) {
-    console.log(error);
-  }
-};
-
-
-const handleSavePayment = async () => {
-  const vnp_responseCode = searchParams.get("vnp_ResponseCode");
+    const tuVanServices = JSON.parse(process || "[]");
+    const isTuVanService = tuVanServices.includes(selectedProduct.service.name);
+    
+    // Calculate amount based on the appointment total
+    const amount = isTuVanService ? selectedProduct.total * 25000 * 0.1 : selectedProduct.total * 25000 * 0.1;
+    const returnUrl = encodeURIComponent("http://localhost:5173/staff/checkoutTherapist");
   
-  if (vnp_responseCode === "00") {
-    const appointmentId = parseInt(searchParams.get("vnp_OrderInfo"));
-    const amount = parseInt(searchParams.get("vnp_Amount")) / 100;
-    const transactionCode = searchParams.get("vnp_TransactionNo");
-    const method = searchParams.get("vnp_CardType");
-    const payTime = searchParams.get("vnp_PayDate");
+    // Store the appointment ID in localStorage
+    localStorage.setItem('pendingAppointmentId', appointmentId);
     
-    // Get the detail ID from localStorage instead of URL params
-    const detailId = parseInt(localStorage.getItem('pendingDetailId'));
-    
-    // Validate detailId
-    if (isNaN(detailId)) {
-      console.error("Invalid detail ID retrieved from localStorage:", localStorage.getItem('pendingDetailId'));
-      
-      return;
-    }
-
     try {
-      const paymentResponse = await axios.post(`${BASE.BASE_URL}/payment/create`, {
-        appointmentId,
-        amount,
-        transactionCode,
-        method,
-        payTime,
-        responseCode: vnp_responseCode,
-      });
-
-      console.log("Payment save response:", paymentResponse);
-
-      if (paymentResponse.status === 201) {
-        console.log("Payment saved successfully, updating appointment detail...");
-       
-        // Get updated products
-        const updatedProducts = await axios.get(`${BASE.BASE_URL}/appointments/getAll`).then(res => res.data.data.content);
-        setProducts(updatedProducts);
-        
-        // Find the selected product
-        const selectedProduct = updatedProducts.find((p) => p.id === appointmentId);
-       
-        if (selectedProduct) {
-          // Only update the specific detail that was paid for
-          console.log(`Updating appointment detail: ${detailId}`);
-          try {
-            const response = await axios.put(`${BASE.BASE_URL}/appointment-detail/checkout/${detailId}`);
-            console.log(`Updated appointment detail ${detailId} response:`, response.data);
-            
-            // Clear the localStorage after successful update
-            localStorage.removeItem('pendingDetailId');
-            
-          } catch (error) {
-            console.error(`Error updating appointment detail ${detailId}:`, error.response ? error.response.data : error.message);
-          }
-        } else {
-          console.error("Selected product not found, cannot update appointment details.");
-        }
-
-        Modal.success({
-          title: "Payment Successful",
-          content: "The appointment has been checked out successfully!",
-        });
-
-        fetchAppointments();
+      const response = await axios.get(
+        `${BASE.BASE_URL}/vnpay/create-payment-url?appointmentId=${appointmentId}&amount=${amount}&returnUrl=${returnUrl}`
+      );
+      
+      console.log("VNPay response:", response);
+      if (response.data.data) {
+        window.location.href = response.data.data;
       } else {
-        console.error("Payment save failed:", paymentResponse.data);
+        console.error("Không lấy được payment URL", response.data);
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  const handleSavePayment = async () => {
+    const vnp_responseCode = searchParams.get("vnp_ResponseCode");
+    
+    if (vnp_responseCode === "00") {
+      const appointmentId = parseInt(searchParams.get("vnp_OrderInfo"));
+      const amount = parseInt(searchParams.get("vnp_Amount")) / 100;
+      const transactionCode = searchParams.get("vnp_TransactionNo");
+      const method = searchParams.get("vnp_CardType");
+      const payTime = searchParams.get("vnp_PayDate");
+      
+      try {
+        const paymentResponse = await axios.post(`${BASE.BASE_URL}/payment/create`, {
+          appointmentId,
+          amount,
+          transactionCode,
+          method,
+          payTime,
+          responseCode: vnp_responseCode,
+        });
+  
+        console.log("Payment save response:", paymentResponse);
+  
+        if (paymentResponse.status === 201) {
+          console.log("Payment saved successfully");
+          
+          // Get updated products
+          await fetchAppointments();
+          
+          Modal.success({
+            title: "Payment Successful",
+            content: "The appointment has been checked out successfully!",
+          });
+        } else {
+          console.error("Payment save failed:", paymentResponse.data);
+          Modal.error({
+            title: "Payment Failed",
+            content: "There was an issue processing the payment.",
+          });
+        }
+      } catch (error) {
+        console.error("Error saving payment:", error.response ? error.response.data : error.message);
         Modal.error({
           title: "Payment Failed",
           content: "There was an issue processing the payment.",
         });
       }
-    } catch (error) {
-      console.error("Error saving payment:", error.response ? error.response.data : error.message);
-      Modal.error({
-        title: "Payment Failed",
-        content: "There was an issue processing the payment.",
-      });
     }
-  }
-};
+  };
 
 
-const handleCashPayment = async (detail) => {
-  if (!selectedProduct || !detail) return;
-  
-  try {
- 
-    const paymentResponse = await axios.post(`${BASE.BASE_URL}/payment/create`, {
-      appointmentId: selectedProduct.id,
-      amount: detail.price * 25000* 0.9, 
-      transactionCode: "14837441", 
-      method: "CASH", 
-      payTime: "20250309213832",
-      responseCode: "00" 
-    });
+  const handleCashPayment = async (appointmentId) => {
+    if (!selectedProduct) return;
     
-    console.log("Cash payment response:", paymentResponse);
-    
-    if (paymentResponse.status === 201) {
-      // Now update the appointment detail status
-      console.log(`Updating appointment detail: ${detail.id}`);
-      const response = await axios.put(`${BASE.BASE_URL}/appointment-detail/checkout/${detail.id}`);
-      console.log(`Updated appointment detail ${detail.id} response:`, response.data);
+    try {
+      // Check if it's a TuVan service
+      const tuVanServices = JSON.parse(process || "[]");
+      const isTuVanService = tuVanServices.includes(selectedProduct.service.name);
+      const amount = isTuVanService ? selectedProduct.total * 25000 * 0.1 : selectedProduct.total * 25000 * 0.1;
       
-      // Show success message
-      Modal.success({
-        title: "Payment Successful",
-        content: "The appointment has been checked out successfully with cash payment!",
+      const paymentResponse = await axios.post(`${BASE.BASE_URL}/payment/create`, {
+        appointmentId: appointmentId,
+        amount: amount,
+        transactionCode: "14837441", 
+        method: "CASH", 
+        payTime: dayjs().format("YYYYMMDDHHmmss"),
+        responseCode: "00" 
       });
+      
+      console.log("Cash payment response:", paymentResponse);
       
       // Update the products list and close the modal
       await fetchAppointments();
       handleCheckOutCancel();
+      
+      Modal.success({
+        title: "Payment Successful",
+        content: "Cash payment has been processed successfully!",
+      });
+    } catch (error) {
+      console.error("Error processing cash payment:", error.response ? error.response.data : error.message);
+      Modal.error({
+        title: "Payment Failed",
+        content: "There was an issue processing the cash payment.",
+      });
     }
-  } catch (error) {
-    console.error("Error processing cash payment:", error.response ? error.response.data : error.message);
-    Modal.error({
-      title: "Payment Failed",
-      content: "There was an issue processing the cash payment.",
-    });
-  }
-};
+  };
   return (
     <div className="checkin-container">
       <div className="checkin-header">
@@ -291,12 +249,21 @@ const handleCashPayment = async (detail) => {
                     <td>{product.total} $</td>
                     <td>{dayjs(product.createdTime).format("YYYY-MM-DD")}</td>
                     <td>
-                      <Button
+                     <div className="btn-action-checkinout">
+                     <Button
                         className="checkout-button"
+                        style={{gap: "10px"}}
                         onClick={() => showAppointmentDetail(product)}
                       >
                         View detail
                       </Button>
+                      <Button
+                        className="checkout-button"
+                        onClick={() => handleTransfer(product.id)}
+                      >
+                       Check out
+                      </Button>
+                     </div>
                     </td>
                   </tr>
                 ))
@@ -331,8 +298,12 @@ const handleCashPayment = async (detail) => {
     <Button key="cancel" className="checkout-cancel-btn" onClick={handleCheckOutCancel}>
       Cancel
     </Button>,
-    
-      
+    <Button key="cash" type="default" onClick={() => handleCashPayment(selectedProduct.id)}>
+      Cash Payment
+    </Button>,
+    <Button key="pay" type="primary" onClick={() => handleTransfer(selectedProduct.id)}>
+      Online Payment
+    </Button>
   ]}
   className="checkout-modal"
 >
@@ -353,28 +324,7 @@ const handleCashPayment = async (detail) => {
         <p><strong>End:</strong> {detail.endHour}</p>
         <p><strong>Day:</strong> {detail.day}</p>
         <p><strong>Therapist:</strong> {detail.therapist?.account?.name}</p>
-    <div className="btn-action-checkinout">
-      
    
-    <Button
-  key="checkout"
-  className="checkout-confirm-btn"
-  type="primary"
-  onClick={() => handleCashPayment(detail)}
-  disabled={detail.status === "COMPLETED" || detail.status === "PENDING"}
->
-  Cash
-</Button>
-    <Button
-            className="checkout-confirm-btn"
-            type="primary"
-            onClick={() => handleTransfer(detail)}
-            style={{ marginLeft: "10px" }}
-            disabled={detail.status === "COMPLETED" || detail.status === "PENDING"}
-          >
-            Pay 
-          </Button>
-    </div>
         
        
       </div>

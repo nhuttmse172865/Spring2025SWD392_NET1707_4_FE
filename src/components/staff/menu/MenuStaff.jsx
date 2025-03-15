@@ -36,7 +36,7 @@ const MenuStaff = () => {
     { name: "Check-in", icon: ICONS.services, iconActive: ICONS.servicesActive },
     { name: "Check-out", icon: ICONS.services, iconActive: ICONS.servicesActive },
     // { name: "datngu", icon: ICONS.services, iconActive: ICONS.servicesActive },
-    { name: "checkoutTherapist", icon: ICONS.services, iconActive: ICONS.servicesActive },
+    { name: "Checkout Therapist", icon: ICONS.services, iconActive: ICONS.servicesActive },
   ];
 
   return (

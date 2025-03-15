@@ -11,7 +11,7 @@ const Itinerary = () => {
   const [selectedDate, setSelectedDate] = useState(null);
   const [timeSlots, setTimeSlots] = useState([]);
   const [services, setServices] = useState([]);
-  const [selectedService, setSelectedService] = useState(null);
+  const [selectedService, setSelectedService] = useState([]);
   const [availableTherapists, setAvailableTherapists] = useState([]);
   const [bookingSummaries, setBookingSummaries] = useState([]); 
 
@@ -66,13 +66,27 @@ const Itinerary = () => {
     const service = services.find(s => s.id === selectedService);
     const formattedDate = dayjs(selectedDate).format('YYYY-MM-DD');
   
-    // Kiểm tra xem slot đã được chọn cho bất kỳ dịch vụ nào khác chưa
-    const isSlotTaken = bookingSummaries.some(
+    // Kiểm tra nếu slot này đã được đặt cho dịch vụ hiện tại
+    const isSlotTakenForSameService = bookingSummaries.some(
+      booking => booking.serviceId === selectedService &&
+                 booking.date === formattedDate &&
+                 booking.time === time
+    );
+  
+    if (isSlotTakenForSameService) {
+      Modal.error({
+        title: 'Error',
+        content: 'This time slot has already been booked for this service.',
+      });
+      return;
+    }
+  
+    // Kiểm tra nếu slot đã được đặt cho bất kỳ dịch vụ nào khác
+    const isSlotTakenForAnyService = bookingSummaries.some(
       booking => booking.date === formattedDate && booking.time === time
     );
   
-    if (isSlotTaken) {
-      
+    if (isSlotTakenForAnyService) {
       Modal.error({
         title: 'Error',
         content: 'This time slot is already booked for another service.',
@@ -80,7 +94,9 @@ const Itinerary = () => {
       return;
     }
   
+    // Thêm mới thay vì cập nhật slot của dịch vụ đã chọn
     const newBooking = {
+      id: `${selectedService}-${therapist.therapistId}-${time}`, // Đảm bảo mỗi booking có id duy nhất
       service: service?.name,
       serviceId: selectedService,
       therapist: therapist.therapistName,
@@ -90,24 +106,16 @@ const Itinerary = () => {
       price: service?.price || 0, 
     };
   
-    // Kiểm tra nếu đã có booking cho service này -> cập nhật lại
-    setBookingSummaries(prev => {
-      const existingIndex = prev.findIndex(booking => booking.serviceId === selectedService);
-      if (existingIndex !== -1) {
-        const updatedSummaries = [...prev];
-        updatedSummaries[existingIndex] = newBooking;
-        return updatedSummaries;
-      }
-      return [...prev, newBooking];
-    });
+    setBookingSummaries(prev => [...prev, newBooking]);
   };
+  
   
 
 
   const handleRemoveBooking = (bookingId) => {
     setBookingSummaries(prev => prev.filter(booking => booking.id !== bookingId));
   };
-
+  
   const handleBook = async () => {
     const apoimentID = localStorage.getItem('selectedAppointmentId');
     const bookingData = bookingSummaries.map(booking => ({
@@ -125,8 +133,13 @@ const Itinerary = () => {
         content: 'Create successful!',
       });
       setBookingSummaries([]);
+      localStorage.removeItem('selectedAppointmentId');
     } catch (error) {
-      console.error('Error  appointments:', error)
+      console.error('Error  appointments:', error);
+      Modal.error({
+        title: 'Create failed',
+        content: 'Please record the appointment',
+      });
     }
   };
 
@@ -171,6 +184,9 @@ const Itinerary = () => {
             <DatePicker 
               onChange={handleDateChange} 
               className='datepicker-itinerary'
+              disabledDate={(current) => {
+                return current && current <= dayjs().endOf('day'); 
+  }}
             />
           </div>
         </div>
