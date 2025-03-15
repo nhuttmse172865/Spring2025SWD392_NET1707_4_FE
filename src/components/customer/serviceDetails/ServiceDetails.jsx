@@ -16,20 +16,42 @@ const ServiceDetails = React.memo(() => {
     const fetchInitialData = async () => {
       try {
         setLoading(true);
+
         const storedService = JSON.parse(
           localStorage.getItem("selectedService")
         );
+        let serviceId;
 
-        if (!storedService?.id) {
-          setLoading(false);
-          return;
+        if (storedService?.id) {
+          console.log("Using storedService from localStorage:", storedService);
+          setSelectedService(storedService);
+          serviceId = storedService.id;
+        } else {
+          serviceId = localStorage.getItem("selectedServiceId");
+
+          if (!serviceId) {
+            setLoading(false);
+            console.error("No service data or ID found in localStorage");
+            return;
+          }
+
+          const serviceResponse = await axios.get(
+            `${BASE.BASE_URL}/service/getById?id=${serviceId}`
+          );
+          const serviceData = serviceResponse.data.data;
+          console.log("Fetched service data from API:", serviceData);
+          if (!serviceData) {
+            throw new Error("Service not found");
+          }
+          setSelectedService(serviceData);
+          serviceId = serviceData.id;
         }
 
-        setSelectedService(storedService);
         const detailResponse = await axios.get(
-          `${BASE.BASE_URL}/service-detail/getByServiceId?id=${storedService.id}`
+          `${BASE.BASE_URL}/service-detail/getByServiceId?id=${serviceId}`
         );
         const details = detailResponse.data.data || [];
+        console.log("Service details:", details);
         setServiceDetail(details);
 
         if (details.length > 0) {
@@ -45,6 +67,7 @@ const ServiceDetails = React.memo(() => {
           );
 
           const stepsData = await Promise.all(stepPromises);
+          console.log("Service steps:", stepsData);
           setServiceSteps(stepsData);
         }
 
@@ -59,6 +82,9 @@ const ServiceDetails = React.memo(() => {
   }, []);
 
   const formatPrice = useCallback((price) => {
+    if (typeof price !== "number") {
+      return "N/A";
+    }
     return price.toLocaleString("en-US", {
       style: "currency",
       currency: "USD",
@@ -66,13 +92,21 @@ const ServiceDetails = React.memo(() => {
   }, []);
 
   const handleBack = useCallback(() => {
-    navigate(-1);
+    localStorage.removeItem("selectedService");
+    localStorage.removeItem("selectedServiceId");
+    navigate("/customer-service");
   }, [navigate]);
 
   const getStepsForDetail = useMemo(() => {
     return (detailId) =>
       serviceSteps.find((item) => item.detailId === detailId)?.steps || [];
   }, [serviceSteps]);
+
+  const totalPrice = useMemo(() => {
+    return serviceDetail.reduce((sum, detail) => {
+      return sum + (detail.price || 0);
+    }, 0);
+  }, [serviceDetail]);
 
   if (loading) {
     return <p className="text-center text-blue-500">Loading...</p>;
@@ -88,18 +122,21 @@ const ServiceDetails = React.memo(() => {
         <ArrowLeft size={20} />
       </button>
 
-      <h4 className="service-title0">{selectedService.name}</h4>
+      <h4 className="service-title0">
+        {selectedService.name || "Unnamed Service"}
+      </h4>
       <img
-        src={selectedService.image}
-        alt={selectedService.name}
+        src={selectedService.image || "https://via.placeholder.com/300"}
+        alt={selectedService.name || "Service"}
         className="service-image"
         loading="lazy"
       />
       <p className="service-price">
-        Price: {formatPrice(selectedService.total)}
+        Price: {formatPrice(totalPrice)}{" "}
+        {/* Sử dụng totalPrice thay vì selectedService.total */}
       </p>
       <p className="service-gap">
-        Interval between uses: {selectedService.gapDay} day
+        Interval between uses: {selectedService.gapDay || "N/A"} day
       </p>
 
       {serviceDetail.length > 0 ? (
@@ -111,19 +148,22 @@ const ServiceDetails = React.memo(() => {
             return (
               <div key={detail.id} className="service-detail-card">
                 <img
-                  src={detail.image}
-                  alt={detail.name}
+                  src={detail.image || "https://via.placeholder.com/150"}
+                  alt={detail.name || "Detail"}
                   className="service-detail-image"
                   loading="lazy"
                 />
                 <div className="service-detail-info">
-                  <p className="detail-name">{detail.name}</p>
-                  <p className="detail-day">Day: {detail.day_order}</p>
+                  <p className="detail-name">
+                    {detail.name || "Unnamed Detail"}
+                  </p>
+                  <p className="detail-day">Day: {detail.day_order || "N/A"}</p>
                   <p className="detail-duration">
-                    Time: {detail.duration} minutes
+                    Time: {detail.duration || "N/A"} minutes
                   </p>
                   <p className="detail-description">
-                    Description: {detail.description}
+                    Description:{" "}
+                    {detail.description || "No description available"}
                   </p>
                   <p className="detail-price">
                     Price: {formatPrice(detail.price)}
@@ -136,7 +176,8 @@ const ServiceDetails = React.memo(() => {
                     <ul className="steps-list">
                       {stepsData.map((step) => (
                         <li key={step.id}>
-                          <strong>{step.stepNumber}:</strong> {step.name}
+                          <strong>{step.stepNumber}:</strong>{" "}
+                          {step.name || "Unnamed Step"}
                         </li>
                       ))}
                     </ul>

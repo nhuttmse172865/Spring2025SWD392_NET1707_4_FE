@@ -3,7 +3,7 @@ import Item from "../item/Item";
 import axios from "axios";
 import BASE from "../../../../../../constants/base";
 
-const Body = ({ listTitle, setItemUpdate, setShowModal, page, setShowModalUpdate }) => {
+const Body = ({ listTitle, setItemUpdate, setShowModal, page, setShowModalUpdate ,refreshData}) => {
   const [listServices, setListServices] = useState();
   const abortControllerRef = useRef(null);
 
@@ -33,7 +33,7 @@ const Body = ({ listTitle, setItemUpdate, setShowModal, page, setShowModalUpdate
         abortControllerRef.current.abort();
       }
     };
-  }, [handleFetchService]);
+  }, [handleFetchService, refreshData]);
 
   return (
     <div

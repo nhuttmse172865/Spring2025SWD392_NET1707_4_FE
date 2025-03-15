@@ -6,9 +6,10 @@ import InputImage from "../modal/add/inputImage/InputImage";
 import Table from "./table/Table";
 import axios from "axios";
 import BASE from "../../../../../constants/base";
+import DEEP_COMPARE_OBJECTS from "../../../../../helpers/DeepCompareObject";
 
-const ModalUpdate = ({ itemUpdate, setShowModalUpdate }) => {
-  const [id,setId] = useState()
+const ModalUpdate = ({ itemUpdate, setShowModalUpdate, setRefreshData }) => {
+  const [id, setId] = useState();
   const [name, setName] = useState();
   const [description, setDescription] = useState();
   const [gapDay, setGapDay] = useState();
@@ -16,12 +17,18 @@ const ModalUpdate = ({ itemUpdate, setShowModalUpdate }) => {
   const [issueSkin, setIssueSkin] = useState();
   const [skinType, setSkinType] = useState();
   const [therapist, setTherapist] = useState();
-  const [images,setImages] = useState();
+  const [images, setImages] = useState([]);
+  const [refreshImage, setRefreshImage] = useState(false);
 
   const [categoriesList, setCategoriesList] = useState();
   const [issueSkinList, setIssueSkinList] = useState();
   const [skinTypeList, setSkinTypeList] = useState();
   const [therapistList, setTherapistList] = useState();
+
+  const [loading, setLoading] = useState(false);
+
+  const [serviceDetailsOrigin, setServiceDetailsOrigin] = useState();
+  const [serviceDetails, setServiceDetails] = useState();
 
   const handleLoadCategory = async () => {
     try {
@@ -70,6 +77,162 @@ const ModalUpdate = ({ itemUpdate, setShowModalUpdate }) => {
     }
   };
 
+  const handleSaveImage = async (data) => {
+    const formData = new FormData();
+    Array.isArray(data) &&
+      data.forEach((item) => {
+        formData.append("images", item);
+      });
+    try {
+      const response = await axios.post(
+        `${BASE.BASE_URL}/upload-files`,
+        formData,
+        {
+          headers: {
+            "Content-Type": "multipart/form-data",
+          },
+        }
+      );
+      if (!response || response.status !== 200) throw new Error();
+      return response.data.data.successFiles;
+    } catch (error) {
+      console.log(error);
+      return null;
+    }
+  };
+
+  const handleUpdateService = async () => {
+    setLoading(true);
+    let isCallApi = false;
+    const serviceDetailDifferenece = DEEP_COMPARE_OBJECTS.findArrayDifferences(
+      serviceDetailsOrigin,
+      serviceDetails
+    );
+    if (serviceDetailDifferenece.modified.length > 0) {
+      await Promise.all(
+        serviceDetailDifferenece.modified.map(async (item) => {
+          try {
+            const response = await axios.put(
+              `${BASE.BASE_URL}/service-detail/update-day-order?id=${item.id}`,
+              {
+                day_order: item.day_order,
+              }
+            );
+            if (!response && response.status !== 200) throw new Error();
+          } catch (error) {
+            console.log(error);
+          } finally {
+            isCallApi = true;
+          }
+        })
+      );
+    }
+    const data = {
+      service: {
+        id: itemUpdate.id,
+        name: name,
+        gapDay: gapDay,
+        description: description,
+        categoryId: categoriesList.filter((item) => item.name === categories)[0]
+          .id,
+        imagesId: images,
+      },
+      therapistsIds: therapistList
+        .filter((item) => therapist.includes(item.account.name))
+        .map((item) => item.id),
+      issueSkinIds: issueSkinList
+        .filter((item) => issueSkin.includes(item.name))
+        .map((item) => item.id),
+      skinTypeIds: skinTypeList
+        .filter((item) => skinType.includes(item.name))
+        .map((item) => item.id),
+    };
+
+    const serviceChange = DEEP_COMPARE_OBJECTS.deepCompareObjects(data, {
+      service: {
+        id: itemUpdate.id,
+        name: itemUpdate.name,
+        gapDay: itemUpdate.gapDay,
+        description: itemUpdate.description,
+        categoryId: itemUpdate.categoryId,
+        imagesId: itemUpdate.image,
+      },
+      therapistsIds: itemUpdate.therapistsId,
+      issueSkinIds: itemUpdate.issueSkinId,
+      skinTypeIds: itemUpdate.skinTypeId,
+    });
+
+    console.log(itemUpdate);
+    if (!serviceChange) {
+      const image = [];
+      const imagesIdAvailable = [];
+      images &&
+        images.forEach((item) => {
+          if (item instanceof File) {
+            image.push(item);
+          } else {
+            imagesIdAvailable.push(item.id);
+          }
+        });
+      const imagesIds = await handleSaveImage(image);
+      imagesIds &&
+        Array.isArray(imagesIds) &&
+        imagesIds.forEach((item) => {
+          imagesIdAvailable.push(item.id);
+        });
+
+      data.service.imagesId = imagesIdAvailable;
+      try {
+        console.log(data);
+        const response = await axios.put(`${BASE.BASE_URL}/service`, data);
+        if (!response || response.status !== 200) throw new Error();
+      } catch (error) {
+        console.log(error);
+      } finally {
+        isCallApi = true;
+      }
+    }
+    if (isCallApi) {
+      setRefreshData((prev) => !prev);
+      setShowModalUpdate(false);
+    }
+    setLoading(false);
+  };
+
+  const handleDeleteImage = (index) => {
+    
+    setImages(images.filter((_,_index) => _index !== index))
+    setRefreshImage(prev => !prev)
+  }
+
+  const handleAddImage = (event, index) => {
+    const image = event.target.files[0];
+    if (index === 0 || index) {
+      let imagesUpdate = [...images];
+      imagesUpdate[index] = image;
+      setImages(imagesUpdate);
+    } else {
+      let imagesAdd = images;
+      imagesAdd.push(image);
+      setImages(imagesAdd);
+    }
+    event.target.value = null;
+    setRefreshImage((prev) => !prev);
+  };
+
+  useEffect(() => {
+    setImages([...itemUpdate.image]);
+    console.log(itemUpdate);
+    setId(itemUpdate.id);
+    setName(itemUpdate.name);
+    setDescription(itemUpdate.description);
+    setGapDay(itemUpdate.gapDay);
+    setCategories(itemUpdate.categoryName);
+    setIssueSkin(itemUpdate.issueTypeName);
+    setSkinType(itemUpdate.skinTypeName);
+    setTherapist(itemUpdate.therapistsName);
+  }, []);
+
   useEffect(() => {
     if (!categoriesList) {
       handleLoadCategory();
@@ -83,18 +246,6 @@ const ModalUpdate = ({ itemUpdate, setShowModalUpdate }) => {
     if (!therapistList) {
       handleLoadTherapist();
     }
-  }, []);
-
-  useEffect(() => {
-    setImages(itemUpdate.image)
-    setId(itemUpdate.id)
-    setName(itemUpdate.name);
-    setDescription(itemUpdate.description);
-    setGapDay(itemUpdate.gapDay);
-    setCategories(itemUpdate.categoryName);
-    setIssueSkin(itemUpdate.issueTypeName);
-    setSkinType(itemUpdate.skinTypeName);
-    setTherapist(itemUpdate.therapistsName);
   }, []);
 
   return (
@@ -115,6 +266,8 @@ const ModalUpdate = ({ itemUpdate, setShowModalUpdate }) => {
             width={"180px"}
             height={"45px"}
             rounded={".375rem"}
+            isLoading={loading}
+            handleOnclick={() => handleUpdateService()}
             text="Save"
           />
         </div>
@@ -273,18 +426,27 @@ const ModalUpdate = ({ itemUpdate, setShowModalUpdate }) => {
             </div>
           </div>
           <div className="w-[50%]">
-            {images &&
+            <div className="flex flex-wrap gap-2.5 mb-2.5">
+              {images &&
                 images.map((item, index) => (
                   <InputImage
                     key={index}
-                    width="100px"
-                    height="100px"
+                    width="150px"
+                    height="150px"
                     imageObject={item}
+                    handleChangeImage={handleAddImage}
                     index={index}
-            
+                    refreshImage={refreshImage}
+                    handleDeleteImage={handleDeleteImage}
+                    showDeleteImage={true}
                   />
                 ))}
-            <InputImage width="100px" height="100px" />
+            </div>
+            <InputImage
+              width="100px"
+              height="100px"
+              handleChangeImage={handleAddImage}
+            />
           </div>
         </div>
 
@@ -292,7 +454,12 @@ const ModalUpdate = ({ itemUpdate, setShowModalUpdate }) => {
           <label className="text-[16px] mb-0.5 text-[rgba(0,0,0,0.7)] font-medium">
             Service Detail
           </label>
-          <Table serviceId={id}/>
+          <Table
+            setServiceDetails={setServiceDetails}
+            serviceId={id}
+            setServiceDetailsOrigin={setServiceDetailsOrigin}
+            serviceDetails={serviceDetails}
+          />
         </div>
       </div>
     </div>

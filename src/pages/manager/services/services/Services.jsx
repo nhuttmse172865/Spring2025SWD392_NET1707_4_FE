@@ -7,27 +7,35 @@ import ModalUpdate from "../../../../components/manager/services/services/modalU
 
 const Services = () => {
   const [showModal, setShowModal] = useState(false);
-  const [itemUpdate, setItemUpdate] = useState()
-  const [showModalUpdate,setShowModalUpdate] = useState(false);
+  const [itemUpdate, setItemUpdate] = useState();
+  const [showModalUpdate, setShowModalUpdate] = useState(false);
+  const [refreshData, setRefreshData] = useState(false);
 
   return (
     <div className="mt-10">
-      <ToolBar   handleOnClickElevated={() => setShowModal(true)}/>
+      <ToolBar handleOnClickElevated={() => setShowModal(true)} />
       <div>
-        <Content setShowModal={setShowModal} setItemUpdate={setItemUpdate} setShowModalUpdate={setShowModalUpdate} />
+        <Content
+          setShowModal={setShowModal}
+          refreshData={refreshData}
+          setItemUpdate={setItemUpdate}
+          setShowModalUpdate={setShowModalUpdate}
+        />
       </div>
       {showModal && (
         <Popup>
           <Modal setShowModal={setShowModal} />
         </Popup>
       )}
-      {
-        showModalUpdate && (
-          <Popup>
-            <ModalUpdate itemUpdate={itemUpdate} setShowModalUpdate={setShowModalUpdate} />
-          </Popup>
-        )
-      }
+      {showModalUpdate && (
+        <Popup>
+          <ModalUpdate
+            itemUpdate={itemUpdate}
+            setShowModalUpdate={setShowModalUpdate}
+            setRefreshData={setRefreshData}
+          />
+        </Popup>
+      )}
     </div>
   );
 };

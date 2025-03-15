@@ -5,7 +5,7 @@ import Paging from "../../../../common/paging/Paging";
 import axios from "axios";
 import BASE from "../../../../../constants/base";
 
-const Table = ({ setShowModal, setItemUpdate, setShowModalUpdate }) => {
+const Table = ({ setShowModal, setItemUpdate, setShowModalUpdate, refreshData }) => {
   const listTitle = [
     {
       name: "No.",
@@ -67,6 +67,7 @@ const Table = ({ setShowModal, setItemUpdate, setShowModalUpdate }) => {
         setShowModal={setShowModal}
         page={page}
         setShowModalUpdate={setShowModalUpdate}
+        refreshData={refreshData}
       />
       <Paging page={page} setPage={setPage} numberPages={Math.ceil(numberRows/7)}/>
     </div>
