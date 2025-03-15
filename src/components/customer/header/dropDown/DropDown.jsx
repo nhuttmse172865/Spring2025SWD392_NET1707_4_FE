@@ -10,14 +10,17 @@ const DropDown = ({ active = true }) => {
   const listMenu = LIST_MENU_DROP_DOWN_HEADER.filter((item) =>
     item.roles.includes(ROLES.CUSTOMER)
   );
-  const [customer,setCustomer] = useLocalStorage(LOCALSTORAGE_NAME.CUSTOMER_INFORMATION_CACHE,"")
-  const height = listMenu.length*40 + 20;
+  const [customer, setCustomer] = useLocalStorage(
+    LOCALSTORAGE_NAME.CUSTOMER_INFORMATION_CACHE,
+    ""
+  );
+  const height = listMenu.length * 40 + 50;
 
   const handleItemClick = (item) => {
     if (item.title === "Logout") {
-      setCustomer()
-      window.location.reload()
-      navigate("/")
+      setCustomer();
+      window.location.reload();
+      navigate("/");
     } else if (item.path) {
       navigate(item.path);
     }

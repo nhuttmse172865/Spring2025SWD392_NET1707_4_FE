@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import ICONS from "../../../constants/icons";
 
 const Select = ({
@@ -11,6 +11,7 @@ const Select = ({
   setListSelected,
   isTop = false,
   heightFix,
+  itemReadySelect
 }) => {
   const [active, setActive] = useState(false);
   const [itemsSelected, setItemsSelected] = useState();
@@ -37,6 +38,11 @@ const Select = ({
     }
     setListSelected(listItemsSelected);
   };
+
+  useEffect(() => {
+
+    setItemsSelected(itemReadySelect)
+  },[])
 
   return (
     <div

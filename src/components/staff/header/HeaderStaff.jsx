@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import ICONS from "../../../constants/icons";
 import { useLocation } from "react-router-dom";
-
+import { jwtDecode } from "jwt-decode";
 
 const HeaderStaff = () => {
   const location = useLocation()
@@ -18,6 +18,9 @@ const HeaderStaff = () => {
     };
     return map[pathname] || { title: "" };
   };
+  const token = localStorage.getItem('customer_information');
+  const decode = jwtDecode(token);
+  const accountId = decode.accountId;
   useEffect(() => {
     const item = useMapPath(location.pathname)
     setTitle(item?.title);
