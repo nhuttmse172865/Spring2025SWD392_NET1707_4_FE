@@ -2,7 +2,7 @@ import { BrowserRouter, Route, Routes } from "react-router-dom";
 import Login from "./pages/login/Login";
 import Customer from "./pages/customer/Customer";
 import CustomerLayout from "./layouts/customer/Customer";
-import Manager from "./layouts/manager";
+import Manager from "./layouts/Manager";
 import Dashboard from "./pages/manager/dashboard/Dashboard";
 import COMPONENT_PATH_HELPER from "./helpers/ComponentPathHelper";
 import Staff from "./pages/staff/home/Staff";
