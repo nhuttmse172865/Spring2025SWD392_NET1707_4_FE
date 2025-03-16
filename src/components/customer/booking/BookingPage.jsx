@@ -71,7 +71,7 @@ const BookingPage = () => {
   const [therapists, setTherapists] = useState([]);
   const [availableDates, setAvailableDates] = useState([]);
   const [showDoctorConfirmation, setShowDoctorConfirmation] = useState(false);
-  const [wantDoctor, setWantDoctor] = useState(null); // null: undecided, true: yes, false: no
+  const [wantDoctor, setWantDoctor] = useState(null);
 
   useEffect(() => {
     const fetchServices = async () => {
@@ -162,7 +162,7 @@ const BookingPage = () => {
         );
         setAvailableTimeSlots(response.data.data || []);
         if (wantDoctor === null) {
-          setShowDoctorConfirmation(true); // Show confirmation popup
+          setShowDoctorConfirmation(true); 
         }
       } catch (error) {
         console.error("Error fetching available time slots:", error);
@@ -316,7 +316,7 @@ const BookingPage = () => {
     setSelectedService(newServiceId);
     setSelectedDoctor("");
     setSelectedTime(null);
-    setWantDoctor(null); 
+    setWantDoctor(null);
     localStorage.removeItem("selectedServiceID");
     localStorage.setItem("selectedServiceID", newServiceId);
   };
@@ -385,9 +385,9 @@ const BookingPage = () => {
     <Application theme={theme}>
       <div className="appointment-card">
         <h1 className="appointment-title">Make an Appointment</h1>
+
         <div className="form-row">
           <div className="form-group">
-            <label className="form-label">Select Service</label>
             <select
               className="form-select1"
               value={selectedService}
@@ -401,33 +401,24 @@ const BookingPage = () => {
               ))}
             </select>
           </div>
-
-          {wantDoctor !== false && (
-            <div className="form-group">
-              <label className="form-label">Select Doctor</label>
-              <select
-                className="form-select1"
-                value={selectedDoctor}
-                onChange={handleDoctorChange}
-                disabled={!selectedService || !selectedDate}
-              >
-                <option value="">Select a doctor</option>
-                {filteredDoctors.map((doctor) => (
-                  <option key={doctor.id} value={doctor.id}>
-                    {doctor.name}
-                  </option>
-                ))}
-              </select>
-            </div>
-          )}
         </div>
 
         {selectedServiceData && (
           <div className="card">
             <img
-              src={selectedServiceData.image}
+              src={
+                selectedServiceData.image[0]?.url ||
+                "https://via.placeholder.com/150"
+              }
               alt={`Image of ${selectedServiceData.name}`}
               className="profile-image"
+              onError={(e) => {
+                e.target.src = "https://via.placeholder.com/150"; 
+                console.error(
+                  "Failed to load image:",
+                  selectedServiceData.image[0]?.url
+                );
+              }}
             />
             <div className="content">
               <h2 className="title">{selectedServiceData.name}</h2>
@@ -471,11 +462,15 @@ const BookingPage = () => {
 
         <div className="date-time-group">
           <div className="form-group0">
-            <label className="form-label">Select Date</label>
             <div className="calendar-container">
               <Calendar
                 value={selectedDate}
-                onChange={handleDateChange}
+                onChange={(date) => {
+                  handleDateChange(date);
+                  if (date && selectedService) {
+                    setShowDoctorConfirmation(true);
+                  }
+                }}
                 variant="single"
                 locale="en-US"
                 className="rainbow-calendar"
@@ -486,37 +481,58 @@ const BookingPage = () => {
               />
             </div>
           </div>
-          <div className="form-group1">
-            <label className="form-label">Select Time</label>
-
-            {!selectedService || !selectedDate ? (
-              <p className="no-slots-message">
-                Please select service and date first
-              </p>
-            ) : timeSlots.length === 0 ? (
-              <p className="no-slots-message">No available time slots</p>
-            ) : (
-              <div
-                className={`time-picker ${
-                  wantDoctor === true && !selectedDoctor ? "blurred" : ""
-                }`}
-              >
-                {timeSlots.map((slot, index) => (
-                  <button
-                    key={index}
-                    className={`time-button ${
-                      selectedTime === slot.display ? "selected" : ""
-                    }`}
-                    onClick={() => handleTimeSlotSelect(slot)}
-                    disabled={wantDoctor === true && !selectedDoctor}
-                  >
-                    {slot.display}
-                  </button>
-                ))}
-              </div>
-            )}
-          </div>
         </div>
+
+        {wantDoctor === true && (
+          <div className="form-group">
+            <select
+              className="form-select1"
+              value={selectedDoctor}
+              onChange={handleDoctorChange}
+              disabled={!selectedService || !selectedDate}
+            >
+              <option value="">Select a doctor</option>
+              {filteredDoctors.map((doctor) => (
+                <option key={doctor.id} value={doctor.id}>
+                  {doctor.name}
+                </option>
+              ))}
+            </select>
+          </div>
+        )}
+
+        {wantDoctor !== null && (
+          <div className="date-time-group">
+            <div className="form-group1">
+              {!selectedService || !selectedDate ? (
+                <p className="no-slots-message">
+                  Please select service and date first
+                </p>
+              ) : timeSlots.length === 0 ? (
+                <p className="no-slots-message">No available time slots</p>
+              ) : (
+                <div
+                  className={`time-picker ${
+                    wantDoctor === true && !selectedDoctor ? "blurred" : ""
+                  }`}
+                >
+                  {timeSlots.map((slot, index) => (
+                    <button
+                      key={index}
+                      className={`time-button ${
+                        selectedTime === slot.display ? "selected" : ""
+                      }`}
+                      onClick={() => handleTimeSlotSelect(slot)}
+                      disabled={wantDoctor === true && !selectedDoctor}
+                    >
+                      {slot.display}
+                    </button>
+                  ))}
+                </div>
+              )}
+            </div>
+          </div>
+        )}
 
         <div className="contact-info-section">
           <div className="form-group5">

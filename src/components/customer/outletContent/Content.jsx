@@ -1,3 +1,5 @@
+
+
 import React, { useState, useEffect, useMemo, useCallback } from "react";
 import { useNavigate } from "react-router-dom";
 import ReactPaginate from "react-paginate";
@@ -61,9 +63,9 @@ const Content = React.memo(() => {
           b.name.localeCompare(a.name)
         );
       case "priceLowHigh":
-        return [...filteredServices].sort((a, b) => a.price - b.price);
+        return [...filteredServices].sort((a, b) => a.total - b.total);
       case "priceHighLow":
-        return [...filteredServices].sort((a, b) => b.price - a.price);
+        return [...filteredServices].sort((a, b) => b.total - a.total);
       default:
         return filteredServices;
     }
@@ -93,7 +95,7 @@ const Content = React.memo(() => {
     }).format(price);
   }, []);
 
-  const servicesPerPage = 6;
+  const servicesPerPage = 9;
   const pageCount = Math.ceil(sortedServices.length / servicesPerPage);
   const currentServices = useMemo(() => {
     const start = currentPage * servicesPerPage;
@@ -137,10 +139,17 @@ const Content = React.memo(() => {
           >
             <div className="service-image-container">
               <img
-                src={service.image}
+                src={
+                  service.image && service.image.length > 0
+                    ? service.image[0].url
+                    : "https://via.placeholder.com/150"
+                }
                 alt={service.name}
-                className="service-image"
+                className="service-image-main"
                 loading="lazy"
+                onError={(e) =>
+                  (e.target.src = "https://via.placeholder.com/150")
+                } 
               />
             </div>
             <div className="service-info">
