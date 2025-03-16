@@ -1,3 +1,4 @@
+
 import React, { useEffect, useState } from "react";
 import "./ServiceModal.css";
 import axios from "axios";
@@ -5,58 +6,28 @@ import BASE from "../../../../constants/base";
 
 const ServiceModal = () => {
   const [selectedService, setSelectedService] = useState(null);
-  const [serviceDetail, setServiceDetail] = useState(null);
-  const [serviceSteps, setServiceSteps] = useState([]);
+  const [serviceDetails, setServiceDetails] = useState([]);
 
   useEffect(() => {
-    const fetchServices = async () => {
+    const fetchServiceById = async () => {
       try {
-        const response = await axios.get(
-          `${BASE.BASE_URL}/service/getAllServicePaging?page=0&size=10`
-        );
         const storedServiceId = Number(
           localStorage.getItem("selectedServiceID")
         );
-        const matchedService = response.data.data.find(
-          (service) => service.id === storedServiceId
+        const response = await axios.get(
+          `${BASE.BASE_URL}/service/getById?id=${storedServiceId}`
         );
-        if (matchedService) {
-          setSelectedService(matchedService);
-          // Fetch service details
-          const serviceDetailResponse = await axios.get(
-            `${BASE.BASE_URL}/service-detail/getByServiceId?id=${storedServiceId}`
-          );
-          setServiceDetail(serviceDetailResponse.data.data);
-        }
+        const serviceData = response.data.data;
+        setSelectedService(serviceData);
+        setServiceDetails(serviceData.service_details || []);
       } catch (error) {
-        console.error("Error fetching services:", error);
+        console.error("Error fetching service by ID:", error);
       }
     };
 
-    fetchServices();
+    fetchServiceById();
   }, []);
 
-  useEffect(() => {
-    if (serviceDetail && serviceDetail.length > 0) {
-      serviceDetail.forEach((detail) => {
-        axios
-          .get(
-            `${BASE.BASE_URL}/service-detail-step/getByServiceDetailId?id=${detail.id}`
-          )
-          .then((response) => {
-            setServiceSteps((prevSteps) => [
-              ...prevSteps,
-              { detailId: detail.id, steps: response.data.data },
-            ]);
-          })
-          .catch((error) => {
-            console.error("Error fetching service steps:", error);
-          });
-      });
-    }
-  }, [serviceDetail]);
-
-  // Hàm định dạng giá theo USD
   const formatPrice = (price) => {
     return new Intl.NumberFormat("en-US", {
       style: "currency",
@@ -70,49 +41,34 @@ const ServiceModal = () => {
 
   return (
     <div className="service-details-container1">
-      {serviceDetail && serviceDetail.length > 0 ? (
+      {serviceDetails.length > 0 ? (
         <div className="service-details-list">
-          {serviceDetail.map((detail) => {
-            const stepsData =
-              serviceSteps.find((item) => item.detailId === detail.id)?.steps ||
-              [];
-
-            return (
-              <div key={detail.id} className="service-detail-card">
+          {serviceDetails.map((detail) => (
+            <div key={detail.id} className="service-detail-card">
+              {detail.images && detail.images.length > 0 ? (
                 <img
-                  src={detail.image}
+                  src={detail.images[0].url}
                   alt={detail.name}
                   className="service-detail-image"
                 />
-                <div className="service-detail-info">
-                  <p className="detail-name">{detail.name}</p>
-                  <p className="detail-day">Day: {detail.day_order}</p>
-                  <p className="detail-duration">
-                    Time: {detail.duration} minutes
-                  </p>
-                  <p className="detail-description">
-                    Description: {detail.description}
-                  </p>
-                  <p className="detail-price">
-                    Price: {formatPrice(detail.price)}
-                  </p>
-                </div>
-
-                {stepsData.length > 0 && (
-                  <div className="service-steps">
-                    <h4 className="steps-title1">Implementation steps:</h4>
-                    <ul className="steps-list">
-                      {stepsData.map((step) => (
-                        <li key={step.id}>
-                          <strong>{step.stepNumber}:</strong> {step.name}
-                        </li>
-                      ))}
-                    </ul>
-                  </div>
-                )}
+              ) : (
+                <p>No image available</p>
+              )}
+              <div className="service-detail-info">
+                <p className="detail-name">{detail.name}</p>
+                <p className="detail-day">Day: {detail.dayOrder}</p>
+                <p className="detail-duration">
+                  Time: {detail.duration * 60} minutes
+                </p>
+                <p className="detail-description">
+                  Description: {detail.description}
+                </p>
+                <p className="detail-price">
+                  Price: {formatPrice(detail.price)}
+                </p>
               </div>
-            );
-          })}
+            </div>
+          ))}
         </div>
       ) : (
         <p className="no-service-details">No Service Details.</p>

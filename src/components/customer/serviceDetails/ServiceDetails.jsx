@@ -1,3 +1,5 @@
+
+
 import React, { useEffect, useState, useMemo, useCallback } from "react";
 import { ArrowLeft } from "lucide-react";
 import { useNavigate } from "react-router-dom";
@@ -24,8 +26,14 @@ const ServiceDetails = React.memo(() => {
 
         if (storedService?.id) {
           console.log("Using storedService from localStorage:", storedService);
-          setSelectedService(storedService);
           serviceId = storedService.id;
+          // Lấy ảnh từ localStorage cho selectedService
+          setSelectedService({
+            ...storedService,
+            image:
+              storedService.image?.[0]?.url ||
+              "https://via.placeholder.com/300",
+          });
         } else {
           serviceId = localStorage.getItem("selectedServiceId");
 
@@ -43,15 +51,21 @@ const ServiceDetails = React.memo(() => {
           if (!serviceData) {
             throw new Error("Service not found");
           }
-          setSelectedService(serviceData);
+          setSelectedService({
+            ...serviceData,
+            image:
+              serviceData.images?.[0]?.url || "https://via.placeholder.com/300",
+          });
           serviceId = serviceData.id;
         }
 
-        const detailResponse = await axios.get(
-          `${BASE.BASE_URL}/service-detail/getByServiceId?id=${serviceId}`
+    
+        const serviceResponse = await axios.get(
+          `${BASE.BASE_URL}/service/getById?id=${serviceId}`
         );
-        const details = detailResponse.data.data || [];
-        console.log("Service details:", details);
+        const serviceData = serviceResponse.data.data;
+        const details = serviceData.service_details || [];
+        console.log("Service details from API:", details);
         setServiceDetail(details);
 
         if (details.length > 0) {
@@ -105,8 +119,8 @@ const ServiceDetails = React.memo(() => {
   const totalPrice = useMemo(() => {
     return serviceDetail.reduce((sum, detail) => {
       return sum + (detail.price || 0);
-    }, 0);
-  }, [serviceDetail]);
+    }, selectedService?.total || 0); 
+  }, [serviceDetail, selectedService]);
 
   if (loading) {
     return <p className="text-center text-blue-500">Loading...</p>;
@@ -131,10 +145,7 @@ const ServiceDetails = React.memo(() => {
         className="service-image"
         loading="lazy"
       />
-      <p className="service-price">
-        Price: {formatPrice(totalPrice)}{" "}
-        {/* Sử dụng totalPrice thay vì selectedService.total */}
-      </p>
+      <p className="service-price">Price: {formatPrice(totalPrice)}</p>
       <p className="service-gap">
         Interval between uses: {selectedService.gapDay || "N/A"} day
       </p>
@@ -148,7 +159,9 @@ const ServiceDetails = React.memo(() => {
             return (
               <div key={detail.id} className="service-detail-card">
                 <img
-                  src={detail.image || "https://via.placeholder.com/150"}
+                  src={
+                    detail.images?.[0]?.url || "https://via.placeholder.com/150"
+                  }
                   alt={detail.name || "Detail"}
                   className="service-detail-image"
                   loading="lazy"
@@ -157,9 +170,9 @@ const ServiceDetails = React.memo(() => {
                   <p className="detail-name">
                     {detail.name || "Unnamed Detail"}
                   </p>
-                  <p className="detail-day">Day: {detail.day_order || "N/A"}</p>
+                  <p className="detail-day">Day: {detail.dayOrder || "N/A"}</p>
                   <p className="detail-duration">
-                    Time: {detail.duration || "N/A"} minutes
+                    Time: {detail.duration || "N/A"} hour(s)
                   </p>
                   <p className="detail-description">
                     Description:{" "}

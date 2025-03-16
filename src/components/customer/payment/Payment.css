@@ -1,7 +1,6 @@
 .payment-container {
-  display: flex;
   gap: 30px;
-  max-width: 100%;
+  max-width: 90%;
   margin: 0 auto;
   padding: 20px;
   font-family: system-ui, -apple-system, sans-serif;
