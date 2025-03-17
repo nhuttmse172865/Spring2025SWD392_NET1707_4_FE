@@ -1,0 +1,81 @@
+/* Container */
+.blog-container-staff {
+
+    padding: 20px;
+    border-radius: 10px;
+  }
+  
+  /* Table */
+  .blog-table-staff {
+    background-color: white !important;
+    border-radius: 10px;
+  }
+  
+  .blog-table-staff .ant-table-thead > tr > th {
+    background-color: #ffdde1 !important; /* Light pink */
+    color: #d63384;
+    font-weight: bold;
+  }
+  
+  .blog-table-staff .ant-table-tbody > tr > td {
+    background-color: #fff0f5;
+  }
+  
+  /* Buttons */
+  .blog-create-btn {
+    background-color: #ff66b2; /* Pastel pink */
+    border: none;
+    color: white;
+    font-weight: bold;
+    padding: 10px 20px;
+    font-size: 16px;
+    border-radius: 8px;
+    transition: all 0.3s ease-in-out;
+    cursor: pointer;
+    margin-bottom: 16px;
+  }
+  
+  .blog-create-btn:hover {
+    background-color: #e60073; /* Darker pink */
+    transform: scale(1.05);
+  }
+  
+  .blog-create-btn:active {
+    background-color: #cc005a;
+  }
+  
+  /* Edit Button */
+  .blog-btn-edit {
+    color: #ff66b2;
+  }
+  
+  .blog-btn-edit:hover {
+    color: #e60073;
+  }
+  
+  /* Delete Button */
+  .blog-btn-delete {
+    color: #ff1493;
+  }
+  
+  .blog-btn-delete:hover {
+    color: #e60073;
+  }
+  
+  /* Modal */
+  .blog-modal .ant-modal-content {
+    border-radius: 15px;
+    background-color: #fff5f8;
+  }
+  
+  .blog-modal .ant-modal-title {
+    color: #d63384;
+    font-size: 18px;
+  }
+  
+  /* Form */
+  .blog-form .ant-form-item-label > label {
+    color: #ff1493 !important;
+    font-weight: bold;
+  }
+  

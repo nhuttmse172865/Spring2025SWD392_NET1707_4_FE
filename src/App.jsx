@@ -41,6 +41,7 @@ import PaymentFailure from "./components/customer/payment/payment-return/payment
 import Itinerary from "./pages/therapist/CreateRoute/Itinerary";
 import Test from "./pages/staff/test";
 import CheckOutTherapist from "./pages/staff/checkout/CheckOutTherapist";
+import ManagerBlog from "./pages/staff/Blog/Blog";
 
 function App() {
   return (
@@ -97,7 +98,8 @@ function App() {
           <Route path="checkin" element={<CheckIn />} />
           <Route path="checkout" element={<CheckOut />} />
           <Route path="checkoutTherapist" element={<CheckOutTherapist />} />
-          <Route path="datngu" element={<Test />} />
+          {/* <Route path="datngu" element={<Test />} /> */}
+          <Route path="managerBlog" element={<ManagerBlog />} />
         </Route>
         <Route path="/therapist" element={<Therapist />}>
           <Route path="schedule" element={<Schedule />} />

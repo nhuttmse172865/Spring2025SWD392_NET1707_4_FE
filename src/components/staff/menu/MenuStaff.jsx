@@ -17,9 +17,11 @@ const MenuStaff = () => {
     navigate("/staff/checkout");
   }else if(name === "Dashboard"){
     navigate("/staff");
-  }else if(name === "checkoutTherapist"){
+  }else if(name === "CheckoutTherapist"){
     navigate("/staff/checkoutTherapist")
   
+}else if(name==="Manage Blog"){
+  navigate("/staff/managerBlog")
 }
   }
 
@@ -36,7 +38,8 @@ const MenuStaff = () => {
     { name: "Check-in", icon: ICONS.services, iconActive: ICONS.servicesActive },
     { name: "Check-out", icon: ICONS.services, iconActive: ICONS.servicesActive },
     // { name: "datngu", icon: ICONS.services, iconActive: ICONS.servicesActive },
-    { name: "Checkout Therapist", icon: ICONS.services, iconActive: ICONS.servicesActive },
+    { name: "CheckoutTherapist", icon: ICONS.services, iconActive: ICONS.servicesActive },
+    {name:"Manage Blog" ,icon: ICONS.schedule, iconActive: ICONS.scheduleActive}
   ];
 
   return (

@@ -7,7 +7,8 @@ import axios from "axios";
 import BASE from "../../../constants/base";
 import dayjs from "dayjs";
 import { useSearchParams } from "react-router-dom";
-const process = import.meta.env.REACT_APP_TUVAN;
+const process = import.meta.env.VITE_APP_TUVAN;
+
 const CheckOutTherapist = () => {
  
   const [isCheckOutModalVisible, setIsCheckOutModalVisible] = useState(false);
@@ -20,7 +21,7 @@ const CheckOutTherapist = () => {
   const [filteredProducts, setFilteredProducts] = useState([]);
   const [products, setProducts] = useState([]);
   const [searchPhone, setSearchPhone] = useState("");
- 
+  const tuVanServices = JSON.parse(process || "[]");
   const [searchParams] = useSearchParams();
   useEffect(() => {
     fetchAppointments();
@@ -33,6 +34,7 @@ const CheckOutTherapist = () => {
   // }, [selectedDate, products,searchPhone]); 
   useEffect(() => {
     setFilteredProducts(products);
+    console.log(filteredProducts)
   }, [products]);
   useEffect(() => {
     return () => {
@@ -40,6 +42,7 @@ const CheckOutTherapist = () => {
       localStorage.removeItem('pendingDetailId');
     };
   }, []);
+  
   const fetchAppointments = async () => {
     setLoading(true);
     try {
@@ -54,14 +57,6 @@ const CheckOutTherapist = () => {
     setLoading(false);
   };
 
-  const filterAppointmentsByDate = () => {
-    const filtered = products.filter((product) =>
-        product.appointment_details.some((detail) =>
-            dayjs(detail.day).isSame(selectedDate, "day")
-        ) && product?.account?.phone?.includes(searchPhone)
-    );
-    setFilteredProducts(filtered);
-};
 
 
 
@@ -167,7 +162,7 @@ const CheckOutTherapist = () => {
     if (!selectedProduct) return;
     
     try {
-      // Check if it's a TuVan service
+     
       const tuVanServices = JSON.parse(process || "[]");
       const isTuVanService = tuVanServices.includes(selectedProduct.service.name);
       const amount = isTuVanService ? selectedProduct.total * 25000 * 0.1 : selectedProduct.total * 25000 * 0.1;
@@ -183,7 +178,7 @@ const CheckOutTherapist = () => {
       
       console.log("Cash payment response:", paymentResponse);
       
-      // Update the products list and close the modal
+   
       await fetchAppointments();
       handleCheckOutCancel();
       
@@ -199,6 +194,7 @@ const CheckOutTherapist = () => {
       });
     }
   };
+
   return (
     <div className="checkin-container">
       <div className="checkin-header">
@@ -208,11 +204,7 @@ const CheckOutTherapist = () => {
         </div>
 
         <div style={{ display: "flex", gap: "20px", marginBottom: "10px" }}>
-        <Input
-            placeholder="Search by phone..."
-            value={searchPhone}
-            onChange={(e) => setSearchPhone(e.target.value)}
-          />
+       
           <DatePicker
             value={selectedDate}
             onChange={(date) => setSelectedDate(date || dayjs())}
@@ -235,46 +227,49 @@ const CheckOutTherapist = () => {
             <th>Service</th>
             <th>Phone</th>
             <th>Total</th>
+            <th>Status</th>
             <th>Day</th>
             <th>Actions</th>
           </tr>
         </thead>
         <tbody>
-              {filteredProducts ? (
-                filteredProducts.map((product) => (
-                  <tr key={product.id}>
-                    <td>{product.account.name}</td>
-                    <td>{product.service.name}</td>
-                    <td>{product.account.phone}</td>
-                    <td>{product.total} $</td>
-                    <td>{dayjs(product.createdTime).format("YYYY-MM-DD")}</td>
-                    <td>
-                     <div className="btn-action-checkinout">
-                     <Button
-                        className="checkout-button"
-                        style={{gap: "10px"}}
-                        onClick={() => showAppointmentDetail(product)}
-                      >
-                        View detail
-                      </Button>
-                      <Button
-                        className="checkout-button"
-                        onClick={() => handleTransfer(product.id)}
-                      >
-                       Check out
-                      </Button>
-                     </div>
-                    </td>
-                  </tr>
-                ))
-              ) : (
-                <tr>
-                  <td colSpan="6" style={{ textAlign: "center" }}>
-                    No appointments found
-                  </td>
-                </tr>
-              )}
-            </tbody>
+  {filteredProducts.length > 0 ? (
+    filteredProducts
+      .filter((product) => {
+        
+        return tuVanServices.includes(product.service?.name);
+      })
+      .map((product) => (
+        <tr key={product.id}>
+          <td>{product.account.name}</td>
+          <td>{product.service?.name || "No Service"}</td>
+          <td>{product.account.phone}</td>
+          <td>{product.total} $</td>
+          <td>{product.status}</td>
+          <td>{dayjs(product.createdTime).format("YYYY-MM-DD")}</td>
+          <td>
+            <div className="btn-action-checkinout">
+              <Button
+                className="checkout-button"
+                style={{ gap: "10px" }}
+                onClick={() => showAppointmentDetail(product)}
+              >
+                View detail
+              </Button>
+            </div>
+          </td>
+        </tr>
+      ))
+  ) : (
+    <tr>
+      <td colSpan="7" style={{ textAlign: "center" }}>
+        No matching appointments found
+      </td>
+    </tr>
+  )}
+</tbody>
+
+
       </table>
        
        <Pagination
@@ -298,7 +293,7 @@ const CheckOutTherapist = () => {
     <Button key="cancel" className="checkout-cancel-btn" onClick={handleCheckOutCancel}>
       Cancel
     </Button>,
-    <Button key="cash" type="default" onClick={() => handleCashPayment(selectedProduct.id)}>
+    <Button  key="cash" type="default" onClick={() => handleCashPayment(selectedProduct.id)}  >
       Cash Payment
     </Button>,
     <Button key="pay" type="primary" onClick={() => handleTransfer(selectedProduct.id)}>
