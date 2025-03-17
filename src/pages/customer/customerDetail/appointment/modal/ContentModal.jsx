@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import BASE from "../../../../../constants/base";
 import "./ContentModal.css";
 
 const ContentModal = ({ appointment }) => {
@@ -10,11 +11,10 @@ const ContentModal = ({ appointment }) => {
     if (!appointment) return;
 
     setLoading(true);
-    fetch(`http://localhost:8080/appointments/${appointment.id}`)
+    fetch(`${BASE.BASE_URL}/appointments/${appointment.id}`)
       .then((response) => response.json())
       .then((result) => {
         if (result.status === 200) {
-          // Format dữ liệu từ appointment_details
           const formattedDetails = result.data.appointment_details.map(
             (detail) => ({
               detail_id: detail.id,

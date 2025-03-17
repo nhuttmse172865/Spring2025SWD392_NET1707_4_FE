@@ -7,6 +7,7 @@ import "./Appointment.css";
 import ContentModal from "./modal/ContentModal";
 import useLocalStorage from "use-local-storage";
 import LOCALSTORAGE_NAME from "../../../../constants/localStorageName";
+import BASE from "../../../../constants/base";
 
 const Appointments = () => {
   const [appointments, setAppointments] = useState([]);
@@ -64,7 +65,7 @@ const Appointments = () => {
 
   useEffect(() => {
     if (accountId) {
-      fetch(`http://localhost:8080/appointments/account/${accountId}`)
+      fetch(`${BASE.BASE_URL}/appointments/account/${accountId}`)
         .then((response) => response.json())
         .then((result) => {
           if (result.status === 200) {
@@ -152,7 +153,7 @@ const Appointments = () => {
 
     try {
       const response = await fetch(
-        `http://localhost:8080/vnpay/create-payment-url?appointmentId=${appointmentId}&amount=${totalCostVND}&returnUrl=http://localhost:5173/payment-return`,
+        `${BASE.BASE_URL}/vnpay/create-payment-url?appointmentId=${appointmentId}&amount=${totalCostVND}&returnUrl=http://localhost:5173/payment-return`,
         {
           method: "GET",
           headers: {
@@ -181,7 +182,7 @@ const Appointments = () => {
   const fetchCancelReasons = async () => {
     try {
       const response = await fetch(
-        "http://localhost:8080/cancel-reason-common/getAll"
+        `${BASE.BASE_URL}/cancel-reason-common/getAll`
       );
       const result = await response.json();
       if (result.status === 200) {
@@ -243,7 +244,7 @@ const Appointments = () => {
 
     try {
       const response = await fetch(
-        `http://localhost:8080/appointments/cancel/${selectedAppointmentId}`,
+        `${BASE.BASE_URL}/appointments/cancel/${selectedAppointmentId}`,
         {
           method: "PUT",
           headers: {
