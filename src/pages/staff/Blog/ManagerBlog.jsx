@@ -24,6 +24,7 @@ const ManagerBlog = () => {
     try {
       const res = await axios.get(`${BASE.BASE_URL}/blog/getAll`);
       setBlogs(res.data.data);
+      console.log(res.data.data)
     } catch (error) {
       message.error("Failed to fetch blogs!");
     } finally {
@@ -44,6 +45,7 @@ const ManagerBlog = () => {
       headline: record.headline,
       content: record.content,
       summary: record.summary,
+      
     });
     setIsModalOpen(true);
   }
@@ -59,69 +61,95 @@ try {
   setLoading(false)
 }
  }
-  const handleOk = async () => {
-    try {
-      const values = await form.validateFields();
-      console.log(values)
-      const token = localStorage.getItem('customer_information');
-      const decode = jwtDecode(token);
-      const accountId = decode.accountId; 
-      
-      const formData = new FormData();
-
-      formData.append('blog', JSON.stringify({
+ const handleOk = async () => {
+  try {
+    const values = await form.validateFields();
+    console.log("Form values:", values);
+    console.log(file)
+    const token = localStorage.getItem("customer_information");
+    const decode = jwtDecode(token);
+    const accountId = decode.accountId;
+ 
+    const formData = new FormData();
+    formData.append(
+      "blog",
+      JSON.stringify({
         title: values.title,
         headline: values.headline,
         content: values.content,
         summary: values.summary,
-        accountId: accountId
-      }));
-      
-      if (file) {
-        formData.append('image', file);
-      }
+        accountId: accountId,
+      })
+    );
 
-      setLoading(true);
-    
-     if(editData){
-      const response =  await axios.put(`${BASE.BASE_URL}/blog/update/${editData.id}`, formData, {
-        headers: { 'Content-Type': 'multipart/form-data' }
-      });
-      message.success('Blog updated successfully!');
-     }else{
-      const response = await axios.post('http://localhost:8080/blog/create', formData, {
-        headers: {
-          'Content-Type': 'multipart/form-data'
+    if (file) {
+      formData.append("image", file);
+  }
+
+    setLoading(true);
+
+    let response;
+    if (editData) {
+      response = await axios.put(
+        `${BASE.BASE_URL}/blog/update/${editData.id}`,
+        formData,
+        {
+          headers: { "Content-Type": "multipart/form-data" },
         }
-    
-      });
-      message.success('Blog created successfully!');
-     }
-
-     
-      setIsModalOpen(false);
-      fetchBlogs(); 
-    } catch (error) {
-      message.error('Failed to create blog!');
-    } finally {
-      setLoading(false);
+      );
+      console.log("Update response:", response.data); 
+      message.success("Blog updated successfully!");
+    } else {
+      response = await axios.post(
+        `${BASE.BASE_URL}/blog/create`,
+        formData,
+        {
+          headers: { "Content-Type": "multipart/form-data" },
+        }
+      );
+      console.log("Create response:", response.data);
+      message.success("Blog created successfully!");
     }
-  };
+
+    setIsModalOpen(false);
+    fetchBlogs();
+  } catch (error) {
+    console.error("Error:", error.response?.data || error);
+    message.error("Failed to save blog!");
+  } finally {
+    setLoading(false);
+  }
+};
 
   const handleCancel = () => {
     setIsModalOpen(false);
   };
 
-  const handleFileChange = (info) => {
-    if (info.file) {
-      setFile(info.file.originFileObj);
-    }
+  const handleFileChange = (file) => {
+  if(file.file){
+    setFile(file.file);
+  }
+  
+
   };
+  
+  
   const columns = [
     { title: "Title", dataIndex: "title", key: "title" },
     { title: "Summary", dataIndex: "summary", key: "summary" },
     { title: "Author", dataIndex: "authorName", key: "authorName" },
-    { title: "Content", dataIndex: "content", key: "content" },
+    // { title: "Content", dataIndex: "content", key: "content" },
+    {
+      title: "Image",
+      dataIndex: "thumbnailUrl",
+      key: "thumbnailUrl",
+      render: (text) =>
+        text ? (
+          <img src={text} alt="Image" style={{ width: "120px", height: "auto" }} />
+        ) : (
+          "No image"
+        ),
+    },
     {
       title: "Created Date",
       dataIndex: "createdTime",

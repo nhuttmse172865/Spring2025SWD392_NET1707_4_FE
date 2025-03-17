@@ -81,17 +81,17 @@ try {
         <div className="therapist-profile-container">
             <div className="therapist-profile-content">
                 <div className="therapist-profile-image">
-                <img src={therapist.images?.[0]?.url || "default-image.jpg"} alt="therapist" />
+                <img src={therapist?.images?.[0]?.url || "default-image.jpg"} alt="therapist" />
                 <button className="btn-updateprofile" onClick={() => setIsModalOpen(true)}>Update profile</button>
                 </div>
                 <div className="therapist-profile-info">
-                    <h2 className="therapist-profile-name">{therapist.account?.name}</h2>
+                    <h2 className="therapist-profile-name">{therapist?.account?.name}</h2>
                     <table className="therapist-profile-table">
                         <tbody>
                            
                             <tr>
                                 <td><strong>speciality</strong></td>
-                                <td>{therapist.speciality}</td>
+                                <td>{therapist?.speciality}</td>
                             </tr>
                           
                         </tbody>
@@ -99,14 +99,14 @@ try {
                     <div className="therapist-profile-section">
                         <h3 className="therapist-profile-title">Chứng chỉ</h3>
                         <ul className="therapist-profile-list">
-                            {therapist.certificate}
+                            {therapist?.certificate}
                            
                         </ul>
                     </div>
                     <div className="therapist-profile-section">
                         <h3 className="therapist-profile-title">Kinh nghiệm</h3>
                         <ul className="therapist-profile-list">
-                            {therapist.experience}
+                            {therapist?.experience}
                         </ul>
                     </div>
                 </div>
