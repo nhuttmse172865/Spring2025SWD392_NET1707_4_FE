@@ -2,6 +2,7 @@ import React, { useState, useEffect, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import useLocalStorage from "use-local-storage";
 import LOCALSTORAGE_NAME from "../../../constants/localStorageName";
+import BASE from "../../../constants/base";
 import "./QuizContent.css";
 
 const Modal = ({ isOpen, onClose, skinTypeData, issueSkinData }) => {
@@ -85,13 +86,13 @@ const QuizContent = () => {
     const fetchQuizData = async () => {
       try {
         const typeResponse = await fetch(
-          "http://localhost:8080/type-question/get-all"
+          `${BASE.BASE_URL}/type-question/get-all`
         );
         const typeData = await typeResponse.json();
         const typeIds = typeData.data.map((type) => type.id);
 
         const quizPromises = typeIds.map((id) =>
-          fetch(`http://localhost:8080/quiz/getQuizByTypeQuestion/${id}`).then(
+          fetch(`${BASE.BASE_URL}/quiz/getQuizByTypeQuestion/${id}`).then(
             (res) => res.json()
           )
         );
@@ -165,8 +166,8 @@ const QuizContent = () => {
 
     const url =
       typeId === 1
-        ? "http://localhost:8080/skinType/getSkinTypeByAnswer"
-        : "http://localhost:8080/issue-skin/getIssuesSkinByAnswer";
+        ? `${BASE.BASE_URL}/skinType/getSkinTypeByAnswer`
+        : `${BASE.BASE_URL}/issue-skin/getIssuesSkinByAnswer`;
 
     try {
       const response = await fetch(url, {
@@ -217,7 +218,7 @@ const QuizContent = () => {
 
     try {
       const response = await fetch(
-        "http://localhost:8080/service/getServiceByIssueSkinAndSkinType?page=0&size=10",
+        `${BASE.BASE_URL}/service/getServiceByIssueSkinAndSkinType?page=0&size=10`,
         {
           method: "POST",
           headers: {

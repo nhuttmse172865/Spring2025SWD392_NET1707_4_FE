@@ -27,7 +27,6 @@ const ServiceDetails = React.memo(() => {
         if (storedService?.id) {
           console.log("Using storedService from localStorage:", storedService);
           serviceId = storedService.id;
-          // Lấy ảnh từ localStorage cho selectedService
           setSelectedService({
             ...storedService,
             image:
