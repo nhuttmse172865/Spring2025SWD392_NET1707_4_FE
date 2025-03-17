@@ -26,7 +26,7 @@
 
 .appointment-row {
   display: grid;
-  grid-template-columns: 1fr 1fr 1fr 1fr 1fr 1fr; 
+  grid-template-columns: 1fr 1fr 1fr 1fr 1fr 1fr;
   padding: 20px 24px;
   align-items: center;
   border-bottom: 1px solid #e9ecef;
@@ -95,13 +95,9 @@
 }
 
 .view-details-button {
-  background-color: #f0f2f5;
-  color: black;
+  background-color: #ff4f9d;
+  color: white;
   border: 1px solid #dfe3e8;
-}
-
-.view-details-button:hover {
-  background-color: #e6f7ff;
 }
 
 .more-actions-button {
@@ -270,4 +266,149 @@
   background-color: white;
   color: #ff4f9d;
   border-color: white;
+}
+
+/*------------------------------------*/
+.cancel-reasons-list {
+  max-height: 200px;
+  overflow-y: auto;
+  margin-bottom: 15px;
+}
+
+.reason-item {
+  display: flex;
+  align-items: center;
+  padding: 10px;
+  cursor: pointer;
+}
+
+.reason-item input[type="radio"] {
+  margin-right: 10px;
+  width: 16px;
+  height: 16px;
+}
+
+.reason-item span {
+  font-size: 14px;
+}
+
+.btn-primary1 {
+  background-color: #ff4f9d;
+  color: white;
+  border: none;
+  padding: 8px 16px;
+  border-radius: 4px;
+  display: block;
+  margin: 0 auto;
+}
+
+.btn-primary1:disabled {
+  background-color: #ff4f9d;
+  cursor: not-allowed;
+}
+
+.popup-overlays {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+}
+
+.popup-content3 {
+  background-color: #fff;
+  border-radius: 8px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  padding: 20px;
+  width: 50%;
+}
+.popup-content4 {
+  background-color: #fff;
+  border-radius: 8px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  padding: 20px;
+  width: 30%;
+}
+
+.form-control {
+  width: 100%;
+  padding: 8px;
+  margin-bottom: 10px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+}
+
+.popup-headers {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 15px;
+}
+
+.popup-header h5 {
+  margin: 0;
+  font-size: 18px;
+  font-weight: bold;
+  color: #ff4f9d;
+}
+
+.close-btn {
+  background: none;
+  border: none;
+  font-size: 18px;
+  cursor: pointer;
+  color: #ff4f9d;
+}
+
+.popup-bodyss {
+  text-align: left;
+  margin-top: 10px;
+  padding-bottom: 10px;
+  color: #333;
+  font-size: 14px;
+}
+
+.confirm-message {
+  font-size: 14px;
+  color: #ff4f9d;
+  margin-bottom: 20px;
+}
+
+.confirm-buttons {
+  display: flex;
+  justify-content: center;
+  gap: 15px;
+}
+
+.btn-confirm-yes {
+  background-color: #ff4f9d;
+  color: white;
+  border: none;
+  padding: 8px 20px;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+.btn-confirm-yes:hover {
+  background-color: #ff4f9d;
+}
+
+.btn-confirm-no {
+  background-color: #ff4f9d;
+  color: white;
+  border: none;
+  padding: 8px 20px;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+.btn-confirm-no:hover {
+  background-color: #ff4f9d;
 }

@@ -1,0 +1,10 @@
+apiVersion: deploy.cloud.google.com/v1
+kind: Target
+metadata:
+  name: prod
+  annotations: {}
+  labels: {}
+description: prod
+#requireApproval: true
+gke:
+  cluster: projects/sbs-spring-2025/locations/asia-southeast1/clusters/sbs-cluster

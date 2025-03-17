@@ -2,7 +2,7 @@ import { BrowserRouter, Route, Routes } from "react-router-dom";
 import Login from "./pages/login/Login";
 import Customer from "./pages/customer/Customer";
 import CustomerLayout from "./layouts/customer/Customer";
-import Manager from "./layouts/manager";
+import Manager from "./layouts/Manager";
 import Dashboard from "./pages/manager/dashboard/Dashboard";
 import COMPONENT_PATH_HELPER from "./helpers/ComponentPathHelper";
 import Staff from "./pages/staff/home/Staff";
@@ -41,7 +41,7 @@ import PaymentFailure from "./components/customer/payment/payment-return/payment
 import Itinerary from "./pages/therapist/CreateRoute/Itinerary";
 import Test from "./pages/staff/test";
 import CheckOutTherapist from "./pages/staff/checkout/CheckOutTherapist";
-import ManagerBlog from "./pages/staff/Blog/Blog";
+import ManagerBlog from "./pages/staff/Blog/ManagerBlog";
 
 function App() {
   return (

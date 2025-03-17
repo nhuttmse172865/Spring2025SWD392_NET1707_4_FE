@@ -1,6 +1,6 @@
 /* Container */
 .blog-container-staff {
-
+  font-family: 'Poppins', sans-serif ;
     padding: 20px;
     border-radius: 10px;
   }
@@ -9,16 +9,20 @@
   .blog-table-staff {
     background-color: white !important;
     border-radius: 10px;
+    
   }
   
   .blog-table-staff .ant-table-thead > tr > th {
     background-color: #ffdde1 !important; /* Light pink */
     color: #d63384;
     font-weight: bold;
+    font-family: 'Poppins', sans-serif ;
+     
   }
   
   .blog-table-staff .ant-table-tbody > tr > td {
     background-color: #fff0f5;
+    font-family: 'Poppins', sans-serif ;
   }
   
   /* Buttons */

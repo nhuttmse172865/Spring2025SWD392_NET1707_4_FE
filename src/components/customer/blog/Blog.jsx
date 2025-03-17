@@ -1,6 +1,9 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import "./Blog.css";
 import { Calendar, ArrowRight } from "lucide-react";
+import BASE from "../../../constants/base";
+import axios from "axios";
+import { message } from "antd";
 
 const articles = [
   {
@@ -65,26 +68,44 @@ const articles = [
 ];
 
 const Blog = () => {
+    const [blogs, setBlogs] = useState([]);
+    const [loading, setLoading] = useState(false);
+  useEffect(() => {
+    fetchBlogs();
+  }, []);
+
+  const fetchBlogs = async () => {
+    setLoading(true);
+    try {
+      const res = await axios.get(`${BASE.BASE_URL}/blog/getAll`);
+      setBlogs(res.data.data);
+      console.log(res.data.data)
+    } catch (error) {
+      message.error("Failed to fetch blogs!");
+    } finally {
+      setLoading(false);
+    }
+  };
   return (
     <div className="beauty-container">
       <h1 className="beauty-title">Beauty Guide</h1>
       <div className="beauty-grid">
-        {articles.map((article) => (
+        {blogs.map((article) => (
           <div key={article.id} className="beauty-card">
-            <img
-              src={article.image}
-              alt={article.alt}
-              className="beauty-card-image"
-            />
+          <img
+  src={article.image || article.thumbnailUrl}
+  alt={article.alt || "Blog image"}
+  className="beauty-card-image"
+/>
             <div className="beauty-card-content">
               <h2 className="beauty-card-title">
                 <a href={`/blog/${article.id}`} className="beauty-card-link">
                   {article.title}
                 </a>
               </h2>
-              <p className="beauty-card-description">{article.description}</p>
+              <p className="beauty-card-description">{article.summary}</p>
               <div className="beauty-card-footer">
-                <span>⭐ {article.rating}</span>
+                <span> {article.authorName}</span>
                 <span className="beauty-arrow-icon">
                   <ArrowRight size={16} />
                 </span>

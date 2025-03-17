@@ -7,6 +7,10 @@
 .appointment-card {
   background: white;
   padding: 25px;
+  width: 80%;
+  margin: auto;
+  justify-content: center;
+  align-items: center;
 }
 
 .appointment-title {
@@ -214,9 +218,9 @@ input[type="date"]:focus {
 }
 
 .date-time-group {
-  display: flex;
   align-items: flex-start;
   gap: 16px;
+  margin-bottom: 10px;
 }
 .rainbow-date-picker {
   width: 100%;
@@ -240,6 +244,8 @@ input[type="date"]:focus {
 }
 .dBxPVA {
   transition: none !important;
+  border: none !important;
+  background-color: white !important;
 }
 
 .contact-info-section {

@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import ICONS from "../../../constants/icons";
 import { useLocation } from "react-router-dom";
 import { jwtDecode } from "jwt-decode";
+import { getUserInfo } from "../../../helpers/authHelper";
 
 const HeaderStaff = () => {
   const location = useLocation()
@@ -19,9 +20,8 @@ const HeaderStaff = () => {
     };
     return map[pathname] || { title: "" };
   };
-  const token = localStorage.getItem('customer_information');
-  const decode = jwtDecode(token);
-  const accountId = decode.accountId;
+  const userInfo = getUserInfo();
+  console.log("User Info:", userInfo);
   useEffect(() => {
     const item = useMapPath(location.pathname)
     setTitle(item?.title);
@@ -59,9 +59,10 @@ const handleLogout = () => {
         <div className="relative">
   <div
     onClick={() => setIsDropdownOpen(!isDropdownOpen)}
-    className="flex w-[35px] h-[35px] bg-[rgba(0,0,0,0.05)] items-center justify-center rounded-[.375rem] cursor-pointer"
+    className="flex w-[35px] h-[35px]  items-center justify-center rounded-[.375rem] cursor-pointer"
   >
-    <img src="" alt="" />
+ 
+  <p>{userInfo.role}</p>
   </div>
 
   {isDropdownOpen && (
