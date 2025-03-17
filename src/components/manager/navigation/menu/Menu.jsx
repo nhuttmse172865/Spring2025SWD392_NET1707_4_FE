@@ -50,9 +50,9 @@ const Menu = () => {
   useEffect(() => {
     const item = useMapPath(location.pathname)
     setItemActive({
-      indexMenu: item.indexMenu,
-      indexItem: item.indexItem,
-      indexSubItem: item.indexSubItem,
+      indexMenu: item?.indexMenu,
+      indexItem: item?.indexItem,
+      indexSubItem: item?.indexSubItem,
     });
   }, []);
 
