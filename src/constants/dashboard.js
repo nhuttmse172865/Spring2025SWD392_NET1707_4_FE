@@ -58,10 +58,32 @@ const LIST_TITLE_TRANSACTIONS = [
   },
 ];
 
+const  LIST_MONTH = Array.from({ length: 31 }, (_, i) => i + 1);
+
+const LIST_YEAR = [
+  "Jan",
+  "Feb",
+  "Mar",
+  "Apr",
+  "May",
+  "Jun",
+  "Jul",
+  "Aug",
+  "Sep",
+  "Oct",
+  "Nov",
+  "Dec",
+];
+
+const STATUS_CHART = { WEEKLY: "Weekly", MONTHLY: "Monthly", YEARLY: "Yearly" };
+
 const DASHBOARD = {
   ANALYSIS_ITEM,
   LIST_TITLE_POPULAR_SERVICES,
   LIST_TITLE_TRANSACTIONS,
+  LIST_MONTH,
+  LIST_YEAR,
+  STATUS_CHART,
 };
 
 export default DASHBOARD;
