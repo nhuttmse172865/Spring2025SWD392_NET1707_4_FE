@@ -14,7 +14,7 @@ const CheckIn = () => {
   const [loading, setLoading] = useState(false);
   const [selectedProduct, setSelectedProduct] = useState(null);
   const [currentPage, setCurrentPage] = useState(1);
-  const pageSize = 5;
+  const pageSize = 1000;
   const [totalItems, setTotalItems] = useState(0);
   const [selectedDate, setSelectedDate] = useState(dayjs());
   const [filteredProducts, setFilteredProducts] = useState([]);
@@ -44,10 +44,11 @@ const CheckIn = () => {
     setLoading(true);
     try {
       const res = await axios.get(`${BASE.BASE_URL}/appointments/getAll`, {
-        // params: { page: currentPage - 1, size: pageSize },
+        params: { page: currentPage - 1, size: pageSize },
       });
       setProducts(res.data.data.content);
-      console.log(res.data.data.content)
+      console.log(res.data.data.content);
+      setTotalItems(res.data.data.totalElements);
     } catch (error) {
       console.log(error);
     }
@@ -278,45 +279,49 @@ const handleCashPayment = async (detail) => {
             <th>Phone</th>
             <th>Total</th>
             <th>Day</th>
+            <th>Status</th>
             <th>Actions</th>
           </tr>
         </thead>
-        <tbody>
-              {filteredProducts ? (
-                filteredProducts.map((product) => (
-                  <tr key={product.id}>
-                    <td>{product.account.name}</td>
-                    <td>{product.service.name}</td>
-                    <td>{product.account.phone}</td>
-                    <td>{product.total} $</td>
-                    <td>{dayjs(product.createdTime).format("YYYY-MM-DD")}</td>
-                    <td>
-                      <Button
-                        className="checkout-button"
-                        onClick={() => showAppointmentDetail(product)}
-                      >
-                        View detail
-                      </Button>
-                    </td>
-                  </tr>
-                ))
-              ) : (
-                <tr>
-                  <td colSpan="6" style={{ textAlign: "center" }}>
-                    No appointments found
-                  </td>
-                </tr>
-              )}
-            </tbody>
+            <tbody>
+       {filteredProducts.length > 0 ? (
+         filteredProducts
+           .filter((product) => product.status !== "CANCELLED") 
+           .map((product) => (
+             <tr key={product.id}>
+               <td>{product.account.name}</td>
+               <td>{product.service.name}</td>
+               <td>{product.account.phone}</td>
+               <td>{product.total}$</td>
+               <td>{dayjs(product.createdTime).add(1, 'day').format("YYYY-MM-DD")}</td>
+               <td>{product.status}</td>
+               <td>
+                 <Button
+                   className="checkout-button"
+                   onClick={() => showAppointmentDetail(product)}
+                 >
+                   View detail
+                 </Button>
+               </td>
+             </tr>
+           ))
+       ) : (
+         <tr>
+           <td colSpan="6" style={{ textAlign: "center" }}>
+             No appointments found
+           </td>
+         </tr>
+       )}
+     </tbody>
       </table>
        
-       <Pagination
-            current={currentPage}
-            pageSize={pageSize}
-            total={totalItems}
-            onChange={(page) => setCurrentPage(page)}
-            style={{ marginTop: "20px", textAlign: "center" }}
-          />
+      <Pagination
+  current={currentPage}
+  pageSize={pageSize} 
+  total={totalItems}
+  onChange={(page) => setCurrentPage(page)}
+  style={{ marginTop: "20px", textAlign: "center" }}
+/>
  </>
 )}
       
