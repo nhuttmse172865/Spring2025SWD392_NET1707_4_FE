@@ -8,7 +8,7 @@ const LoginContent = () => {
 
   const handleWidthContentLogin = () => {
     const widthContainerlogin =
-      document.getElementById("container-login").clientWidth;
+      document.getElementById("container-login")?.clientWidth;
     const widthContainerFormLogin = document.getElementById(
       "container-form-login"
     ).clientWidth;

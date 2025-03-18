@@ -1,9 +1,10 @@
-import React from 'react'
+import React from "react";
+import Content from "../../../components/manager/dashboard/content/Content";
 
 const Dashboard = () => {
-  return (
-    <div>Dashboard</div>
-  )
-}
+  return <div className="mt-5">
+    <Content />
+  </div>;
+};
 
-export default Dashboard
+export default Dashboard;
