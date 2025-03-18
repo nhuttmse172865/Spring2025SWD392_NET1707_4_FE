@@ -3,6 +3,7 @@ import ICONS from "../../../constants/icons";
 import { useLocation } from "react-router-dom";
 import Authorization from "../../../middleware/Authorization";
 import ROLES from "../../../constants/role";
+import { getUserInfo } from "../../../helpers/authHelper";
 
 const HeaderStaff = () => {
   const location = useLocation();
@@ -20,7 +21,7 @@ const HeaderStaff = () => {
     };
     return map[pathname] || { title: "" };
   };
-  // const userInfo = getUserInfo();
+  const userInfo = getUserInfo();
   // console.log("User Info:", userInfo);
   useEffect(() => {
     const item = useMapPath(location.pathname);
@@ -60,9 +61,9 @@ const HeaderStaff = () => {
           <div className="relative">
             <div
               onClick={() => setIsDropdownOpen(!isDropdownOpen)}
-              className="flex w-[35px] h-[35px] bg-[rgba(0,0,0,0.05)] items-center justify-center rounded-[.375rem] cursor-pointer"
+              className="flex w-[35px] h-[35px] items-center justify-center rounded-[.375rem] cursor-pointer"
             >
-              <img src="" alt="" />
+            {userInfo.role}
             </div>
 
             {isDropdownOpen && (

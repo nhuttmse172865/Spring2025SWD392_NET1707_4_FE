@@ -66,10 +66,10 @@ const HeaderTherapist = () => {
           {/* Avatar + Dropdown */}
           <div className="relative">
             <div
-              className="flex w-[35px] h-[35px] bg-[rgba(0,0,0,0.05)] items-center justify-center rounded-[.375rem] cursor-pointer"
+              className="flex w-[35px] h-[35px] items-center justify-center rounded-[.375rem] cursor-pointer"
               onClick={() => setIsDropdownOpen(!isDropdownOpen)}
             >
-              <img src="" alt="" />
+                    {userInfo.role}
             </div>
 
             {isDropdownOpen && (

@@ -15,7 +15,7 @@ const CheckOutTherapist = () => {
   const [loading, setLoading] = useState(false);
   const [selectedProduct, setSelectedProduct] = useState(null);
   const [currentPage, setCurrentPage] = useState(1);
-  const pageSize = 5;
+  const pageSize = 100;
   const [totalItems, setTotalItems] = useState(0);
   const [selectedDate, setSelectedDate] = useState(dayjs());
   const [filteredProducts, setFilteredProducts] = useState([]);
@@ -50,7 +50,8 @@ const CheckOutTherapist = () => {
         // params: { page: currentPage - 1, size: pageSize },
       });
       setProducts(res.data.data.content);
-      console.log(res.data.data.content)
+      console.log(res.data.data.content);
+      setTotalItems(res.data.data.totalElements);
     } catch (error) {
       console.log(error);
     }

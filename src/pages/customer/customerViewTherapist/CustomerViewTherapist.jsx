@@ -15,8 +15,9 @@ const CustomerViewTherapist = () => {
     }, []);
     const fetchTherapists = async () => {
         try {
-            const res = await axios.get(`${BASE.BASE_URL}/therapist-working-time/get-all`);
-            setTherapists(res.data.data);
+            const res = await axios.get(`${BASE.BASE_URL}/get-all-therapists`);
+            setTherapists(res.data.data.content);
+            console.log(res.data.data.content)
         } catch (error) {
             console.log(error);
         }
@@ -26,24 +27,24 @@ const CustomerViewTherapist = () => {
         <section className="therapist-infor">
             <h2 className="therapist-title">Skincare Spa Expert Team</h2>
             <div className="therapist-container">
-                {therapists.slice(0, 3).map((therapist) => (  // 🟢 Giới hạn 3 therapist
+                {therapists.map((therapist) => ( 
                     <div key={therapist.id} className="therapist-card">
                         <div className="therapist-card-inner">
                             <div className="therapist-card-front">
                                 <div className="therapist-image">
-                                    <img src={therapist.therapist.images?.[0]?.url || IMAGES.skinBackground1} 
-                                         alt={therapist.therapist.name} />
+                                <img src={therapist.images?.[0]?.url} alt="therapist" />
                                 </div>
-                                <h3 className="therapist-name">{therapist.therapist.account.name}</h3>
+                          
+                                <h3 className="therapist-name">{therapist.account.name}</h3>
                                 <p className="therapist-role">{therapist.role}</p>
                             </div>
                             <div className="therapist-card-back">
-                                <h3 className="therapist-name">{therapist.therapist.account.name}</h3>
-                                <p className="therapist-description">{therapist.therapist.speciality}</p>
+                                <h3 className="therapist-name">{therapist.account.name}</h3>
+                                <p className="therapist-description">{therapist.speciality}</p>
                                 <button
                                     className="therapist-button"
                                     onClick={() => navigate(`/customer-view/therapist/${therapist.id}`, 
-                                    { state: { therapist: therapist.therapist } })}
+                                    { state: { therapist: therapist } })}
                                 >
                                     Show more
                                 </button>
