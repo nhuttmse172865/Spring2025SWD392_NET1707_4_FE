@@ -361,7 +361,7 @@ const handleCashPayment = async (detail) => {
   className="checkout-confirm-btn"
   type="primary"
   onClick={() => handleCashPayment(detail)}
-  disabled={detail.status === "COMPLETED" || detail.status === "PENDING"}
+  disabled={detail.status === "COMPLETED" || detail.status === "PENDING" || detail.status==="CONFIRMED"}
 >
   Cash
 </Button>
@@ -370,7 +370,7 @@ const handleCashPayment = async (detail) => {
             type="primary"
             onClick={() => handleTransfer(detail)}
             style={{ marginLeft: "10px" }}
-            disabled={detail.status === "COMPLETED" || detail.status === "PENDING"}
+            disabled={detail.status === "COMPLETED" || detail.status === "PENDING" || detail.status === "CONFIRMED"}
           >
             Pay 
           </Button>

@@ -173,7 +173,7 @@ featchDoctor();
               <div className="doctor-card-inner">
                 <div className="doctor-card-front">
                   <div className="doctor-image">
-                  <img src={doctor?.therapist?.images?.[0]?.url || IMAGES.skinBackground1} alt={doctor?.account?.name} />
+                  <img src={doctor?.images?.[0]?.url} alt="therapist" />
                   </div>
                   <h3 className="doctor-name">{doctor?.account?.name}</h3>
              

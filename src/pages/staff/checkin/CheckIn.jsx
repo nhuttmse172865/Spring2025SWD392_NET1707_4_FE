@@ -219,7 +219,7 @@ useEffect(() => {
       <Button
         type="primary"
         onClick={() => handleCheckin(detail.id)}
-        disabled={detail.status === "CHECKIN" || detail.status === "COMPLETED"}
+        disabled={detail.status === "CHECKIN" || detail.status === "COMPLETED" || detail.status === "CANCELLED"}
         className="checkout-cancel-btn "
       >
         {detail.status === "CHECKIN" ? "Checked In" : "Check In"}
