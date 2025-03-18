@@ -6,7 +6,7 @@ import Item from "./item/Item";
 const PopularService = () => {
   return (
     <div className="bg-white col-span-4 rounded-[.375rem] relative p-5">
-      <h6 className="text-[17px] font-medium text-[rgba(0,0,0,0.5)] mb-4">
+      <h6 className="text-[15px] font-medium text-[rgba(0,0,0,0.5)] mb-4">
         Popular Services
       </h6>
       <Header

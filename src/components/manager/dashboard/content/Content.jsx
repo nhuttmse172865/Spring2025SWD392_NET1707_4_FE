@@ -13,7 +13,7 @@ const Content = () => {
         }}
     >
         <Analysis />
-        <div className='grid grid-cols-11 mt-5 h-[400px] gap-x-[20px]'>
+        <div className='grid grid-cols-11 mt-5 h-[400px] gap-x-[20px] overflow-hidden'>
             <Chart />
             <PopularService />
         </div>
