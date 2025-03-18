@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import IMAGES from "../../../constants/images";
 import { useLocation, useNavigate } from "react-router-dom";
 import "./Payment.css";
+import BASE from "../../../constants/base";
 
 const Payment = () => {
   const [paymentMethod, setPaymentMethod] = useState("credit-card");
@@ -32,9 +33,8 @@ const Payment = () => {
   const handleContinue = async () => {
     try {
       if (totalCostVND === 0) {
-        // Nếu totalCostVND = 0, cập nhật trạng thái appointment
         const updateResponse = await fetch(
-          `http://localhost:8080/appointments/${appointmentId}/status?status=CONFIRMED`,
+          `${BASE.BASE_URL}/appointments/${appointmentId}/status?status=CONFIRMED`,
           {
             method: "PUT",
             headers: {
@@ -46,14 +46,12 @@ const Payment = () => {
         if (updateResponse.ok) {
           window.location.href = "/payment-success";
         } else {
-          console.error("Failed to update appointment status");
-          alert("Failed to confirm appointment.");
         }
         return;
       }
 
       const response = await fetch(
-        `http://localhost:8080/vnpay/create-payment-url?appointmentId=${appointmentId}&amount=${totalCostVND}&returnUrl=http://localhost:5173/payment-return`,
+        `${BASE.BASE_URL}/vnpay/create-payment-url?appointmentId=${appointmentId}&amount=${totalCostVND}&returnUrl=http://localhost:5173/payment-return`,
         {
           method: "GET",
           headers: {
@@ -65,14 +63,10 @@ const Payment = () => {
       const result = await response.json();
       if (result.status === 200) {
         const paymentUrl = result.data;
-        console.log("Payment URL:", paymentUrl);
         window.location.href = paymentUrl;
       } else {
-        console.error("Failed to create payment URL:", result.message);
-        alert("Failed to create payment URL: " + result.message);
       }
     } catch (error) {
-      console.error("Error during payment initiation:", error);
       alert("An error occurred while processing your payment.");
     }
   };

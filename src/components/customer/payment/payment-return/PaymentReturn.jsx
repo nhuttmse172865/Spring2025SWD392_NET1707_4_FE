@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
+import BASE from "../../../../constants/base";
 import "./PaymentReturn.css";
 
 const PaymentReturn = () => {
@@ -24,7 +25,6 @@ const PaymentReturn = () => {
         "Payment failed with response code:",
         paymentData.responseCode
       );
-      alert("Payment failed with response code: " + paymentData.responseCode);
       navigate("/payment-failure");
       setIsProcessing(false);
       return;
@@ -32,7 +32,7 @@ const PaymentReturn = () => {
 
     try {
       const paymentResponse = await fetch(
-        "http://localhost:8080/payment/create",
+        `${BASE.BASE_URL}/payment/create`,
         {
           method: "POST",
           headers: {
@@ -45,9 +45,8 @@ const PaymentReturn = () => {
       const paymentResult = await paymentResponse.json();
 
       if (paymentResponse.ok) {
-        console.log("Payment created successfully:", paymentResult);
         const updateStatusResponse = await fetch(
-          `http://localhost:8080/appointments/${paymentData.appointmentId}/status?status=CONFIRMED`,
+          `${BASE.BASE_URL}/appointments/${paymentData.appointmentId}/status?status=CONFIRMED`,
           {
             method: "PUT",
             headers: {
@@ -59,18 +58,12 @@ const PaymentReturn = () => {
         if (updateStatusResponse.status === 200) {
           navigate("/payment-success");
         } else {
-          console.error("Failed to update appointment status");
-          alert("Failed to update appointment status");
           navigate("/payment-failure");
         }
       } else {
-        console.error("Failed to create payment:", paymentResult.message);
-        alert("Failed to create payment: " + paymentResult.message);
         navigate("/payment-failure");
       }
     } catch (error) {
-      console.error("Error during payment processing:", error);
-      alert("An error occurred while processing your payment.");
       navigate("/payment-failure");
     } finally {
       setIsProcessing(false);

@@ -8,6 +8,8 @@ import BASE from "../../../../constants/base";
 import useLocalStorage from "use-local-storage";
 import LOCALSTORAGE_NAME from "../../../../constants/localStorageName";
 import VALIDATE from "../../../../constants/validate";
+import { jwtDecode } from "jwt-decode";
+import ROLES from "../../../../constants/role";
 
 const LoginForm = () => {
   const navigate = useNavigate();
@@ -52,8 +54,8 @@ const LoginForm = () => {
   };
 
   const handleLogin = async () => {
-    handleValidateEmail(email)
-    handleValidatePassword(password)
+    handleValidateEmail(email);
+    handleValidatePassword(password);
     if (emailInCorrect || passwordInCorrect || !email || !password) return;
     setLoading(true);
     const data = {
@@ -64,7 +66,20 @@ const LoginForm = () => {
       const response = await axios.post(`${BASE.BASE_URL}/login`, data);
       if (!response || response.status !== 200) throw new Error();
       setCustomer(response.data.data);
-      navigate("/");
+      const account = jwtDecode(response.data.data);
+      if (!Array.isArray(account?.roles)) throw new Error();
+      if (account?.roles.includes(ROLES.CUSTOMER)) {
+        navigate("/");
+      }
+      if (account?.roles.includes(ROLES.MANAGER)) {
+        navigate("/manager");
+      }
+      if (account?.roles.includes(ROLES.THERAPIST)) {
+        navigate("/therapist");
+      }
+      if (account?.roles.includes(ROLES.STAFF)) {
+        navigate("/staff");
+      }
     } catch (err) {
       console.log(err);
     } finally {
