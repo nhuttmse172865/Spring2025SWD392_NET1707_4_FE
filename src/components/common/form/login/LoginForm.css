@@ -1,5 +1,5 @@
 .border-input-form-login {
-  border: 1px solid var(--color-title-30);
+  border: 1px solid var(--color-title-20);
   border-radius: 0.375rem;
 }
 .border-input-form-login.error {
