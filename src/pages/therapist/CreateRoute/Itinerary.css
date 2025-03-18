@@ -1,191 +1,243 @@
-@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap');
+/* Itinerary.css - Chủ đề chăm sóc da với tone màu hồng */
 
 .create-booking-container {
-  display: flex;
-  gap: 20px;
   max-width: 1200px;
-  margin: 20px auto;
+  margin: 0 auto;
   padding: 20px;
-}
-
-.create-booking-therapist {
-  flex: 2;
-  padding: 20px;
-  border-radius: 10px;
-  background: #ffe4ec;
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
   font-family: 'Poppins', sans-serif;
+  color: #944e63;
 }
 
-.booking-summary {
+.create-booking-container h2 {
+  text-align: center;
+  margin-bottom: 24px;
+  color: #b35a76;
+  font-size: 28px;
+  font-weight: 500;
+}
+
+.itinerary-content {
+  display: flex;
+  gap: 30px;
+  flex-wrap: wrap;
+}
+
+/* Phần danh sách các bước */
+.itinerary-summary {
   flex: 1;
+  min-width: 300px;
+  background-color: #fff;
+  border-radius: 12px;
   padding: 20px;
-  border-radius: 10px;
-  background: #ffffff;
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
-  font-family: 'Poppins', sans-serif;
+  box-shadow: 0 4px 15px rgba(240, 180, 190, 0.25);
 }
 
-.header-booking-therapist {
+.itinerary-summary h3 {
+  color: #b35a76;
+  margin-bottom: 16px;
+  border-bottom: 1px solid #f3d1db;
+  padding-bottom: 10px;
+  font-weight: 500;
+}
+
+
+.itinerary-summary .ant-list-item {
   display: flex;
   justify-content: space-between;
-  align-items: center;
-  margin-bottom: 20px;
+  align-items: flex-start;
+  padding: 12px 16px;
+  transition: background-color 0.3s;
+  border-bottom: 1px solid #f8e3e8;
 }
 
-.select-service-therapist,
-.select-date {
+.itinerary-summary .ant-list-item:hover {
+  background-color: #fdf0f3;
+}
+
+
+.steps-content {
   flex: 1;
-  margin-right: 10px;
+  min-width: 300px;
+  background-color: #fff; 
+  border-radius: 12px;
+  padding: 20px;
+  box-shadow: 0 4px 15px rgba(240, 180, 190, 0.25);
 }
 
-.select-service-therapist .ant-select-selector {
-  border-radius: 5px;
-  border: 1px solid #ff69b4;
+.steps-content h3 {
+  color: #b35a76;
+  margin-bottom: 16px;
+  border-bottom: 1px solid #f3d1db;
+  padding-bottom: 10px;
+  font-weight: 500;
 }
 
-.select-date .ant-picker {
-  border-radius: 5px;
-  border: 1px solid #ff69b4;
+.steps-content h4 {
+  margin: 18px 0 10px;
+  color: #d58a9c;
+  font-weight: 500;
+}
+
+/* Style cho danh sách therapist và time slots */
+.therapist-slots {
+  margin-top: 16px;
+  padding: 15px;
+  background-color: #fdf0f3;
+  border-radius: 8px;
+  border-left: 3px solid #f3a7b6;
+}
+
+.therapist-slots h5 {
+  font-weight: 500;
+  margin-bottom: 10px;
+  color: #b35a76;
 }
 
 .time-slots {
-  background: #ffffff;
-  padding: 15px;
-  border-radius: 10px;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-}
-
-.time-slots h3 {
-  color: #ff69b4;
-  text-align: center;
-  margin-bottom: 10px;
-}
-
-.time-slots ul {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
   list-style: none;
   padding: 0;
   margin: 0;
-  display: grid;
-  grid-template-columns: repeat(5, 1fr);
-  gap: 10px;
 }
 
 .time-slot-item {
-  padding: 10px;
-  background: #ffb6c1;
-  color: #fff;
-  text-align: center;
-  border-radius: 5px;
+  padding: 6px 12px;
+  border-radius: 6px;
+  background-color: #fce2e9;
   cursor: pointer;
-  transition: background 0.3s ease-in-out;
+  transition: all 0.2s;
+  font-size: 14px;
+  color: #d58a9c;
+  border: 1px solid transparent;
 }
 
 .time-slot-item:hover {
-  background: #ff69b4;
+  background-color: #f8ccd8;
+  border-color: #f3a7b6;
 }
 
 .time-slot-item.selected {
-  background: #ff3385;
-  border: 2px solid #fff;
-}
-
-.btn-container {
-  text-align: center;
-  margin-top: 20px;
-}
-
-.btn-book-therapist {
-  background-color: #ff69b4;
+  background-color: #d58a9c;
   color: white;
-  border: none;
-  padding: 6px 14px;
-  border-radius: 0.37rem;
-  cursor: pointer;
-  transition: background 0.3s ease;
-  font-weight: bold;
+  border-color: #b35a76;
 }
 
-.btn-book-therapist:disabled {
-  background-color: #cccccc;
+.time-slot-item.booked {
+  background-color: #f0f0f0;
+  color: #c0c0c0;
   cursor: not-allowed;
+  text-decoration: line-through;
+  border-color: transparent;
 }
 
-.btn-book-therapist:hover:not(:disabled) {
-  background-color: #ff3385;
-}
-
-.booking-summary h3 {
-  color: #ff69b4;
-  margin-bottom: 15px;
-}
-
-.summary-details {
-  margin-bottom: 20px;
-}
-
-.booking-item {
-  border-bottom: 1px solid #eee;
-  padding: 10px 0;
-}
-
-.booking-item:last-child {
-  border-bottom: none;
-}
-
-.booking-item p {
-  margin: 5px 0;
-  color: #333;
-}
-
-.btn-remove-booking {
-  background-color: #ff4444;
-  color: white;
-  border: none;
-  padding: 5px 10px;
-  border-radius: 5px;
-  cursor: pointer;
-  margin-top: 5px;
-}
-
-.btn-remove-booking:hover {
-  background-color: #cc0000;
-}
-
-.btn-book-final {
-  width: 100%;
-  background-color: #ff69b4;
-  color: white;
-  border: none;
-  padding: 10px;
-  border-radius: 5px;
-  cursor: pointer;
-  transition: background 0.3s ease;
-  font-weight: bold;
-}
-
-.btn-book-final:hover {
-  background-color: #ff3385;
-}
-
+/* Responsive */
 @media (max-width: 768px) {
-  .create-booking-container {
+  .itinerary-content {
     flex-direction: column;
   }
-
-  .header-booking-therapist {
-    flex-direction: column;
-    align-items: center;
-  }
-
-  .select-service-therapist,
-  .select-date {
+  
+  .itinerary-summary, .steps-content {
     width: 100%;
-    margin-right: 0;
-    margin-bottom: 10px;
   }
+}
 
-  .time-slots ul {
-    grid-template-columns: repeat(2, 1fr);
-  }
+/* Styling cho các button */
+.create-booking-container button.ant-btn-primary {
+  background-color: #d58a9c;
+  border-color: #d58a9c;
+}
+
+.create-booking-container button.ant-btn-primary:hover {
+  background-color: #b35a76;
+  border-color: #b35a76;
+}
+
+.create-booking-container button.ant-btn-dashed {
+  border-color: #d58a9c;
+  color: #d58a9c;
+}
+
+.create-booking-container button.ant-btn-dashed:hover {
+  border-color: #b35a76;
+  color: #b35a76;
+}
+
+/* Styling cho các button link */
+.create-booking-container button.ant-btn-link {
+  color: #d58a9c;
+}
+
+.create-booking-container button.ant-btn-link:hover {
+  color: #b35a76;
+}
+
+.create-booking-container button.ant-btn-link.ant-btn-dangerous {
+  color: #eb9090;
+}
+
+.create-booking-container button.ant-btn-link.ant-btn-dangerous:hover {
+  color: #e57373;
+}
+
+/* Điều chỉnh cho item content để tránh tràn nội dung */
+.step-content {
+  max-width: calc(100% - 120px);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* Điều chỉnh cho các nút action */
+.step-actions {
+  min-width: 120px;
+  display: flex;
+  justify-content: flex-end;
+  gap: 8px;
+}
+
+/* Styling cho các form elements */
+.create-booking-container .ant-select-selector {
+  border-color: #f3d1db !important;
+  border-radius: 6px !important;
+}
+
+.create-booking-container .ant-select-selector:hover,
+.create-booking-container .ant-picker:hover {
+  border-color: #f3a7b6 !important;
+}
+
+.create-booking-container .ant-select-focused .ant-select-selector,
+.create-booking-container .ant-picker-focused {
+  border-color: #d58a9c !important;
+  box-shadow: 0 0 0 2px rgba(213, 138, 156, 0.2) !important;
+}
+
+.create-booking-container .ant-picker {
+  border-color: #f3d1db;
+  border-radius: 6px;
+}
+
+/* Styling cho select để tùy chỉnh dropdown */
+.ant-select-dropdown {
+  border-radius: 6px;
+  box-shadow: 0 4px 12px rgba(240, 180, 190, 0.25);
+}
+
+.ant-select-item-option-selected {
+  background-color: #fce2e9 !important;
+}
+
+.ant-select-item-option-active:not(.ant-select-item-option-selected) {
+  background-color: #fdf0f3 !important;
+}
+
+/* DatePicker custom styling */
+.ant-picker-cell-in-view.ant-picker-cell-selected .ant-picker-cell-inner {
+  background-color: #d58a9c !important;
+}
+
+.ant-picker-cell-in-view.ant-picker-cell-today .ant-picker-cell-inner::before {
+  border-color: #d58a9c !important;
 }

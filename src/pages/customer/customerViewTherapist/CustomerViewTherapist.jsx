@@ -26,12 +26,13 @@ const CustomerViewTherapist = () => {
         <section className="therapist-infor">
             <h2 className="therapist-title">Skincare Spa Expert Team</h2>
             <div className="therapist-container">
-                {therapists.map((therapist) => (
+                {therapists.slice(0, 3).map((therapist) => (  // 🟢 Giới hạn 3 therapist
                     <div key={therapist.id} className="therapist-card">
                         <div className="therapist-card-inner">
                             <div className="therapist-card-front">
                                 <div className="therapist-image">
-                                <img src={therapist.therapist.images?.[0]?.url || IMAGES.skinBackground1} alt={therapist.therapist.name} />
+                                    <img src={therapist.therapist.images?.[0]?.url || IMAGES.skinBackground1} 
+                                         alt={therapist.therapist.name} />
                                 </div>
                                 <h3 className="therapist-name">{therapist.therapist.account.name}</h3>
                                 <p className="therapist-role">{therapist.role}</p>
@@ -41,9 +42,10 @@ const CustomerViewTherapist = () => {
                                 <p className="therapist-description">{therapist.therapist.speciality}</p>
                                 <button
                                     className="therapist-button"
-                                    onClick={() => navigate(`/customer-view/therapist/${therapist.id}`, { state: {therapist:therapist.therapist} })}
+                                    onClick={() => navigate(`/customer-view/therapist/${therapist.id}`, 
+                                    { state: { therapist: therapist.therapist } })}
                                 >
-                                    Show moree
+                                    Show more
                                 </button>
                             </div>
                         </div>
@@ -52,6 +54,7 @@ const CustomerViewTherapist = () => {
             </div>
         </section>
     );
+    
 };
 
 export default CustomerViewTherapist;

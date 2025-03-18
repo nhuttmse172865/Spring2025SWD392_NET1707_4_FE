@@ -3,50 +3,106 @@
   margin: auto;
   padding: 20px;
   margin-top: 50px;
+  background-color: #fff; 
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); 
 }
 
+
 .blog-title {
-  font-size: 28px;
+  font-size: 32px; 
   font-weight: bold;
-  color: black;
+  color: #333; 
   text-align: center;
-  margin-bottom: 15px;
+  margin-bottom: 20px;
   font-family: "Poppins", sans-serif;
 }
+
+
+.blog-headline {
+  font-size: 24px;
+  font-weight: 500;
+  color: #ff4f9d;
+  text-align: center;
+  margin-bottom: 25px;
+  font-family: "Poppins", sans-serif;
+}
+
 
 .blog-image {
   width: 100%;
   max-height: 400px;
-  object-fit: cover;
+  object-fit: cover; 
   border-radius: 10px;
-  margin-bottom: 20px;
+  margin-bottom: 30px;
+  display: block; 
 }
+
 
 .blog-content {
   font-size: 16px;
-  line-height: 1.8;
+  line-height: 1.8; 
   text-align: justify;
-  color: black;
+  color: #555; 
   font-family: "Poppins", sans-serif;
 }
 
+
 .blog-content h2 {
   font-size: 22px;
-  margin: 20px 0;
+  margin: 25px 0 15px; 
   color: #ff4f9d;
   font-family: "Poppins", sans-serif;
   font-weight: 500;
 }
 
+.blog-content h3 {
+  font-size: 18px;
+  margin: 20px 0 10px;
+  color: #333;
+  font-family: "Poppins", sans-serif;
+  font-weight: 500;
+}
+
 .blog-content p {
-  margin-bottom: 15px;
+  margin-bottom: 20px; 
   font-family: "Poppins", sans-serif;
 }
 
-.blog-content h3 {
-  font-size: 18px;
-  margin-top: 15px;
-  color: black;
+
+.blog-container h1:not(.blog-title) {
+  font-size: 20px;  
+  color: #333;
+  margin-top: 30px;
+  text-align: center;
   font-family: "Poppins", sans-serif;
-  font-weight: 500;
+  border-top: 1px solid #eee;
+  padding-top: 20px;
+}
+
+
+@media (max-width: 768px) {
+  .blog-container {
+    padding: 15px;
+    margin-top: 30px;
+  }
+
+  .blog-title {
+    font-size: 24px;
+  }
+
+  .blog-headline {
+    font-size: 20px;
+  }
+
+  .blog-image {
+    max-height: 300px;
+  }
+
+  .blog-content {
+    font-size: 14px;
+  }
+
+  .blog-container h1:not(.blog-title) {
+    font-size: 18px;
+  }
 }

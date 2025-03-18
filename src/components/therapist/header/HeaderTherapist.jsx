@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import ICONS from "../../../constants/icons";
 import { useLocation, useNavigate } from "react-router-dom";
+import { getUserInfo } from "../../../helpers/authHelper";
 import Authorization from "../../../middleware/Authorization";
 import ROLES from "../../../constants/role";
 
@@ -33,7 +34,7 @@ const HeaderTherapist = () => {
     localStorage.removeItem("token");
     navigate("/");
   };
-
+  const userInfo =  getUserInfo();
   return (
     <Authorization requiredRole={ROLES.THERAPIST}>
       <div className="h-[60px] flex items-center pl-5 pr-10 justify-between bg-white rounded-3xl mt-2.5">

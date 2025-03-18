@@ -15,9 +15,13 @@ const HeaderStaff = () => {
       "/staff": { title: "Dashboard" },
       "/staff/checkin": { title: "CheckIn" },
       "/staff/checkout": { title: "CheckOut" },
+      "/staff/checkoutTherapist": { title: "checkoutTherapist" },
+      "/staff/managerBlog" : {title:"Manage Blog"}
     };
     return map[pathname] || { title: "" };
   };
+  // const userInfo = getUserInfo();
+  // console.log("User Info:", userInfo);
   useEffect(() => {
     const item = useMapPath(location.pathname);
     setTitle(item?.title);

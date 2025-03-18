@@ -58,6 +58,7 @@ const RecordBooking = () => {
           patientName: booking?.cusName,
           phone: booking?.phone,
           date: booking?.day,
+          service: booking?.appointment?.service?.name,
           appointment: booking?.appointment,
           appointmentId: booking?.appointment?.id, 
           appointment_details: booking?.appointment?.appointment_details || [],
@@ -150,6 +151,13 @@ const RecordBooking = () => {
       key: "phone",
     },
     {
+      title: "Service",
+      dataIndex: "service",
+      key:
+        "service",
+
+    },
+    {
       title: "Date",
       dataIndex: "date",
       key: "date",
@@ -162,9 +170,9 @@ const RecordBooking = () => {
           <Button className="viewdetail-button" type="primary" onClick={() => showModal(record)} style={{ marginLeft: 8 }}>
             View detail
           </Button>
-          <Button className="quiz-button" type="default" onClick={() => showQuizModal(record)} style={{ marginLeft: 8 }}>
+          {/* <Button className="quiz-button" type="default" onClick={() => showQuizModal(record)} style={{ marginLeft: 8 }}>
             View Quiz
-          </Button>
+          </Button> */}
         </>
       ),
     },

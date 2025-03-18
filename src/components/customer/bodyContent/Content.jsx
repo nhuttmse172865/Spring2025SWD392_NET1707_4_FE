@@ -18,9 +18,9 @@ featchDoctor();
   const featchDoctor = async () =>{
 
     try {
-      const res = await axios.get(`${BASE.BASE_URL}/therapist-working-time/get-all`);
-      setDoctor(res.data.data)
-      console.log(res.data.data)
+      const res = await axios.get(`${BASE.BASE_URL}/get-all-therapists`);
+      setDoctor(res.data.data.content)
+      console.log(res.data.data.content)
     } catch (error) {
       console.log(error)
     }
@@ -173,15 +173,15 @@ featchDoctor();
               <div className="doctor-card-inner">
                 <div className="doctor-card-front">
                   <div className="doctor-image">
-                  <img src={doctor.therapist.images?.[0]?.url || IMAGES.skinBackground1} alt={doctor.therapist.name} />
+                  <img src={doctor?.therapist?.images?.[0]?.url || IMAGES.skinBackground1} alt={doctor?.account?.name} />
                   </div>
-                  <h3 className="doctor-name">{doctor.therapist.account.name}</h3>
-                  <p className="doctor-role">{doctor.role}</p>
+                  <h3 className="doctor-name">{doctor?.account?.name}</h3>
+             
                 </div>
                 <div className="doctor-card-back">
-                  <h3 className="doctor-name">{doctor.name}</h3>
-                  <p className="doctor-description">{doctor.therapist.speciality}</p>
-                  <button className="doctor-button"   onClick={() => navigate(`/customer-view/therapist/${doctor.id}`, { state: {therapist:doctor.therapist} })}>View more</button>
+                  <h3 className="doctor-name">{doctor?.account?.name}</h3>
+                  <p className="doctor-description">{doctor?.speciality}</p>
+                  <button className="doctor-button"   onClick={() => navigate(`/customer-view/therapist/${doctor.id}`, { state: {therapist:doctor} })}>View more</button>
                 </div>
               </div>
             </div>
