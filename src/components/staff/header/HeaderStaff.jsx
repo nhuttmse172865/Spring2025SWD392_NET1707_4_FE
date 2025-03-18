@@ -37,7 +37,7 @@ const handleLogout = () => {
       </h6>
       <div className="flex gap-10">
         <div className="flex gap-2 relative">
-          <div className="relative flex w-[35px] h-[35px] items-center justify-center rounded-[.375rem] cursor-pointer">
+          {/* <div className="relative flex w-[35px] h-[35px] items-center justify-center rounded-[.375rem] cursor-pointer">
             {isHaveMessage && (
               <span className="absolute flex top-[5px] right-[5px]">
                 <span className="absolute inline-flex h-[6px] w-[6px] animate-ping rounded-full bg-(--color-primary-70) opacity-75"></span>
@@ -54,7 +54,7 @@ const handleLogout = () => {
               </span>
             )}
             <img src={ICONS.notification} alt="" />
-          </div>
+          </div> */}
         </div>
         <div className="relative">
   <div
