@@ -24,13 +24,14 @@ const CheckIn = () => {
   const [searchParams] = useSearchParams();
   useEffect(() => {
     fetchAppointments();
+    
   }, [currentPage]);
   useEffect(() => {
     handleSavePayment();
   }, [searchParams]);
-  // useEffect(() => {
-  //   filterAppointmentsByDate();
-  // }, [selectedDate, products,searchPhone]); 
+  useEffect(() => {
+    filterAppointmentsByDate();
+  }, [products,searchPhone]); 
   useEffect(() => {
     setFilteredProducts(products);
   }, [products]);
@@ -57,9 +58,8 @@ const CheckIn = () => {
 
   const filterAppointmentsByDate = () => {
     const filtered = products.filter((product) =>
-        product.appointment_details.some((detail) =>
-            dayjs(detail.day).isSame(selectedDate, "day")
-        ) && product?.account?.phone?.includes(searchPhone)
+     
+         product?.account?.phone?.includes(searchPhone)
     );
     setFilteredProducts(filtered);
 };
@@ -256,11 +256,11 @@ const handleCashPayment = async (detail) => {
             value={searchPhone}
             onChange={(e) => setSearchPhone(e.target.value)}
           />
-          <DatePicker
+          {/* <DatePicker
             value={selectedDate}
             onChange={(date) => setSelectedDate(date || dayjs())}
             format="YYYY-MM-DD"
-          />
+          /> */}
        
         </div>
       </div>
@@ -286,7 +286,7 @@ const handleCashPayment = async (detail) => {
             <tbody>
        {filteredProducts.length > 0 ? (
          filteredProducts
-           .filter((product) => product.status !== "CANCELLED") 
+           .filter((product) => product.status !== "CANCELLED" && product.status !=="COMPLETED") 
            .map((product) => (
              <tr key={product.id}>
                <td>{product.account.name}</td>

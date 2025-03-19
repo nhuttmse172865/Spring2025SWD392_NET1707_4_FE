@@ -5,7 +5,7 @@ import BASE from "../../../constants/base";
 import axios from "axios";
 import { message } from "antd";
 import { useNavigate } from "react-router-dom";
-
+import dayjs from "dayjs";
 
 const Blog = () => {
     const [blogs, setBlogs] = useState([]);
@@ -52,6 +52,8 @@ const Blog = () => {
               <p className="beauty-card-description">{article.summary}</p>
               <div className="beauty-card-footer">
                 <span> {article.authorName}</span>
+                <span>{new Date(article.createdTime).toLocaleDateString("vi-VN")}</span>
+
                 <span className="beauty-arrow-icon">
                   <ArrowRight size={16} />
                 </span>

@@ -22,9 +22,9 @@ const CheckIn = () => {
     fetchAppointments();
   }, [currentPage]);
 
-  // useEffect(() => {
-  //   filterAppointmentsByDate();
-  // }, [selectedDate, products,searchPhone]); 
+  useEffect(() => {
+    filterAppointmentsByDate();
+  }, [products,searchPhone]); 
 useEffect(() => {
     setFilteredProducts(products);
   }, [products]);
@@ -46,7 +46,6 @@ useEffect(() => {
 
   const filterAppointmentsByDate = () => {
     const filtered = products.filter((product) =>
-      dayjs(product.createdTime).isSame(selectedDate.subtract(1, "day"), "day") &&
       product?.account?.phone?.includes(searchPhone)
     );
     setFilteredProducts(filtered);
@@ -125,11 +124,11 @@ useEffect(() => {
             value={searchPhone}
             onChange={(e) => setSearchPhone(e.target.value)}
           />
-          <DatePicker
+          {/* <DatePicker
             value={selectedDate}
             onChange={(date) => setSelectedDate(date || dayjs())}
             format="YYYY-MM-DD"
-          />
+          /> */}
        
         </div>
       </div>
@@ -155,14 +154,14 @@ useEffect(() => {
         <tbody>
   {filteredProducts.length > 0 ? (
     filteredProducts
-      .filter((product) => product.status !== "CANCELLED") 
+      .filter((product) => product.status !== "CANCELLED"&& product.status !=="COMPLETED" ) 
       .map((product) => (
         <tr key={product.id}>
           <td>{product.account.name}</td>
           <td>{product.service.name}</td>
           <td>{product.account.phone}</td>
           <td>{product.total}$</td>
-          <td>{dayjs(product.createdTime).add(1, 'day').format("YYYY-MM-DD")}</td>
+          <td>{dayjs(product.createdTime).format("YYYY-MM-DD")}</td>
           <td>{product.status}</td>
           <td>
             <Button
