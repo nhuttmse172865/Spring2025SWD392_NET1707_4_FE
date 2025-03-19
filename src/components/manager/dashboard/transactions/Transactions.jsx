@@ -6,7 +6,7 @@ import Item from "./Item/Item";
 const Transactions = () => {
   return (
     <div className="col-span-7 bg-white p-5 rounded-[.375rem]">
-      <h6 className="text-[17px] font-medium text-[rgba(0,0,0,0.5)] mb-4">
+      <h6 className="text-[15px] font-medium text-[rgba(0,0,0,0.5)] mb-4">
         Transactions
       </h6>
       <Header
