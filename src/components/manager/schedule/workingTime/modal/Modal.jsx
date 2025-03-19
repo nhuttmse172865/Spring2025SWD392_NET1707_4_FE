@@ -7,8 +7,9 @@ import useGenerateHours from "../../../../../hook/useGenerateHours";
 import axios from "axios";
 import BASE from "../../../../../constants/base";
 import formatDate from "../../../../../helpers/FormatDate";
+import TIME_CACULATE from "../../../../../helpers/TimeCaculate";
 
-const Modal = ({ setShowModal, setReloadData }) => {
+const Modal = ({ setShowModal, setReloadData, itemUpdate, setItemUpdate }) => {
   const [selectedDate, setSelectedDate] = useState();
   const [selectedMonth, setSelectedMonth] = useState();
   const [selectedYear, setSelectedYear] = useState();
@@ -31,6 +32,32 @@ const Modal = ({ setShowModal, setReloadData }) => {
     }
   };
 
+  const handleUpdateTherapistWorkingTime = async () => {
+    setLoading(true);
+    try {
+      const data = {
+        id: itemUpdate.id,
+        startHour: startHour,
+        endHour: endHour,
+        day: formatDate(new Date(selectedYear, selectedMonth, selectedDate)),
+        therapistId: therapistList.filter(
+          (item) => item.account.name === therapist
+        )[0].id,
+      };
+      const response = await axios.put(
+        `${BASE.BASE_URL}/therapist-working-time/update`,
+        data
+      );
+      if (!response || response.status !== 200) throw new Error();
+      setShowModal(false);
+    } catch (error) {
+      console.log(error);
+    } finally {
+      setReloadData((prev) => !prev);
+      setLoading(false);
+    }
+  };
+
   const handleCreateTherapistWorkingTime = async () => {
     setLoading(true);
     try {
@@ -43,7 +70,7 @@ const Modal = ({ setShowModal, setReloadData }) => {
         )[0].id,
       };
 
-      console.log(data)
+      console.log(data);
       const response = await axios.post(
         `${BASE.BASE_URL}/therapist-working-time/create`,
         data
@@ -53,11 +80,22 @@ const Modal = ({ setShowModal, setReloadData }) => {
     } catch (error) {
       console.log(error);
     } finally {
-      setReloadData(prev => !prev)
+      setReloadData((prev) => !prev);
       setLoading(false);
     }
   };
 
+  useEffect(() => {
+    if (itemUpdate) {
+      setTherapist(itemUpdate?.therapist?.account?.name);
+      setEndHour(TIME_CACULATE.minutesToTime(itemUpdate?.endHour));
+      setStartHour(TIME_CACULATE.minutesToTime(itemUpdate?.startHour));
+      const date = new Date(itemUpdate?.day);
+      setSelectedDate(date.getDate());
+      setSelectedMonth(date.getMonth());
+      setSelectedYear(date.getFullYear());
+    }
+  }, [itemUpdate]);
   useEffect(() => {
     if (!therapistList) {
       handleLoadTherapist();
@@ -69,10 +107,13 @@ const Modal = ({ setShowModal, setReloadData }) => {
         src={ICONS.close}
         alt=""
         className="w-[20px] top-2.5 right-2.5 absolute cursor-pointer"
-        onClick={() => setShowModal(false)}
+        onClick={() => {
+          setShowModal(false);
+          setItemUpdate();
+        }}
       />
       <h3 className="text-[20px] font-medium text-[rgba(0,0,0,0.5)] ">
-        CREATE WORKING TIME
+        {itemUpdate ? "UPDATE WORKING TIME" : "CREATE WORKING TIME"}
       </h3>
       <div className="flex mt-7 gap-5 flex-col">
         <div className="flex flex-col">
@@ -87,8 +128,10 @@ const Modal = ({ setShowModal, setReloadData }) => {
             modeShowTextOnInput={false}
             mutilpleSelect={false}
             setListSelected={setTherapist}
+            itemReadySelect={therapist}
             text="Select therapist"
             width="300px"
+            heightFix={200}
           />
         </div>
         <div className="w-[100% mt-2">
@@ -127,6 +170,7 @@ const Modal = ({ setShowModal, setReloadData }) => {
                 width="200px"
                 heightFix={400}
                 setListSelected={setStartHour}
+                itemReadySelect={startHour}
                 list={useGenerateHours(7, 0, 22, 15, 15)}
                 isTop={true}
               />
@@ -140,6 +184,7 @@ const Modal = ({ setShowModal, setReloadData }) => {
                 width="200px"
                 heightFix={400}
                 setListSelected={setEndHour}
+                itemReadySelect={endHour}
                 list={useGenerateHours(7, 0, 22, 15, 15)}
                 isTop={true}
               />
@@ -150,8 +195,12 @@ const Modal = ({ setShowModal, setReloadData }) => {
         <ElevatedButton
           height="50px"
           rounded=".375rem"
-          text="Create"
-          handleOnclick={handleCreateTherapistWorkingTime}
+          text={itemUpdate ? "Update" : "Create"}
+          handleOnclick={
+            itemUpdate
+              ? handleUpdateTherapistWorkingTime
+              : handleCreateTherapistWorkingTime
+          }
           isLoading={loading}
         />
       </div>

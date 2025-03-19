@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import CalendarWeek from "../calendarWeek/CalendarWeek";
 import CalendarMonth from "../calendarMonth/CalendarMonth";
 
-const Content = ({setShowModal, reloadData}) => {
+const Content = ({setShowModal, reloadData, setItemUpdate}) => {
   const [selectedDate, setSelectedDate] = useState();
   const [selectedMonth, setSelectedMonth] = useState();
   const [selectedYear, setSelectedYear] = useState();
@@ -20,6 +20,7 @@ const Content = ({setShowModal, reloadData}) => {
         setSelectedYear={setSelectedYear}
         setShowModal={setShowModal}
         reloadData={reloadData}
+        setItemUpdate={setItemUpdate}
       />
       <CalendarMonth
         setSelectedDate={setSelectedDate}

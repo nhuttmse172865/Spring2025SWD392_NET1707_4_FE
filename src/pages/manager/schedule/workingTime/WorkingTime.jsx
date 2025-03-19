@@ -6,12 +6,14 @@ import Modal from "../../../../components/manager/schedule/workingTime/modal/Mod
 const WorkingTime = () => {
   const [showModal, setShowModal] = useState(false);
   const [reloadData,setReloadData] = useState(false);
+  const [itemUpdate,setItemUpdate] = useState()
+  
   return (
     <div>
-      <Content setShowModal={setShowModal} reloadData={reloadData} />
+      <Content setShowModal={setShowModal} reloadData={reloadData} setItemUpdate={setItemUpdate}/>
       {showModal && (
         <Popup>
-          <Modal setShowModal={setShowModal} setReloadData={setReloadData} />
+          <Modal setShowModal={setShowModal} setReloadData={setReloadData} itemUpdate={itemUpdate} setItemUpdate={setItemUpdate} />
         </Popup>
       )}
     </div>
