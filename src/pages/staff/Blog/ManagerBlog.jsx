@@ -5,7 +5,7 @@ import axios from "axios";
 import BASE from "../../../constants/base";
 import { jwtDecode } from "jwt-decode";
 import "./ManagerBlog.css";
-
+import dayjs from "dayjs";
 const ManagerBlog = () => {
   const [blogs, setBlogs] = useState([]);
   const [loading, setLoading] = useState(false);
@@ -23,6 +23,7 @@ const ManagerBlog = () => {
     try {
       const res = await axios.get(`${BASE.BASE_URL}/blog/getAll`);
       setBlogs(res.data.data);
+      console.log(res.data.data)
     } catch (error) {
       message.error("Failed to fetch blogs!");
     } finally {
@@ -39,15 +40,18 @@ const ManagerBlog = () => {
 
   const handleEdit = (record) => {
     setEditData(record);
+  
+   
+  
+    
     form.setFieldsValue({
       title: record.title,
       headline: record.headline,
-      content: record.content,
+      content: record.content || [], 
       summary: record.summary,
     });
     setIsModalOpen(true);
   };
-
   const handleDelete = async (id) => {
     try {
       await axios.delete(`${BASE.BASE_URL}/blog/delete/${id}`);
@@ -61,6 +65,7 @@ const ManagerBlog = () => {
   const handleOk = async () => {
     try {
       const values = await form.validateFields();
+      console.log(values)
       const token = localStorage.getItem("customer_information");
       const decode = jwtDecode(token);
       const accountId = decode.accountId;
@@ -71,16 +76,16 @@ const ManagerBlog = () => {
         JSON.stringify({
           title: values.title,
           headline: values.headline,
-          content: values.content,
+        content: values.content || [],
           summary: values.summary,
           accountId,
         })
       );
-
+ 
       if (file) {
         formData.append("image", file);
       }
-
+   console.log(formData)
       setLoading(true);
 
       let response;
@@ -96,11 +101,13 @@ const ManagerBlog = () => {
           headers: { "Content-Type": "multipart/form-data" },
         });
         message.success("Blog created successfully!");
+        console.log(response.data);
       }
-
+      console.log("✅ API response:", response.data);
       setIsModalOpen(false);
       fetchBlogs();
     } catch (error) {
+      console.log(error)
       message.error(error.response?.data.message || "Failed to save blog!");
     } finally {
       setLoading(false);
@@ -130,7 +137,9 @@ const ManagerBlog = () => {
       title: "Created Date",
       dataIndex: "createdTime",
       key: "createdTime",
-      render: (text) => new Date(text).toLocaleDateString(),
+      render: (text) => {
+        return new Date(text).toLocaleDateString("en-GB");
+      },
     },
     {
       title: "Actions",
@@ -160,6 +169,7 @@ const ManagerBlog = () => {
         onCancel={handleCancel}
         okText={editData ? "Update" : "Create"}
         cancelText="Cancel"
+        className="blog-modal"
       >
         <Form form={form} layout="vertical">
           <Form.Item name="title" label="Title" rules={[{ required: true, message: "Please input the title!" }]}>
@@ -168,9 +178,34 @@ const ManagerBlog = () => {
           <Form.Item name="headline" label="Headline" rules={[{ required: true, message: "Please input the headline!" }]}>
             <Input />
           </Form.Item>
-          <Form.Item name="content" label="Content" rules={[{ required: true, message: "Please input the content!" }]}>
-            <Input.TextArea rows={4} />
-          </Form.Item>
+          <Form.Item label="Content">
+  <Button type="dashed" onClick={() => {
+    const currentContent = form.getFieldValue("content") || [];
+    form.setFieldsValue({ content: [...currentContent, { title: "", detail: "" }] });
+  }}>
+    + Add Content Section
+  </Button>
+  <Form.List name="content">
+    {(fields, { add, remove }) => (
+      <>
+        {fields.map(({ key, name, ...restField }) => (
+          <div key={key} style={{ marginBottom: 8, padding: 10, border: "1px solid #ddd" }}>
+            <Form.Item {...restField} name={[name, "title"]} label="Title" rules={[{ required: true, message: "Enter title" }]}>
+              <Input placeholder="Enter title" />
+            </Form.Item>
+            <Form.Item {...restField} name={[name, "detail"]} label="Detail" rules={[{ required: true, message: "Enter detail" }]}>
+              <Input.TextArea placeholder="Enter detail" rows={4} />
+            </Form.Item>
+            <Button type="link" onClick={() => remove(name)} style={{ color: "red" }}>
+              Remove
+            </Button>
+          </div>
+        ))}
+      </>
+    )}
+  </Form.List>
+</Form.Item>
+
           <Form.Item name="summary" label="Summary" rules={[{ required: true, message: "Please input the summary!" }]}>
             <Input.TextArea rows={3} />
           </Form.Item>

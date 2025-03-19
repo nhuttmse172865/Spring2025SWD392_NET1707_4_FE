@@ -1,5 +1,5 @@
 .blog-container {
-  max-width: 90%;
+  max-width: 70%;
   margin: auto;
   padding: 20px;
   margin-top: 50px;
@@ -9,7 +9,7 @@
 
 
 .blog-title {
-  font-size: 32px; 
+  font-size: 30px; 
   font-weight: bold;
   color: #333; 
   text-align: center;
@@ -29,12 +29,14 @@
 
 
 .blog-image {
-  width: 100%;
+  width: 50%;
   max-height: 400px;
   object-fit: cover; 
   border-radius: 10px;
   margin-bottom: 30px;
   display: block; 
+  margin-left: auto;  
+  margin-right: auto;
 }
 
 
