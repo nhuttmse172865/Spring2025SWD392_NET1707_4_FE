@@ -6,7 +6,12 @@ import ElevatedButton from "../../../../common/button/elevated/ElevatedButton";
 import axios from "axios";
 import BASE from "../../../../../constants/base";
 
-const Modal = ({ handleCloseModal, itemUpdate,setRefreshData }) => {
+const Modal = ({
+  handleCloseModal,
+  itemUpdate,
+  setRefreshData,
+  setItemUpdate,
+}) => {
   const [images, setImages] = useState([]);
   const [refreshImage, setRefreshImage] = useState(false);
   const [name, setName] = useState();
@@ -57,9 +62,88 @@ const Modal = ({ handleCloseModal, itemUpdate,setRefreshData }) => {
     } catch (error) {
       console.log(error);
     } finally {
-      setRefreshData(prev => !prev)
+      setRefreshData((prev) => !prev);
       setLoading(false);
     }
+  };
+
+  const handleSaveImage = async (data) => {
+    const formData = new FormData();
+    Array.isArray(data) &&
+      data.forEach((item) => {
+        formData.append("images", item);
+      });
+    try {
+      const response = await axios.post(
+        `${BASE.BASE_URL}/upload-files`,
+        formData,
+        {
+          headers: {
+            "Content-Type": "multipart/form-data",
+          },
+        }
+      );
+      if (!response || response.status !== 200) throw new Error();
+      return response.data.data.successFiles;
+    } catch (error) {
+      console.log(error);
+      return null;
+    }
+  };
+
+  const handleUpdateTherapist = async () => {
+    setLoading(true);
+    const data = {
+      accountId: itemUpdate?.account.id,
+      name: name,
+      phone: phone,
+      experience: experience,
+      gender: String(gender).toLocaleUpperCase(),
+      imagesID: images,
+    };
+    console.log(images, "images");
+    const image = [];
+    const imagesIdAvailable = [];
+    images &&
+      images.forEach((item) => {
+        if (item instanceof File) {
+          image.push(item);
+        } else {
+          imagesIdAvailable.push(item.id);
+        }
+      });
+    if (image.length > 0) {
+      const imagesIds = await handleSaveImage(image);
+      imagesIds &&
+        Array.isArray(imagesIds) &&
+        imagesIds.forEach((item) => {
+          imagesIdAvailable.push(item.id);
+        });
+    }
+    data.imagesID = imagesIdAvailable;
+    try {
+      const response = await axios.put(
+        `${BASE.BASE_URL}/update-therapist`,
+        data
+      );
+      if (!response || response.status !== 200) throw new Error();
+      handleCloseModal();
+    } catch (error) {
+      console.log(error);
+    } finally {
+      setRefreshData((prev) => !prev);
+      setLoading(false);
+    }
+  };
+
+  const handleDeleteImage = (index) => {
+    let imageUpdate = images.filter((_, _index) => _index !== index);
+    setImages(imageUpdate);
+  };
+
+  const handleCloseModalTherapist = () => {
+    setItemUpdate();
+    handleCloseModal();
   };
 
   useEffect(() => {
@@ -77,13 +161,13 @@ const Modal = ({ handleCloseModal, itemUpdate,setRefreshData }) => {
   return (
     <div className="w-[30vw] max-h-[94vh] min-h-[70vh] min-w-[500px] bg-white relative rounded-[.375rem] p-5 overflow-y-scroll">
       <img
-        onClick={() => handleCloseModal()}
+        onClick={() => handleCloseModalTherapist()}
         src={ICONS.close}
         alt=""
         className="w-[20px] top-2.5 right-2.5 absolute cursor-pointer"
       />
       <h3 className="text-[20px] font-medium text-[rgba(0,0,0,0.5)] ">
-        NEW THERAPIST
+        {itemUpdate ? "UPDATE THERAPIST" : "NEW THERAPIST"}
       </h3>
       <div className="mt-10 mb-10">
         <div className="grid max-w-[300px]">
@@ -98,30 +182,36 @@ const Modal = ({ handleCloseModal, itemUpdate,setRefreshData }) => {
             className="h-12 border-input-form-login text-[rgba(0,0,0,0.8)] text-[15px]"
           />
         </div>
-        <div className="grid mt-5  max-w-[350px]">
-          <label className="text-[15px] mb-0.5 text-[rgba(0,0,0,0.5)]">
-            Email
-          </label>
-          <input
-            type="text"
-            placeholder="Enter therapist email"
-            value={email}
-            onChange={(event) => setEmail(event.target.value)}
-            className="h-12 border-input-form-login text-[rgba(0,0,0,0.8)] text-[15px]"
-          />
-        </div>
-        <div className="grid mt-5 max-w-[300px]">
-          <label className="text-[15px] mb-0.5 text-[rgba(0,0,0,0.5)]">
-            Password
-          </label>
-          <input
-            type="password"
-            value={password}
-            onChange={(event) => setPassword(event.target.value)}
-            placeholder="Enter therapist password"
-            className="h-12 border-input-form-login text-[rgba(0,0,0,0.8)] text-[15px]"
-          />
-        </div>
+        {!itemUpdate && (
+          <div className="grid mt-5  max-w-[350px]">
+            <label className="text-[15px] mb-0.5 text-[rgba(0,0,0,0.5)]">
+              Email
+            </label>
+            <input
+              type="text"
+              placeholder="Enter therapist email"
+              value={email}
+              onChange={(event) => setEmail(event.target.value)}
+              className="h-12 border-input-form-login text-[rgba(0,0,0,0.8)] text-[15px]"
+            />
+          </div>
+        )}
+
+        {!itemUpdate && (
+          <div className="grid mt-5 max-w-[300px]">
+            <label className="text-[15px] mb-0.5 text-[rgba(0,0,0,0.5)]">
+              Password
+            </label>
+            <input
+              type="password"
+              value={password}
+              onChange={(event) => setPassword(event.target.value)}
+              placeholder="Enter therapist password"
+              className="h-12 border-input-form-login text-[rgba(0,0,0,0.8)] text-[15px]"
+            />
+          </div>
+        )}
+
         <div className="grid mt-5 max-w-[200px]">
           <label className="text-[15px] mb-0.5 text-[rgba(0,0,0,0.5)]">
             Phone
@@ -151,9 +241,11 @@ const Modal = ({ handleCloseModal, itemUpdate,setRefreshData }) => {
             <label className="text-[15px] mb-0.5 text-[rgba(0,0,0,0.5)]">
               Gender
             </label>
+
             <Select
               text="Select Gender"
               setListSelected={setGender}
+              itemReadySelect={gender}
               width="150px"
               list={["Male", "Female"]}
             />
@@ -173,7 +265,9 @@ const Modal = ({ handleCloseModal, itemUpdate,setRefreshData }) => {
                   imageObject={item}
                   index={index}
                   handleChangeImage={handleAddImage}
+                  showDeleteImage={true}
                   refreshImage={refreshImage}
+                  handleDeleteImage={handleDeleteImage}
                 />
               ))}
             <InputImage
@@ -186,9 +280,11 @@ const Modal = ({ handleCloseModal, itemUpdate,setRefreshData }) => {
         <ElevatedButton
           height="50px"
           rounded="0.375rem"
-          text="Create"
+          text={itemUpdate ? "Update" : "Create"}
           isLoading={loadding}
-          handleOnclick={handleAddTherapist}
+          handleOnclick={
+            itemUpdate ? handleUpdateTherapist : handleAddTherapist
+          }
         />
       </div>
     </div>
