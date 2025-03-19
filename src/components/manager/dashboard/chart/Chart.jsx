@@ -1,6 +1,6 @@
 import React, { useEffect, useMemo, useRef, useState } from "react";
 import DASHBOARD from "../../../../constants/dashboard";
-import findClosestNumber from "../../../../helpers/findClosestNumber";
+import findClosestNumber from "../../../../helpers/CaculateClosestNumber";
 import CALENDAR from "../../../../constants/calendar";
 
 const Chart = () => {

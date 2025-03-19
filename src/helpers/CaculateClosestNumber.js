@@ -1,4 +1,4 @@
-function findClosestNumber(number, numberList) {
+function CaculateClosestNumber(number, numberList) {
   if(!Array.isArray(numberList)) return;
   return numberList.reduce((closestNumber, currentNumber) => {
     const distanceToClosestNumber = Math.abs(number - closestNumber);
@@ -12,4 +12,4 @@ function findClosestNumber(number, numberList) {
   });
 }
 
-export default findClosestNumber;
+export default CaculateClosestNumber;
