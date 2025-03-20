@@ -120,7 +120,7 @@ const Appointments = () => {
   const handleReDeposit = async (appointmentId, totalCostVND) => {
     try {
       const response = await fetch(
-        `${BASE.BASE_URL}/vnpay/create-payment-url?appointmentId=${appointmentId}&amount=${totalCostVND}&returnUrl=http://localhost:5173/payment-return`
+        `${BASE.BASE_URL}/vnpay/create-payment-url?appointmentId=${appointmentId}&amount=${totalCostVND}&returnUrl=${BASE.BASE_MY_HOST}/payment-return`
       );
       const result = await response.json();
       if (result.status === 200 && result.data) {

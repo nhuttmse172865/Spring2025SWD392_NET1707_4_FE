@@ -87,9 +87,7 @@ const CheckIn = () => {
   const appointment_detailsId = detail.id;
   const amount = detail.price * 25000 *0.9; 
   const returnUrl = encodeURIComponent(
-    window.location.hostname === "localhost"
-      ? "http://localhost:5173/staff/checkout"
-      : "http://34.126.143.212/staff/checkout"
+      `${BASE.BASE_MY_HOST}/staff/checkout`
   );
   
   console.log("Selected Product ID:", selectedProduct?.id);

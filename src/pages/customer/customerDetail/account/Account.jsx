@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import useLocalStorage from "use-local-storage";
 import LOCALSTORAGE_NAME from "../../../../constants/localStorageName";
 import "./Account.css";
+import BASE from "../../../../constants/base";
 
 const Account = () => {
   const [customer] = useLocalStorage(
@@ -51,7 +52,7 @@ const Account = () => {
   const fetchAccountInfo = async () => {
     setLoading(true);
     try {
-      const response = await fetch(`http://localhost:8080/info/${accountId}`);
+      const response = await fetch(`${BASE.BASE_URL}/info/${accountId}`);
       const data = await response.json();
       if (data.status === 200) {
         setAccountInfo(data.data);
@@ -79,7 +80,7 @@ const Account = () => {
     setLoading(true);
     try {
       const response = await fetch(
-        `http://localhost:8080/update/${accountId}`,
+        `${BASE.BASE_URL}/update/${accountId}`,
         {
           method: "PUT",
           headers: {

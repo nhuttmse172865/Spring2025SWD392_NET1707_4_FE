@@ -42,11 +42,11 @@ const Chart = () => {
 
   const handleChangeStatus = (item) => {
     setStatusActive(item);
-    setRevenueData()
-    setDataPoints()
-    setPath()
-    setLineCurrent()
-    setGradientPath()
+    setRevenueData();
+    setDataPoints();
+    setPath();
+    setLineCurrent();
+    setGradientPath();
     switch (item) {
       case DASHBOARD.STATUS_CHART.WEEKLY:
         setArrayVertical(CALENDAR.WEEK);
@@ -97,7 +97,8 @@ const Chart = () => {
 
   useEffect(() => {
     if (revenueData) {
-      const revenueDataPoints = Array.isArray(revenueData) && revenueData.map((item) => item.value)
+      const revenueDataPoints =
+        Array.isArray(revenueData) && revenueData.map((item) => item.value);
       const svg = svgRef.current;
       const padding = 20;
       const height = svg.clientHeight - 2 * padding;
@@ -175,9 +176,9 @@ const Chart = () => {
       );
       setLineCurrent(lineCurrent);
       setDataPoints(dataPoints);
-      setIndexArrayHover(revenueDataPoints.length -1)
+      setIndexArrayHover(revenueDataPoints.length - 1);
     }
-  }, [arrayVertical,revenueData]);
+  }, [arrayVertical, revenueData]);
 
   useEffect(() => {
     if (statusActive) {
@@ -245,7 +246,15 @@ const Chart = () => {
             }}
           >
             <h6 className="text-[13px] text-[rgba(0,0,0,0.5)]">
-              {arrayVertical && arrayVertical[indexArrayHover]} <span className="text-[12px] text-[rgba(0,0,0,0.5)]">({revenueData && revenueData[indexArrayHover]?.date})</span>
+              {arrayVertical && arrayVertical[indexArrayHover]}{" "}
+              {revenueData && revenueData[indexArrayHover]?.date !== undefined && (
+                <span className="text-[12px] text-[rgba(0,0,0,0.5)]">
+             
+                  {statusActive === DASHBOARD.STATUS_CHART.YEARLY
+                    ? formatDate(new Date(revenueData[indexArrayHover]?.date), true)
+                    : revenueData[indexArrayHover]?.date}
+                </span>
+              )}
             </h6>
             <span className="text-[14px] text-(--color-primary-100)">
               {revenueData && revenueData[indexArrayHover]?.value}$
