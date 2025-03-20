@@ -4,7 +4,7 @@ import DASHBOARD from '../../../../constants/dashboard'
 
 const Analysis = () => {
   return (
-    <div className=' h-[120px] grid grid-cols-5 gap-x-[20px]'>
+    <div className=' h-[130px] grid grid-cols-5 gap-x-[20px]'>
         {DASHBOARD.ANALYSIS_ITEM.map((item) => (
             <Card item={item} />
         ))}
