@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useRef } from "react";
 import Header from "./header/Header";
 import Body from "./body/Body";
 
@@ -10,10 +10,12 @@ const CalendarWeek = ({
   selectedYear,
   setSelectedYear,
   setShowModal,
-  reloadData
+  reloadData,
+  setItemUpdate
 }) => {
+  const calendarWeek = useRef(null)
   return (
-    <div className="bg-white w-full rounded-[.375rem] h-full relative flex flex-col">
+    <div ref={calendarWeek} className="bg-white w-full rounded-[.375rem] h-full relative flex flex-col">
       <Header setShowModal={setShowModal} />
       <Body
         setSelectedDate={setSelectedDate}
@@ -23,6 +25,9 @@ const CalendarWeek = ({
         selectedYear={selectedYear}
         setSelectedYear={setSelectedYear}
         reloadData={reloadData}
+        calendarWeek={calendarWeek}
+        setItemUpdate={setItemUpdate}
+        setShowModal={setShowModal}
       />
     </div>
   );

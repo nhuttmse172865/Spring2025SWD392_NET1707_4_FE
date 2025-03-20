@@ -40,9 +40,8 @@ const Select = ({
   };
 
   useEffect(() => {
-
     setItemsSelected(itemReadySelect)
-  },[])
+  },[itemReadySelect])
 
   return (
     <div

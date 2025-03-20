@@ -5,7 +5,18 @@ import BASE from "../../../../../../../constants/base";
 import { format } from "date-fns";
 import TIME_CACULATE from "../../../../../../../helpers/TimeCaculate";
 
-const Item = ({ index, day, currentYear, currentMonth, reloadData }) => {
+const Item = ({
+  index,
+  day,
+  currentYear,
+  currentMonth,
+  reloadData,
+  setItemHover,
+  setLocation,
+  calendarWeek,
+  setItemUpdate,
+  setShowModal
+}) => {
   let timeStart = "7:00";
   let timeEnd = "23:00";
   const [heightSlotTime, setHeightSlotTime] = useState();
@@ -70,6 +81,36 @@ const Item = ({ index, day, currentYear, currentMonth, reloadData }) => {
     }
   };
 
+  const handleUpdateSchedule = (_slotTime) => {
+    setItemUpdate(_slotTime)
+    setShowModal(true)
+  }
+
+  const handleMouseLeave = () => {
+    setLocation();
+    setItemHover();
+  };
+
+  const handleMouseOver = (_slotTime, event) => {
+    const rectItem = event.target.getBoundingClientRect();
+    const leftItem = rectItem?.left;
+    const topItem = rectItem?.top;
+    const rectCalendar = calendarWeek.current.getBoundingClientRect();
+    const leftCalendar = rectCalendar?.left;
+    const topCalendar = rectCalendar?.top;
+    const data = {
+      top: topItem - topCalendar,
+      left: leftItem - leftCalendar,
+    };
+    setLocation(data);
+    setItemHover(_slotTime);
+  };
+
+  const handleDeleteWorkingTime = (event) => {
+    console.log(event)
+    console.log("asasasas")
+  }
+
   useEffect(() => {
     if (currentMonth && day) {
       setWorkingTimes("");
@@ -125,7 +166,13 @@ const Item = ({ index, day, currentYear, currentMonth, reloadData }) => {
                     <div className="absolute w-[40px] right-[100%] flex justify-end ">
                       <span className="text-[14px] text-[rgba(0,0,0,0.5)] pr-2.5">
                         {_index === 0 ? timeStart : null}
-                        {_index === row / 2 - 1 ? timeStart : null}
+                        {_index === row / 2 - 1
+                          ? TIME_CACULATE.minutesToTime(
+                              (TIME_CACULATE.timeToMinutes(timeEnd) +
+                                TIME_CACULATE.timeToMinutes(timeStart)) /
+                                2
+                            )
+                          : null}
                         {_index === row - 2 ? timeEnd : null}
                       </span>
                     </div>
@@ -144,11 +191,17 @@ const Item = ({ index, day, currentYear, currentMonth, reloadData }) => {
                     transform: "translateX(-50%)",
                     top:
                       heightSlotTime *
-                      ((_slotTime.startHour - TIME_CACULATE.timeToMinutes(timeStart)) / 15),
+                      ((_slotTime.startHour -
+                        TIME_CACULATE.timeToMinutes(timeStart)) /
+                        15),
                     height:
                       heightSlotTime *
                       ((_slotTime.endHour - _slotTime.startHour) / 15),
                   }}
+                  onClick={() => handleUpdateSchedule(_slotTime)}
+                  onMouseOver={(event) => handleMouseOver(_slotTime, event)}
+                  onMouseLeave={() => handleMouseLeave()}
+                  onKeyDown={(event) => handleDeleteWorkingTime(event)}
                 >
                   <div>
                     <h3 className="text-[15px] h-[20px] w-full text-(--color-primary-100) font-medium line-clamp-1">

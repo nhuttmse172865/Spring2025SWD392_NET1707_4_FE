@@ -1,36 +1,108 @@
 
-
 import React, { useState, useEffect, useMemo, useCallback } from "react";
 import { useNavigate } from "react-router-dom";
 import ReactPaginate from "react-paginate";
 import axios from "axios";
 import BASE from "../../../constants/base";
+import useLocalStorage from "use-local-storage";
+import LOCALSTORAGE_NAME from "../../../constants/localStorageName";
+import { ToastContainer, toast } from "react-toastify";
+import Authorization from "../../../middleware/Authorization";
+import "react-toastify/dist/ReactToastify.css";
 import "./Content.css";
 
+import ROLES from "../../../constants/role";
+
+const SERVICES_PER_PAGE = 9;
+
 const Content = React.memo(() => {
+  const navigate = useNavigate();
   const [sortType, setSortType] = useState("default");
   const [currentPage, setCurrentPage] = useState(0);
   const [services, setServices] = useState([]);
-  const navigate = useNavigate();
+  const [customer] = useLocalStorage(
+    LOCALSTORAGE_NAME.CUSTOMER_INFORMATION_CACHE,
+    ""
+  );
+  const [accountId, setAccountId] = useState(null);
 
   useEffect(() => {
-    const fetchServices = async () => {
+    if (customer) {
       try {
-        const response = await axios.get(
-          `${BASE.BASE_URL}/service/getAllServicePaging?page=0&size=10`
+        const token = customer;
+        const base64Url = token.split(".")[1];
+        const base64 = base64Url.replace(/-/g, "+").replace(/_/g, "/");
+        const jsonPayload = decodeURIComponent(
+          atob(base64)
+            .split("")
+            .map((c) => `%${("00" + c.charCodeAt(0).toString(16)).slice(-2)}`)
+            .join("")
         );
-        setServices(response.data.data);
+        const decodedData = JSON.parse(jsonPayload);
+        setAccountId(decodedData.accountId);
       } catch (error) {
-        console.error("Error fetching services:", error);
+        console.log("Error decoding token:", error);
       }
-    };
+    }
+  }, [customer]);
 
+  const fetchServices = async () => {
+    try {
+      const response = await axios.get(
+        `${BASE.BASE_URL}/service/getAllServicePaging?page=0&size=10`
+      );
+      setServices(response.data.data);
+    } catch (error) {
+      console.error("Error fetching services:", error);
+    }
+  };
+
+  useEffect(() => {
     fetchServices();
+  }, []);
+
+  const formatPrice = useCallback((price) => {
+    return new Intl.NumberFormat("en-US", {
+      style: "currency",
+      currency: "USD",
+    }).format(price);
+  }, []);
+
+  const handleServiceClick = useCallback(
+    (service) => {
+      localStorage.setItem("selectedService", JSON.stringify(service));
+      navigate("/customer-service/service-details");
+    },
+    [navigate]
+  );
+
+  const handleBookClick = useCallback(
+    (id) => {
+      if (!customer || !accountId) {
+        toast.info("Please log in to book this service", {
+          position: "top-right",
+          autoClose: 2000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          onClose: () => navigate("/login"),
+          style: { backgroundColor: "#ffffff", color: "#ff4f9d" },
+        });
+      } else {
+        localStorage.setItem("selectedServiceId", id);
+        navigate("/booking");
+      }
+    },
+    [navigate, customer, accountId]
+  );
+
+  const handlePageClick = useCallback((data) => {
+    setCurrentPage(data.selected);
   }, []);
 
   const filteredServices = useMemo(() => {
     let filtered = [...services];
-
     const selectedCategories =
       JSON.parse(localStorage.getItem("selectedCategories")) || [];
     if (selectedCategories.length) {
@@ -38,7 +110,6 @@ const Content = React.memo(() => {
         selectedCategories.includes(service.categoryId)
       );
     }
-
     const selectedPriceRanges =
       JSON.parse(localStorage.getItem("selectedPriceRanges")) || [];
     if (selectedPriceRanges.length) {
@@ -48,7 +119,6 @@ const Content = React.memo(() => {
         )
       );
     }
-
     return filtered;
   }, [services]);
 
@@ -71,44 +141,19 @@ const Content = React.memo(() => {
     }
   }, [filteredServices, sortType]);
 
-  const handleServiceClick = useCallback(
-    (service) => {
-      localStorage.setItem("selectedService", JSON.stringify(service));
-      console.log(service);
-      navigate("/customer-service/service-details");
-    },
-    [navigate]
-  );
+  const pageCount = Math.ceil(sortedServices.length / SERVICES_PER_PAGE);
 
-  const handleBookClick = useCallback(
-    (id) => {
-      localStorage.setItem("selectedServiceId", id);
-      navigate("/booking");
-    },
-    [navigate]
-  );
-
-  const formatPrice = useCallback((price) => {
-    return new Intl.NumberFormat("en-US", {
-      style: "currency",
-      currency: "USD",
-    }).format(price);
-  }, []);
-
-  const servicesPerPage = 9;
-  const pageCount = Math.ceil(sortedServices.length / servicesPerPage);
   const currentServices = useMemo(() => {
-    const start = currentPage * servicesPerPage;
-    const end = start + servicesPerPage;
+    const start = currentPage * SERVICES_PER_PAGE;
+    const end = start + SERVICES_PER_PAGE;
     return sortedServices.slice(start, end);
   }, [sortedServices, currentPage]);
 
-  const handlePageClick = useCallback((data) => {
-    setCurrentPage(data.selected);
-  }, []);
-
   return (
+    <Authorization requiredRole={ROLES.CUSTOMER}>
     <div className="spa-container">
+      <ToastContainer />
+
       <div className="sort-container">
         <span className="sort-label">Sort by:</span>
         <div className="sort-buttons">
@@ -149,7 +194,7 @@ const Content = React.memo(() => {
                 loading="lazy"
                 onError={(e) =>
                   (e.target.src = "https://via.placeholder.com/150")
-                } 
+                }
               />
             </div>
             <div className="service-info">
@@ -186,6 +231,7 @@ const Content = React.memo(() => {
         nextClassName={"next-item"}
       />
     </div>
+    </Authorization>
   );
 });
 

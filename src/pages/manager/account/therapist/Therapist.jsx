@@ -21,6 +21,7 @@ const Therapist = () => {
             handleCloseModal={() => setShowModal(false)}
             itemUpdate={itemUpdate}
             setRefreshData={setRefreshData}
+            setItemUpdate={setItemUpdate}
           />
         </Popup>
       )}
