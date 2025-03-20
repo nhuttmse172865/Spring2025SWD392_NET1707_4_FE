@@ -132,3 +132,133 @@
 .back-button:hover {
   background-color: #ff4f9d;
 }
+
+/*--------------------------*/
+.view-comment-btn {
+  margin-top: 10px;
+  font-size: 14px;
+  padding: 5px 15px;
+  background-color: #ff4f9d;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+.view-comment-btn:hover {
+  background-color: #ff4f9d;
+}
+
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+}
+
+.modal-content {
+  background-color: white;
+  padding: 20px;
+  border-radius: 8px;
+  width: 90%;
+  max-width: 500px;
+  max-height: 80vh;
+  overflow-y: auto;
+  position: relative;
+}
+
+.modal-titlee {
+  margin: 0 0 20px 0;
+  color: #333;
+  text-align: left;
+  font-weight: bold;
+}
+
+.modal-close {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  border: none;
+  background: none;
+  font-size: 24px;
+  cursor: pointer;
+  color: #666;
+}
+
+.feedback-list {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+.feedback-item {
+  border: 1px solid #ddd; 
+  padding: 10px; 
+  border-radius: 4px; 
+}
+
+.feedback-name {
+  margin: 5px 0;
+  text-align: left; 
+  color: black;
+}
+
+.feedback-rating {
+  margin: 5px 0;
+  text-align: left;
+  display: flex;
+  color: black;
+}
+
+.star-rating1 {
+  display: inline-block;
+  margin-left: 5px;
+}
+
+.star {
+  color: #ddd;
+  font-size: 20px;
+}
+
+.star.filled {
+  color: #ffd700;
+}
+
+.feedback-body {
+  margin: 5px 0;
+  color: black;
+  text-align: left; 
+}
+
+.no-feedback {
+  text-align: left; 
+  color: black;
+}
+.price-and-book {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  margin: 10px 0;
+}
+
+.book-now-btn {
+  padding: 8px 16px;
+  background-color: #ff4f9d;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 14px;
+  transition: background-color 0.3s;
+}
+
+.book-now-btn:hover {
+  background-color: #ff4f9d;
+}

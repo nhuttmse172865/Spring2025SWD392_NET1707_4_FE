@@ -1,9 +1,12 @@
+
 import React, { useState, useEffect, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import useLocalStorage from "use-local-storage";
 import LOCALSTORAGE_NAME from "../../../constants/localStorageName";
 import BASE from "../../../constants/base";
+import Authorization from "../../../middleware/Authorization";
 import "./QuizContent.css";
+import ROLES from "../../../constants/role";
 
 const Modal = ({ isOpen, onClose, skinTypeData, issueSkinData }) => {
   if (!isOpen) return null;
@@ -58,6 +61,7 @@ const QuizContent = () => {
     LOCALSTORAGE_NAME.CUSTOMER_INFORMATION_CACHE,
     ""
   );
+  const [currentIndex, setCurrentIndex] = useState(0);
   const navigate = useNavigate();
   const servicesRef = useRef(null);
 
@@ -73,7 +77,6 @@ const QuizContent = () => {
             .map((c) => `%${("00" + c.charCodeAt(0).toString(16)).slice(-2)}`)
             .join("")
         );
-
         const decodedData = JSON.parse(jsonPayload);
         setAccountId(decodedData.accountId);
       } catch (error) {
@@ -279,21 +282,20 @@ const QuizContent = () => {
     return answers[index] !== null;
   };
 
-  const [currentIndex, setCurrentIndex] = useState(0);
-  const visibleCount = 2;
-
   const nextImage = () => {
-    setCurrentIndex((prevIndex) =>
-      prevIndex + visibleCount >= recommendedServices.length ? 0 : prevIndex + 1
-    );
+    if (recommendedServices.length <= 1) return;
+    setCurrentIndex((prevIndex) => {
+      const newIndex = prevIndex + 1;
+      return newIndex >= recommendedServices.length ? 0 : newIndex;
+    });
   };
 
   const prevImage = () => {
-    setCurrentIndex((prevIndex) =>
-      prevIndex === 0
-        ? recommendedServices.length - visibleCount
-        : prevIndex - 1
-    );
+    if (recommendedServices.length <= 1) return;
+    setCurrentIndex((prevIndex) => {
+      const newIndex = prevIndex - 1;
+      return newIndex < 0 ? recommendedServices.length - 1 : newIndex;
+    });
   };
 
   const closeModal = () => {
@@ -317,6 +319,7 @@ const QuizContent = () => {
   }
 
   return (
+    <Authorization requiredRole={ROLES.CUSTOMER}>
     <div className="app-container">
       <div className="content">
         <div className="questionnaire-container">
@@ -447,32 +450,34 @@ const QuizContent = () => {
                 </div>
 
                 <div className="thumbnails-container">
-                  {recommendedServices
-                    .slice(currentIndex, currentIndex + visibleCount)
-                    .map((service, index) => (
-                      <div
-                        key={service?.id || index}
-                        className={`thumbnail-item ${
-                          index === 0 ? "active" : ""
-                        }`}
-                      >
-                        <img
-                          src={
-                            service?.image?.length > 0
-                              ? service.image[0].url
-                              : "https://via.placeholder.com/100"
-                          }
-                          alt={service?.name || "Thumbnail"}
-                          className="thumbnail-image"
-                          onClick={() => setCurrentIndex(currentIndex + index)}
-                        />
-                        <div className="thumbnail-overlay" />
-                      </div>
-                    ))}
+                  {recommendedServices.map((service, index) => (
+                    <div
+                      key={service?.id || index}
+                      className={`thumbnail-item ${
+                        index === currentIndex ? "active" : ""
+                      }`}
+                    >
+                      <img
+                        src={
+                          service?.image?.length > 0
+                            ? service.image[0].url
+                            : "https://via.placeholder.com/100"
+                        }
+                        alt={service?.name || "Thumbnail"}
+                        className="thumbnail-image"
+                        onClick={() => setCurrentIndex(index)}
+                      />
+                      <div className="thumbnail-overlay" />
+                    </div>
+                  ))}
                 </div>
               </div>
               <div className="navigation-buttons1">
-                <button onClick={prevImage} className="nav-button">
+                <button
+                  onClick={prevImage}
+                  className="nav-button"
+                  disabled={recommendedServices.length <= 1}
+                >
                   <svg
                     className="nav-icon"
                     fill="none"
@@ -487,7 +492,11 @@ const QuizContent = () => {
                     />
                   </svg>
                 </button>
-                <button onClick={nextImage} className="nav-button">
+                <button
+                  onClick={nextImage}
+                  className="nav-button"
+                  disabled={recommendedServices.length <= 1}
+                >
                   <svg
                     className="nav-icon"
                     fill="none"
@@ -517,6 +526,7 @@ const QuizContent = () => {
         issueSkinData={issueSkinData}
       />
     </div>
+    </Authorization>
   );
 };
 

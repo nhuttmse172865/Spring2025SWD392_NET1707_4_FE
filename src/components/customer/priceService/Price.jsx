@@ -1,7 +1,9 @@
-
 import React, { useState, useEffect, useMemo, useCallback } from "react";
+import Authorization from "../../../middleware/Authorization";
 import BASE from "../../../constants/base";
+
 import "./Price.css";
+import ROLES from "../../../constants/role";
 
 const formatPrice = (price) =>
   new Intl.NumberFormat("en-US", {
@@ -16,7 +18,6 @@ const Price = React.memo(() => {
   const [expandedService, setExpandedService] = useState(null);
   const [showModal, setShowModal] = useState(false);
   const [selectedService, setSelectedService] = useState(null);
-
 
   useEffect(() => {
     const fetchCategories = async () => {
@@ -33,7 +34,6 @@ const Price = React.memo(() => {
 
     fetchCategories();
   }, []);
-
 
   useEffect(() => {
     const fetchServicesAndDetails = async () => {
@@ -65,7 +65,8 @@ const Price = React.memo(() => {
                   return {
                     ...service,
                     price: totalPrice,
-                    details: detailResult.status === 200 ? detailResult.data : [],
+                    details:
+                      detailResult.status === 200 ? detailResult.data : [],
                   };
                 })
               );
@@ -85,7 +86,6 @@ const Price = React.memo(() => {
     fetchServicesAndDetails();
   }, [categories]);
 
-  // Memoize steps (dữ liệu tĩnh)
   const steps = useMemo(
     () => [
       {
@@ -138,7 +138,6 @@ const Price = React.memo(() => {
     []
   );
 
-  // Memoize handlers
   const toggleDetails = useCallback((serviceId) => {
     setExpandedService((prev) => (prev === serviceId ? null : serviceId));
   }, []);
@@ -153,9 +152,9 @@ const Price = React.memo(() => {
     setSelectedService(null);
   }, []);
 
-  // Memoize category services
   const getCategoryServices = useMemo(() => {
-    return (categoryId) => services.filter((service) => service.categoryId === categoryId);
+    return (categoryId) =>
+      services.filter((service) => service.categoryId === categoryId);
   }, [services]);
 
   if (loading) {
@@ -163,6 +162,7 @@ const Price = React.memo(() => {
   }
 
   return (
+    <Authorization requiredRole={ROLES.CUSTOMER}>
     <div className="price-container">
       <div className="price-categories">
         {categories.map((category) => {
@@ -185,7 +185,9 @@ const Price = React.memo(() => {
                       onClick={() => handleShowModal(service)}
                     >
                       <div className="service-name">{service.name}</div>
-                      <div className="service-price1">{formatPrice(service.price)}</div>
+                      <div className="service-price1">
+                        {formatPrice(service.price)}
+                      </div>
                     </div>
                   ))}
                 </div>
@@ -195,7 +197,6 @@ const Price = React.memo(() => {
         })}
       </div>
 
-      {/* Modal Popup */}
       {showModal && selectedService && (
         <div className="modal" onClick={handleCloseModal}>
           <div className="modal-content" onClick={(e) => e.stopPropagation()}>
@@ -210,7 +211,9 @@ const Price = React.memo(() => {
               <tbody>
                 {selectedService.details.map((detail) => (
                   <tr key={detail.id}>
-                    <td><strong>{detail.name}</strong></td>
+                    <td>
+                      <strong>{detail.name}</strong>
+                    </td>
                     <td>{formatPrice(detail.price)}</td>
                     <td>{detail.description}</td>
                   </tr>
@@ -222,7 +225,9 @@ const Price = React.memo(() => {
       )}
 
       <div className="treatment-timeline">
-        <h1 className="timeline-title">Acne Treatment & Consultation Process at O2 SKIN</h1>
+        <h1 className="timeline-title">
+          Acne Treatment & Consultation Process at O2 SKIN
+        </h1>
         <div className="timeline-container">
           {steps.map((step, index) => (
             <div key={index} className="timeline-step">
@@ -248,6 +253,7 @@ const Price = React.memo(() => {
         </div>
       </div>
     </div>
+    </Authorization>
   );
 });
 
