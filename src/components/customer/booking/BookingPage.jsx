@@ -1,3 +1,4 @@
+
 import { useEffect, useState } from "react";
 import { Application, Calendar } from "react-rainbow-components";
 import { addMinutes, format, parse, isSameDay } from "date-fns";
@@ -10,7 +11,9 @@ import useLocalStorage from "use-local-storage";
 import LOCALSTORAGE_NAME from "../../../constants/localStorageName";
 import "./BookingPage.css";
 import { ToastContainer, toast } from "react-toastify";
+import Authorization from "../../../middleware/Authorization";
 import "react-toastify/dist/ReactToastify.css";
+import ROLES from "../../../constants/role";
 
 const theme = {
   rainbow: {
@@ -27,11 +30,29 @@ const theme = {
 
 const BookingPage = () => {
   const navigate = useNavigate();
+
   const [accountId, setAccountId] = useState(null);
   const [customer] = useLocalStorage(
     LOCALSTORAGE_NAME.CUSTOMER_INFORMATION_CACHE,
     ""
   );
+  const [selectedDate, setSelectedDate] = useState(null);
+  const [selectedTime, setSelectedTime] = useState(null);
+  const [selectedService, setSelectedService] = useState("");
+  const [selectedDoctor, setSelectedDoctor] = useState("");
+  const [formData, setFormData] = useState({
+    name: "",
+    email: "",
+    phone: "",
+  });
+  const [showPopup, setShowPopup] = useState(false);
+  const [currentModalType, setCurrentModalType] = useState("");
+  const [services, setServices] = useState([]);
+  const [availableTimeSlots, setAvailableTimeSlots] = useState([]);
+  const [therapists, setTherapists] = useState([]);
+  const [availableDates, setAvailableDates] = useState([]);
+  const [showDoctorConfirmation, setShowDoctorConfirmation] = useState(false);
+  const [wantDoctor, setWantDoctor] = useState(null);
 
   useEffect(() => {
     if (customer) {
@@ -45,7 +66,6 @@ const BookingPage = () => {
             .map((c) => `%${("00" + c.charCodeAt(0).toString(16)).slice(-2)}`)
             .join("")
         );
-
         const decodedData = JSON.parse(jsonPayload);
         setAccountId(decodedData.accountId);
       } catch (error) {
@@ -54,149 +74,113 @@ const BookingPage = () => {
     }
   }, [customer]);
 
-  const [selectedDate, setSelectedDate] = useState(null);
-  const [selectedTime, setSelectedTime] = useState(null);
-  const [selectedService, setSelectedService] = useState("");
-  const [selectedDoctor, setSelectedDoctor] = useState("");
-  const [formData, setFormData] = useState({
-    name: "",
-    email: "",
-    phone: "",
-  });
+  const fetchServices = async () => {
+    try {
+      const response = await axios.get(
+        `${BASE.BASE_URL}/service/getAllServicePaging?page=0&size=10`
+      );
+      setServices(response.data.data);
+    } catch (error) {
+      console.error("Error fetching services:", error);
+    }
+  };
 
-  const [showPopup, setShowPopup] = useState(false);
-  const [currentModalType, setCurrentModalType] = useState("");
-  const [services, setServices] = useState([]);
-  const [availableTimeSlots, setAvailableTimeSlots] = useState([]);
-  const [therapists, setTherapists] = useState([]);
-  const [availableDates, setAvailableDates] = useState([]);
-  const [showDoctorConfirmation, setShowDoctorConfirmation] = useState(false);
-  const [wantDoctor, setWantDoctor] = useState(null);
+  const fetchTherapists = async () => {
+    try {
+      const response = await axios.get(
+        `${BASE.BASE_URL}/get-all-therapists?page=0&size=10`
+      );
+      const therapistsData = response.data.data.content;
+      const transformedDoctors = therapistsData.map((therapist) => ({
+        id: therapist.id,
+        name: therapist.account ? therapist.account.name : "Unknown",
+        experience: therapist.experience,
+        speciality: therapist.speciality,
+      }));
+      setTherapists(transformedDoctors);
+    } catch (error) {
+      console.error("Error fetching therapists:", error);
+    }
+  };
+
+  const fetchAllAvailableDates = async () => {
+    if (!selectedService) {
+      setAvailableDates([]);
+      setAvailableTimeSlots([]);
+      return;
+    }
+    try {
+      const response = await axios.get(
+        `${BASE.BASE_URL}/therapist-working-time/get-by-available-time?serviceId=${selectedService}`
+      );
+      const timeSlots = response.data.data || [];
+      const datesWithSlots = new Set();
+      timeSlots.forEach((therapist) => {
+        therapist.availableTimeSlots.forEach((slot) => {
+          const date = new Date(slot.day);
+          datesWithSlots.add(format(date, "yyyy-MM-dd"));
+        });
+      });
+      setAvailableDates([...datesWithSlots].map((date) => new Date(date)));
+    } catch (error) {
+      console.error("Error fetching available dates:", error);
+      setAvailableDates([]);
+    }
+  };
+
+  const fetchAvailableTimeSlots = async () => {
+    if (!selectedService || !selectedDate) {
+      setAvailableTimeSlots([]);
+      return;
+    }
+    try {
+      const response = await axios.get(
+        `${
+          BASE.BASE_URL
+        }/therapist-working-time/get-by-available-time?serviceId=${selectedService}&day=${format(
+          selectedDate,
+          "yyyy-MM-dd"
+        )}`
+      );
+      setAvailableTimeSlots(response.data.data || []);
+      if (wantDoctor === null) {
+        setShowDoctorConfirmation(true);
+      }
+    } catch (error) {
+      console.error("Error fetching available time slots:", error);
+      setAvailableTimeSlots([]);
+    }
+  };
 
   useEffect(() => {
-    const fetchServices = async () => {
-      try {
-        const response = await axios.get(
-          `${BASE.BASE_URL}/service/getAllServicePaging?page=0&size=10`
-        );
-        setServices(response.data.data);
-      } catch (error) {
-        console.error("Error fetching services:", error);
-      }
-    };
-
     fetchServices();
   }, []);
 
   useEffect(() => {
-    const fetchTherapists = async () => {
-      try {
-        const response = await axios.get(
-          `${BASE.BASE_URL}/get-all-therapists?page=0&size=10`
-        );
-
-        const therapistsData = response.data.data.content;
-        const transformedDoctors = therapistsData.map((therapist) => ({
-          id: therapist.id,
-          name: therapist.account ? therapist.account.name : "Unknown",
-          experience: therapist.experience,
-          speciality: therapist.speciality,
-        }));
-
-        setTherapists(transformedDoctors);
-      } catch (error) {
-        console.error("Error fetching therapists:", error);
-      }
-    };
-
     fetchTherapists();
   }, []);
 
   useEffect(() => {
-    const fetchAllAvailableDates = async () => {
-      if (!selectedService) {
-        setAvailableDates([]);
-        setAvailableTimeSlots([]);
-        return;
-      }
-
-      try {
-        const response = await axios.get(
-          `${BASE.BASE_URL}/therapist-working-time/get-by-available-time?serviceId=${selectedService}`
-        );
-
-        const timeSlots = response.data.data || [];
-        const datesWithSlots = new Set();
-
-        timeSlots.forEach((therapist) => {
-          therapist.availableTimeSlots.forEach((slot) => {
-            const date = new Date(slot.day);
-            datesWithSlots.add(format(date, "yyyy-MM-dd"));
-          });
-        });
-
-        setAvailableDates([...datesWithSlots].map((date) => new Date(date)));
-      } catch (error) {
-        console.error("Error fetching available dates:", error);
-        setAvailableDates([]);
-      }
-    };
-
     fetchAllAvailableDates();
   }, [selectedService]);
 
   useEffect(() => {
-    const fetchAvailableTimeSlots = async () => {
-      if (!selectedService || !selectedDate) {
-        setAvailableTimeSlots([]);
-        return;
-      }
-      try {
-        const response = await axios.get(
-          `${
-            BASE.BASE_URL
-          }/therapist-working-time/get-by-available-time?serviceId=${selectedService}&day=${format(
-            selectedDate,
-            "yyyy-MM-dd"
-          )}`
-        );
-        setAvailableTimeSlots(response.data.data || []);
-        if (wantDoctor === null) {
-          setShowDoctorConfirmation(true); 
-        }
-      } catch (error) {
-        console.error("Error fetching available time slots:", error);
-        setAvailableTimeSlots([]);
-      }
-    };
-
     fetchAvailableTimeSlots();
   }, [selectedService, selectedDate]);
-
-  const handleInputChange = (e) => {
-    const { name, value } = e.target;
-    setFormData((prevState) => ({
-      ...prevState,
-      [name]: value,
-    }));
-  };
 
   const generateTimeSlots = (start, end, duration = 15) => {
     let slots = [];
     let current = parse(start, "HH:mm:ss", new Date());
     let endTime = parse(end, "HH:mm:ss", new Date());
-
     while (current < endTime) {
       const potentialEndTime = addMinutes(current, duration);
       if (potentialEndTime > endTime) break;
-
       const startTimeStr = format(current, "HH:mm");
       slots.push({
         start: startTimeStr,
         end: format(potentialEndTime, "HH:mm"),
         display: startTimeStr,
       });
-
       current = addMinutes(current, 15);
     }
     return slots;
@@ -205,7 +189,6 @@ const BookingPage = () => {
   const getAvailableTimeSlots = () => {
     const uniqueSlots = new Set();
     let slots = [];
-
     availableTimeSlots.forEach((therapist) => {
       if (
         !selectedDoctor ||
@@ -216,38 +199,24 @@ const BookingPage = () => {
             timeSlot.startHour,
             timeSlot.endHour
           );
-          generatedSlots.forEach((slot) => {
-            uniqueSlots.add(slot.start);
-          });
+          generatedSlots.forEach((slot) => uniqueSlots.add(slot.start));
         });
       }
     });
-
     slots = [...uniqueSlots].map((startTime) => {
       const endTime = format(
         addMinutes(parse(startTime, "HH:mm", new Date()), 15),
         "HH:mm"
       );
-      return {
-        start: startTime,
-        end: endTime,
-        display: startTime,
-      };
+      return { start: startTime, end: endTime, display: startTime };
     });
-
     slots.sort(
       (a, b) =>
         parse(a.start, "HH:mm", new Date()) -
         parse(b.start, "HH:mm", new Date())
     );
-
     return slots;
   };
-
-  const timeSlots = getAvailableTimeSlots();
-  const filteredDoctors = therapists.filter((therapist) =>
-    availableTimeSlots.some((slot) => slot.therapistId === therapist.id)
-  );
 
   const isDateDisabled = (date) => {
     if (!selectedService) return false;
@@ -256,60 +225,23 @@ const BookingPage = () => {
     );
   };
 
-  const handleAppointment = async () => {
-    if (!selectedService || !selectedTime || !selectedDate) {
-      toast.error("Please select all fields before proceeding!");
-      return;
-    }
-
-    const selectedTimeSlot = timeSlots.find(
-      (slot) => slot.display === selectedTime
-    );
-    const selectedDoctorName = therapists.find(
-      (therapist) => therapist.id === parseInt(selectedDoctor)
-    )?.name;
-
-    const appointmentData = accountId
-      ? {
-          accountId: accountId,
-          serviceId: selectedService,
-          day: format(selectedDate, "yyyy-MM-dd"),
-          therapistId: selectedDoctor,
-          startHour: selectedTimeSlot.start,
-        }
-      : null;
-
-    try {
-      const response = await axios.post(
-        `${BASE.BASE_URL}/appointments/create`,
-        appointmentData
-      );
-      const appointmentId = response.data.data;
-
-      toast.success("Appointment created successfully!");
-      navigate("/payment", {
-        state: {
-          service: selectedServiceName,
-          doctor: selectedDoctorName,
-          date: format(selectedDate, "yyyy-MM-dd"),
-          startTime: selectedTimeSlot.start,
-          price: selectedServiceData.total,
-          appointmentId: appointmentId,
-        },
-      });
-    } catch (error) {
-      console.error("Error creating appointment:", error);
-      toast.error("Failed to create appointment. Please try again.");
-    }
+  const formatPrice = (price) => {
+    return new Intl.NumberFormat("en-US", {
+      style: "currency",
+      currency: "USD",
+    }).format(price);
   };
 
-  useEffect(() => {
-    const storedServiceId = localStorage.getItem("selectedServiceId");
-    if (storedServiceId) {
-      setSelectedService(Number(storedServiceId));
-      localStorage.removeItem("selectedServiceId");
-    }
-  }, []);
+  const getCurrentTimeSlot = () => {
+    if (!selectedTime) return null;
+    return timeSlots.find((slot) => slot.display === selectedTime);
+  };
+
+  // Handlers
+  const handleInputChange = (e) => {
+    const { name, value } = e.target;
+    setFormData((prevState) => ({ ...prevState, [name]: value }));
+  };
 
   const handleServiceChange = (e) => {
     const newServiceId = Number(e.target.value);
@@ -352,14 +284,8 @@ const BookingPage = () => {
   const handleDoctorConfirmation = (choice) => {
     setWantDoctor(choice);
     setShowDoctorConfirmation(false);
-    if (!choice) {
-      setSelectedDoctor("");
-    }
+    if (!choice) setSelectedDoctor("");
   };
-
-  const selectedServiceData = services.find((s) => s.id === selectedService);
-  const selectedServiceName =
-    services.find((service) => service.id === selectedService)?.name || "";
 
   const handleShowPopup = (type) => {
     setCurrentModalType(type);
@@ -368,20 +294,83 @@ const BookingPage = () => {
 
   const handleClosePopup = () => setShowPopup(false);
 
-  const getCurrentTimeSlot = () => {
-    if (!selectedTime) return null;
-    return timeSlots.find((slot) => slot.display === selectedTime);
+  const handleAppointment = async () => {
+    if (!selectedService || !selectedTime || !selectedDate) {
+      toast.error("Please select all fields before proceeding!");
+      return;
+    }
+    const selectedTimeSlot = timeSlots.find(
+      (slot) => slot.display === selectedTime
+    );
+    const selectedDoctorName = therapists.find(
+      (therapist) => therapist.id === parseInt(selectedDoctor)
+    )?.name;
+    const appointmentData = accountId
+      ? {
+          accountId: accountId,
+          serviceId: selectedService,
+          day: format(selectedDate, "yyyy-MM-dd"),
+          therapistId: selectedDoctor,
+          startHour: selectedTimeSlot.start,
+        }
+      : null;
+    try {
+      const response = await axios.post(
+        `${BASE.BASE_URL}/appointments/create`,
+        appointmentData
+      );
+      const appointmentId = response.data.data;
+      toast.success("Appointment created successfully!");
+      navigate("/payment", {
+        state: {
+          service: selectedServiceName,
+          doctor: selectedDoctorName,
+          date: format(selectedDate, "yyyy-MM-dd"),
+          startTime: selectedTimeSlot.start,
+          price: selectedServiceData.total,
+          appointmentId: appointmentId,
+        },
+      });
+    } catch (error) {
+      toast.error("Failed to create appointment. Reloading time slots...", {
+        autoClose: 2000,
+      });
+      await fetchAvailableTimeSlots();
+      setSelectedTime(null);
+    }
   };
 
+  useEffect(() => {
+    const storedServiceId = localStorage.getItem("selectedServiceId");
+    localStorage.removeItem("selectedServiceId");
+    if (storedServiceId) {
+      const serviceId = Number(storedServiceId);
+      setSelectedService(serviceId);
+      localStorage.setItem("selectedServiceID", serviceId);
+    }
+  }, []);
+
+  useEffect(() => {
+    const bookedServiceId = localStorage.getItem("bookedServiceId");
+    localStorage.removeItem("bookedServiceId");
+    if (bookedServiceId) {
+      const serviceId = Number(bookedServiceId);
+      setSelectedService(serviceId);
+      localStorage.setItem("selectedServiceID", serviceId);
+    }
+  }, []);
+
+  const timeSlots = getAvailableTimeSlots();
+  const filteredDoctors = therapists.filter((therapist) =>
+    availableTimeSlots.some((slot) => slot.therapistId === therapist.id)
+  );
+  const selectedServiceData = services.find((s) => s.id === selectedService);
+  const selectedServiceName =
+    services.find((service) => service.id === selectedService)?.name || "";
   const currentTimeSlot = getCurrentTimeSlot();
-  const formatPrice = (price) => {
-    return new Intl.NumberFormat("en-US", {
-      style: "currency",
-      currency: "USD",
-    }).format(price);
-  };
 
   return (
+    <Authorization requiredRole={ROLES.CUSTOMER}>
     <Application theme={theme}>
       <div className="appointment-card">
         <h1 className="appointment-title">Make an Appointment</h1>
@@ -413,7 +402,7 @@ const BookingPage = () => {
               alt={`Image of ${selectedServiceData.name}`}
               className="profile-image"
               onError={(e) => {
-                e.target.src = "https://via.placeholder.com/150"; 
+                e.target.src = "https://via.placeholder.com/150";
                 console.error(
                   "Failed to load image:",
                   selectedServiceData.image[0]?.url
@@ -467,9 +456,7 @@ const BookingPage = () => {
                 value={selectedDate}
                 onChange={(date) => {
                   handleDateChange(date);
-                  if (date && selectedService) {
-                    setShowDoctorConfirmation(true);
-                  }
+                  if (date && selectedService) setShowDoctorConfirmation(true);
                 }}
                 variant="single"
                 locale="en-US"
@@ -617,6 +604,7 @@ const BookingPage = () => {
         pauseOnHover
       />
     </Application>
+    </Authorization>
   );
 };
 
