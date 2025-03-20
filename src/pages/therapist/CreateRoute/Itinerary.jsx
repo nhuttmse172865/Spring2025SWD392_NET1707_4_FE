@@ -31,7 +31,7 @@ const Itinerary = () => {
     try {
       const res = await axios.get(`${BASE.BASE_URL}/service-detail/get-all`);
       setServices(res.data.data);
-      console.log(res.data.data);
+     
     } catch (error) {
       console.log(error);
     }
@@ -40,7 +40,7 @@ const Itinerary = () => {
     const service = services.find(s => s.id === value);
     
     if (service?.previousId) {
-      const previousService = services.find(s => s.id === service.previousId); // Tìm service theo previousId
+      const previousService = services.find(s => s.id === service.previousId); 
       const isPreviousBooked = stepsData.some(step => step.service && services.find(s => s.name === step.service)?.id === service.previousId);
       
       if (!isPreviousBooked) {
@@ -139,22 +139,22 @@ const Itinerary = () => {
     const serviceToDelete = services.find(s => s.name === serviceNameToDelete);
     
     if (serviceToDelete) {
-      // Tìm các service phụ thuộc
+      
       const dependentServices = services.filter(s => s.previousId === serviceToDelete.id);
       
-      // Tìm các step có service phụ thuộc
+     
       const dependentSteps = stepsData.filter(step => 
         dependentServices.some(s => s.name === step.service)
       );
       
       if (dependentSteps.length > 0) {
         const dependentServiceNames = dependentSteps.map(step => step.service).join(", ");
-        // Hiển thị thông báo xác nhận
+       
         Modal.confirm({
           title: 'Delete ?',
           content: `Deleting this step will also remove the ${dependentServiceNames} dependency step. Are you sure you want to delete it?`,
           onOk() {
-            // Xóa step hiện tại và các step phụ thuộc
+            
             performDelete(stepId, serviceToDelete.id);
           }
         });
@@ -162,7 +162,7 @@ const Itinerary = () => {
       }
     }
     
-    // Nếu không có step phụ thuộc, xóa trực tiếp
+  
     performDelete(stepId);
   };
   

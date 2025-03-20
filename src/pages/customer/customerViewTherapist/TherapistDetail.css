@@ -4,12 +4,15 @@
     font-family: 'Poppins', sans-serif;
     margin: auto;
     box-shadow: 0 4px 10px rgba(168, 165, 167, 0.2);
+    margin-top: 15px;
+
 }
 .therapist-detail-content {
-    display: inline-block;
+display: flex;
     margin-left: 10px;
     font-size: 16px;
-    gap: 30px;
+    
+    gap: 10px;
 }
 .therapist-image img {
     width: 250px;
@@ -19,14 +22,15 @@
 
 .therapist-detail-info{
     flex :1;
-    
+    min-width: 250px; 
 }
 .therapist-detail-name{
-    font-size: 26px;
+    font-size: 20px;
     font-weight: bold;
     text-transform: uppercase;
     margin-bottom: 15px;
     color: #d63384; 
+    margin-left: 10px;
 }
 .therapist-detail-table{
 width: 100%;

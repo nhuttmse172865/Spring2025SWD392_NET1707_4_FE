@@ -32,22 +32,31 @@ const CheckOutTherapist = () => {
   // useEffect(() => {
   //   filterAppointmentsByDate();
   // }, [selectedDate, products,searchPhone]); 
-  useEffect(() => {
-    setFilteredProducts(products);
-    console.log(filteredProducts)
-  }, [products]);
+  // useEffect(() => {
+  //   setFilteredProducts(products);
+  //   console.log(filteredProducts)
+  // }, [products]);
+   useEffect(() => {
+      filterAppointmentsByDate();
+    }, [products,searchPhone]); 
   useEffect(() => {
     return () => {
      
       localStorage.removeItem('pendingDetailId');
     };
   }, []);
-  
+  const filterAppointmentsByDate = () => {
+    const filtered = products.filter((product) =>
+     
+         product?.account?.phone?.includes(searchPhone)
+    );
+    setFilteredProducts(filtered);
+};
   const fetchAppointments = async () => {
     setLoading(true);
     try {
       const res = await axios.get(`${BASE.BASE_URL}/appointments/getAll`, {
-        // params: { page: currentPage - 1, size: pageSize },
+        params: { page: currentPage - 1, size: pageSize },
       });
       setProducts(res.data.data.content);
       console.log(res.data.data.content);
@@ -88,7 +97,12 @@ const CheckOutTherapist = () => {
     
     // Calculate amount based on the appointment total
     const amount = isTuVanService ? selectedProduct.total * 25000 * 0.1 : selectedProduct.total * 25000 * 0.1;
-    const returnUrl = encodeURIComponent("http://localhost:5173/staff/checkoutTherapist");
+    const returnUrl = encodeURIComponent(
+  window.location.hostname === "localhost"
+    ? "http://localhost:5173/staff/checkoutTherapist"
+    : "http://34.126.143.212/staff/checkoutTherapist"
+);
+
   
     // Store the appointment ID in localStorage
     localStorage.setItem('pendingAppointmentId', appointmentId);
@@ -245,7 +259,7 @@ const CheckOutTherapist = () => {
           <td>{product.account.name}</td>
           <td>{product.service?.name || "No Service"}</td>
           <td>{product.account.phone}</td>
-          <td>{product.total} $</td>
+          <td>${product.total}</td>
           <td>{product.status}</td>
           <td>{dayjs(product.createdTime).format("YYYY-MM-DD")}</td>
           <td>
@@ -315,7 +329,7 @@ const CheckOutTherapist = () => {
   </span>
 </p>
 
-        <p><strong>Price:</strong> {detail.price} $</p>
+        <p><strong>Price:</strong> ${detail.price}</p>
         <p><strong>Start:</strong> {detail.startHour}</p>
         <p><strong>End:</strong> {detail.endHour}</p>
         <p><strong>Day:</strong> {detail.day}</p>

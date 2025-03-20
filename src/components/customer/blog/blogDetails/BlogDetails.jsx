@@ -19,11 +19,7 @@ const BlogDetails = () => {
 
   const parsedContent = Array.isArray(post.content) ? post.content : [];
 
-  // try {
-  //   parsedContent = JSON.parse(post.content);
-  // } catch (error) {
-  //   console.error("Error parsing content:", error);
-  // }
+ 
 
   return (
     <div className="blog-container">

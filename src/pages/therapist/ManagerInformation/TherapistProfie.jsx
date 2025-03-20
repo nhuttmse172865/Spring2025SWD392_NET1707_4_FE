@@ -82,7 +82,7 @@ try {
             <div className="therapist-profile-content">
                 <div className="therapist-profile-image">
                 <img src={therapist?.images?.[0]?.url || "default-image.jpg"} alt="therapist" />
-                <button className="btn-updateprofile" onClick={() => setIsModalOpen(true)}>Update profile</button>
+                <button className="btn-updateprofile" onClick={() => setIsModalOpen(true)}>Update Profile</button>
                 </div>
                 <div className="therapist-profile-info">
                     <h2 className="therapist-profile-name">{therapist?.account?.name}</h2>
@@ -90,21 +90,21 @@ try {
                         <tbody>
                            
                             <tr>
-                                <td><strong>speciality</strong></td>
+                                <td><strong>Speciality</strong></td>
                                 <td>{therapist?.speciality}</td>
                             </tr>
                           
                         </tbody>
                     </table>
                     <div className="therapist-profile-section">
-                        <h3 className="therapist-profile-title">Chứng chỉ</h3>
+                        <h3 className="therapist-profile-title">Certificate</h3>
                         <ul className="therapist-profile-list">
                             {therapist?.certificate}
                            
                         </ul>
                     </div>
                     <div className="therapist-profile-section">
-                        <h3 className="therapist-profile-title">Kinh nghiệm</h3>
+                        <h3 className="therapist-profile-title">Experience</h3>
                         <ul className="therapist-profile-list">
                             {therapist?.experience}
                         </ul>
@@ -112,7 +112,7 @@ try {
                 </div>
             </div>
             <Modal
-                title="Cập nhật hồ sơ"
+                title="Profile"
                 open={isModalOpen}
                 onCancel={() => setIsModalOpen(false)}
                 footer={[

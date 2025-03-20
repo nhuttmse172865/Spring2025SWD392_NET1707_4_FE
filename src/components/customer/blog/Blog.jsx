@@ -20,7 +20,7 @@ const Blog = () => {
     try {
       const res = await axios.get(`${BASE.BASE_URL}/blog/getAll`);
       setBlogs(res.data.data);
-      console.log(res.data.data)
+      
     } catch (error) {
       message.error("Failed to fetch blogs!");
     } finally {
