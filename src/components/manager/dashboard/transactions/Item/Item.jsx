@@ -1,8 +1,9 @@
 import React from "react";
 import CaculateGridColumn from "../../../../../helpers/CaculateGridColumn";
 import DASHBOARD from "../../../../../constants/dashboard";
+import formatDate from "../../../../../helpers/FormatDate";
 
-const Item = () => {
+const Item = ({ item, index }) => {
   const gridColumnTemplate = CaculateGridColumn(
     DASHBOARD.LIST_TITLE_TRANSACTIONS
   );
@@ -13,12 +14,20 @@ const Item = () => {
         gridTemplateColumns: gridColumnTemplate,
       }}
     >
-      <li className="text-[rgba(0,0,0,0.5)]">1</li>
-      <li className="text-[rgba(0,0,0,0.5)]">Deep Cleansing Facial</li>
-      <li className="text-[rgba(21,19,19,0.5)]">1</li>
-      <li className="text-[rgba(0,0,0,0.5)]">200$</li>
-      <li className="text-[rgba(21,19,19,0.5)]">1</li>
-      <li className="text-[rgba(0,0,0,0.5)]">200$</li>
+      <li className="text-[rgba(0,0,0,0.5)] limited-lines-1">{index + 1}</li>
+      <li className="text-[rgba(0,0,0,0.5)] limited-lines-1">
+        {item?.account?.email}
+      </li>
+      <li className="text-[rgba(21,19,19,0.5)] limited-lines-1">
+        {item?.service?.name}
+      </li>
+      <li className="text-[rgba(0,0,0,0.5)] limited-lines-1">
+        {formatDate(new Date(item?.createdTime))}
+      </li>
+      <li className="text-[rgba(21,19,19,0.5)] limited-lines-1">
+        {item?.paid}
+      </li>
+      <li className="text-[rgba(0,0,0,0.5)] limited-lines-1">{item?.status}</li>
     </ul>
   );
 };

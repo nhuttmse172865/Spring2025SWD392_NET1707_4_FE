@@ -32,6 +32,8 @@ import add from '../assets/images/manager/add.png';
 import time from '../assets/images/manager/time.png';
 import trash from '../assets/images/manager/trash.png';
 import arrow from '../assets/images/manager/arrow-left.png'
+import revenue from '../assets/images/manager/revenue.png'
+import transactions from '../assets/images/manager/transactions.png'
 
 const ICONS = {
   search,
@@ -67,8 +69,9 @@ const ICONS = {
   add,
   time,
   trash,
-  arrow
-
+  arrow,
+  revenue,
+  transactions
 };
 
 export default ICONS;

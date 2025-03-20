@@ -1,12 +1,20 @@
+import ICONS from "./icons";
+
 const ANALYSIS_ITEM = [
   {
     title: "Transactions",
+    icon: ICONS.transactions,
+    path: "transactions",
   },
   {
     title: "Customer",
+    icon: ICONS.employeeActive,
+    path: "customer",
   },
   {
     title: "Revenue",
+    icon: ICONS.revenue,
+    path: "revenue",
   },
 ];
 
@@ -17,11 +25,11 @@ const LIST_TITLE_POPULAR_SERVICES = [
   },
   {
     name: "Services",
-    column: 5,
+    column: 6,
   },
   {
-    name: "Number Uses",
-    column: 3,
+    name: "Uses",
+    column:2,
   },
   {
     name: "Price",
@@ -49,16 +57,16 @@ const LIST_TITLE_TRANSACTIONS = [
   },
   {
     name: "Price",
-    column: 1.5,
+    column: 1,
   },
 
   {
     name: "Status",
-    column: 1,
+    column: 1.5,
   },
 ];
 
-const  LIST_MONTH = Array.from({ length: 31 }, (_, i) => i + 1);
+const LIST_MONTH = Array.from({ length: 31 }, (_, i) => i + 1);
 
 const LIST_YEAR = [
   "Jan",
@@ -75,7 +83,23 @@ const LIST_YEAR = [
   "Dec",
 ];
 
-const STATUS_CHART = { WEEKLY: "Weekly", MONTHLY: "Monthly", YEARLY: "Yearly" };
+const STATUS_CHART = {
+  WEEKLY: {
+    name: "Weekly",
+    path: "by-week",
+    subName: "week",
+  },
+  MONTHLY: {
+    name: "Monthly",
+    path: "by-month",
+    subName: "month",
+  },
+  YEARLY: {
+    name: "Yearly",
+    path: "by-year",
+    subName: "year",
+  },
+};
 
 const DASHBOARD = {
   ANALYSIS_ITEM,
