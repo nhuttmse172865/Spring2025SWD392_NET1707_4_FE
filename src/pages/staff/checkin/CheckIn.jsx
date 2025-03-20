@@ -160,7 +160,7 @@ useEffect(() => {
           <td>{product.account.name}</td>
           <td>{product.service.name}</td>
           <td>{product.account.phone}</td>
-          <td>{product.total}$</td>
+          <td>${product.total}</td>
           <td>{dayjs(product.createdTime).format("YYYY-MM-DD")}</td>
           <td>{product.status}</td>
           <td>
@@ -215,7 +215,7 @@ useEffect(() => {
     <div key={detail.id} className="appointment-item">
       <p><strong>Service detail:</strong> {detail.name}</p>
       <p><strong>Status:</strong> {detail.status}</p>
-      <p><strong>Price:</strong> {detail.price}</p>
+      <p><strong>Price:</strong> ${detail.price}</p>
       <p><strong>Start:</strong> {detail.startHour}</p>
       <p><strong>End:</strong> {detail.endHour}</p>
       <p><strong>Therapist:</strong> {detail.therapist?.account?.name}</p>

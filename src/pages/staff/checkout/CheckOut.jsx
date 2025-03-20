@@ -35,12 +35,7 @@ const CheckIn = () => {
   useEffect(() => {
     setFilteredProducts(products);
   }, [products]);
-  useEffect(() => {
-    return () => {
-     
-      localStorage.removeItem('pendingDetailId');
-    };
-  }, []);
+  
   const fetchAppointments = async () => {
     setLoading(true);
     try {
@@ -71,7 +66,7 @@ const CheckIn = () => {
   const handleCheckOutCancel = () => {
     setIsCheckOutModalVisible(false);
     setSelectedProduct(null);
-    localStorage.removeItem('pendingDetailId'); 
+    
   };
 
   const showAppointmentDetail = async (product) => {
@@ -91,8 +86,16 @@ const CheckIn = () => {
   const appointmentId = selectedProduct.id; 
   const appointment_detailsId = detail.id;
   const amount = detail.price * 25000 *0.9; 
-  const returnUrl = encodeURIComponent("http://localhost:5173/staff/checkout");
-
+  const returnUrl = encodeURIComponent(
+    window.location.hostname === "localhost"
+      ? "http://localhost:5173/staff/checkout"
+      : "http://34.126.143.212/staff/checkout"
+  );
+  
+  console.log("Selected Product ID:", selectedProduct?.id);
+  console.log("Detail ID:", detail?.id);
+  console.log("Amount:", amount);
+  
   //save local
   localStorage.setItem('pendingDetailId', detail.id);
   const fullUrl = `${BASE.BASE_URL}/vnpay/create-payment-url?appointmentId=${appointmentId}&detailId=${detail.id}&amount=${amount}&returnUrl=${returnUrl}`;
@@ -104,12 +107,13 @@ const CheckIn = () => {
     );
     
 
-    console.log("VNPay response:", response);
+    console.log("VNPay full response:", response.data);
+
     if (response.data.data) {
      
       setTimeout(() => {
         window.location.href = response.data.data;
-      }, 5000); 
+      }, 2000); 
     } else {
       console.error("Không lấy được payment URL", response.data);
     }
@@ -153,38 +157,30 @@ const handleSavePayment = async () => {
 
       if (paymentResponse.status === 201) {
         console.log("Payment saved successfully, updating appointment detail...");
-       
-        // Get updated products
-        const updatedProducts = await axios.get(`${BASE.BASE_URL}/appointments/getAll`).then(res => res.data.data.content);
-        setProducts(updatedProducts);
         
-        // Find the selected product
-        const selectedProduct = updatedProducts.find((p) => p.id === appointmentId);
-       
+      
+        const appointmentResponse = await axios.get(`${BASE.BASE_URL}/appointments/${appointmentId}`);
+        const selectedProduct = appointmentResponse.data.data;
+        
         if (selectedProduct) {
-          // Only update the specific detail that was paid for
           console.log(`Updating appointment detail: ${detailId}`);
           try {
             const response = await axios.put(`${BASE.BASE_URL}/appointment-detail/checkout/${detailId}`);
             console.log(`Updated appointment detail ${detailId} response:`, response.data);
-            
-            // Clear the localStorage after successful update
             localStorage.removeItem('pendingDetailId');
-            
           } catch (error) {
             console.error(`Error updating appointment detail ${detailId}:`, error.response ? error.response.data : error.message);
           }
         } else {
           console.error("Selected product not found, cannot update appointment details.");
         }
-
+        
         Modal.success({
           title: "Payment Successful",
           content: "The appointment has been checked out successfully!",
         });
-
         fetchAppointments();
-      } else {
+      }else {
         console.error("Payment save failed:", paymentResponse.data);
         Modal.error({
           title: "Payment Failed",
@@ -256,11 +252,7 @@ const handleCashPayment = async (detail) => {
             value={searchPhone}
             onChange={(e) => setSearchPhone(e.target.value)}
           />
-          {/* <DatePicker
-            value={selectedDate}
-            onChange={(date) => setSelectedDate(date || dayjs())}
-            format="YYYY-MM-DD"
-          /> */}
+        
        
         </div>
       </div>
@@ -292,7 +284,7 @@ const handleCashPayment = async (detail) => {
                <td>{product.account.name}</td>
                <td>{product.service.name}</td>
                <td>{product.account.phone}</td>
-               <td>{product.total}$</td>
+               <td>${product.total}</td>
                <td>{dayjs(product.createdTime).add(1, 'day').format("YYYY-MM-DD")}</td>
                <td>{product.status}</td>
                <td>
@@ -353,7 +345,7 @@ const handleCashPayment = async (detail) => {
   </span>
 </p>
 
-        <p><strong>Price:</strong> {detail.price} $</p>
+        <p><strong>Price:</strong> ${detail.price}</p>
         <p><strong>Start:</strong> {detail.startHour}</p>
         <p><strong>End:</strong> {detail.endHour}</p>
         <p><strong>Day:</strong> {detail.day}</p>
