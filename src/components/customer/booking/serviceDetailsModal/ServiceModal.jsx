@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import "./ServiceModal.css";
 import axios from "axios";
 import BASE from "../../../../constants/base";
-import Authorization from "../../../../middleware/Authorization";
+
 
 const ServiceModal = () => {
   const [selectedService, setSelectedService] = useState(null);
@@ -54,7 +54,7 @@ const ServiceModal = () => {
   }
 
   return (
-    <Authorization requiredRole={ROLES.CUSTOMER}>
+   
       <div className="service-details-container1">
         {serviceDetails.length > 0 ? (
           <div className="service-details-list">
@@ -89,7 +89,7 @@ const ServiceModal = () => {
           <p className="no-service-details">No Service Details.</p>
         )}
       </div>
-    </Authorization>
+
   );
 };
 

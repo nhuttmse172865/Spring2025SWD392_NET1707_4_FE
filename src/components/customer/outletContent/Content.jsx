@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect, useMemo, useCallback } from "react";
 import { useNavigate } from "react-router-dom";
 import ReactPaginate from "react-paginate";
@@ -7,7 +6,6 @@ import BASE from "../../../constants/base";
 import useLocalStorage from "use-local-storage";
 import LOCALSTORAGE_NAME from "../../../constants/localStorageName";
 import { ToastContainer, toast } from "react-toastify";
-import Authorization from "../../../middleware/Authorization";
 import "react-toastify/dist/ReactToastify.css";
 import "./Content.css";
 
@@ -150,88 +148,87 @@ const Content = React.memo(() => {
   }, [sortedServices, currentPage]);
 
   return (
-    <Authorization requiredRole={ROLES.CUSTOMER}>
-    <div className="spa-container">
-      <ToastContainer />
 
-      <div className="sort-container">
-        <span className="sort-label">Sort by:</span>
-        <div className="sort-buttons">
-          {[
-            { type: "default", label: "Default" },
-            { type: "nameAZ", label: "Name A-Z" },
-            { type: "nameZA", label: "Name Z-A" },
-            { type: "priceLowHigh", label: "Price Low to High" },
-            { type: "priceHighLow", label: "Price High to Low" },
-          ].map(({ type, label }) => (
-            <button
-              key={type}
-              className={`sort-button ${sortType === type ? "active" : ""}`}
-              onClick={() => setSortType(type)}
-            >
-              {label}
-            </button>
-          ))}
+      <div className="spa-container">
+        <ToastContainer />
+
+        <div className="sort-container">
+          <span className="sort-label">Sort by:</span>
+          <div className="sort-buttons">
+            {[
+              { type: "default", label: "Default" },
+              { type: "nameAZ", label: "Name A-Z" },
+              { type: "nameZA", label: "Name Z-A" },
+              { type: "priceLowHigh", label: "Price Low to High" },
+              { type: "priceHighLow", label: "Price High to Low" },
+            ].map(({ type, label }) => (
+              <button
+                key={type}
+                className={`sort-button ${sortType === type ? "active" : ""}`}
+                onClick={() => setSortType(type)}
+              >
+                {label}
+              </button>
+            ))}
+          </div>
         </div>
-      </div>
 
-      <div className="services-grid">
-        {currentServices.map((service) => (
-          <div
-            key={service.id || service.name}
-            className="service-card"
-            onClick={() => handleServiceClick(service)}
-          >
-            <div className="service-image-container">
-              <img
-                src={
-                  service.image && service.image.length > 0
-                    ? service.image[0].url
-                    : "https://via.placeholder.com/150"
-                }
-                alt={service.name}
-                className="service-image-main"
-                loading="lazy"
-                onError={(e) =>
-                  (e.target.src = "https://via.placeholder.com/150")
-                }
-              />
-            </div>
-            <div className="service-info">
-              <h3 className="service-title">Service: {service.name}</h3>
-              <div className="service-action">
-                <p className="service-price">{formatPrice(service.total)}</p>
-                <button
-                  className="book-button"
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    handleBookClick(service.id);
-                  }}
-                >
-                  Book
-                </button>
+        <div className="services-grid">
+          {currentServices.map((service) => (
+            <div
+              key={service.id || service.name}
+              className="service-card"
+              onClick={() => handleServiceClick(service)}
+            >
+              <div className="service-image-container">
+                <img
+                  src={
+                    service.image && service.image.length > 0
+                      ? service.image[0].url
+                      : "https://via.placeholder.com/150"
+                  }
+                  alt={service.name}
+                  className="service-image-main"
+                  loading="lazy"
+                  onError={(e) =>
+                    (e.target.src = "https://via.placeholder.com/150")
+                  }
+                />
+              </div>
+              <div className="service-info">
+                <h3 className="service-title">Service: {service.name}</h3>
+                <div className="service-action">
+                  <p className="service-price">{formatPrice(service.total)}</p>
+                  <button
+                    className="book-button"
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      handleBookClick(service.id);
+                    }}
+                  >
+                    Book
+                  </button>
+                </div>
               </div>
             </div>
-          </div>
-        ))}
-      </div>
+          ))}
+        </div>
 
-      <ReactPaginate
-        previousLabel={"<"}
-        nextLabel={">"}
-        breakLabel={"..."}
-        pageCount={pageCount}
-        marginPagesDisplayed={2}
-        pageRangeDisplayed={5}
-        onPageChange={handlePageClick}
-        containerClassName={"pagination"}
-        activeClassName={"active"}
-        pageClassName={"page-item"}
-        previousClassName={"previous-item"}
-        nextClassName={"next-item"}
-      />
-    </div>
-    </Authorization>
+        <ReactPaginate
+          previousLabel={"<"}
+          nextLabel={">"}
+          breakLabel={"..."}
+          pageCount={pageCount}
+          marginPagesDisplayed={2}
+          pageRangeDisplayed={5}
+          onPageChange={handlePageClick}
+          containerClassName={"pagination"}
+          activeClassName={"active"}
+          pageClassName={"page-item"}
+          previousClassName={"previous-item"}
+          nextClassName={"next-item"}
+        />
+      </div>
   );
 });
 

@@ -1,9 +1,31 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import Header from "../../../common/table/header/Header";
 import DASHBOARD from "../../../../constants/dashboard";
 import Item from "./item/Item";
+import axios from "axios";
+import BASE from "../../../../constants/base";
 
 const PopularService = () => {
+  const [popularService, setPopularService] = useState();
+
+  const handleFetchPopularService = async () => {
+    try {
+      const response = await axios.get(
+        `${BASE.BASE_URL}/dash-board/services-popularity`
+      );
+      if (!response || response.status !== 200) throw new Error();
+      setPopularService(response.data.data);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  useEffect(() => {
+    if(!popularService){
+      handleFetchPopularService()
+    }
+  },[])
+
   return (
     <div className="bg-white col-span-4 rounded-[.375rem] relative p-5">
       <h6 className="text-[15px] font-medium text-[rgba(0,0,0,0.5)] mb-4">
@@ -22,12 +44,10 @@ const PopularService = () => {
           height: "calc(100% - 86px)",
         }}
       >
-        <Item />
-        <Item />
-        <Item />
-        <Item />
-        <Item />
-        <Item />
+        {popularService && popularService.map((item,index) => (
+          <Item  item={item} index={index}/>
+        ))}
+        
       </div>
     </div>
   );

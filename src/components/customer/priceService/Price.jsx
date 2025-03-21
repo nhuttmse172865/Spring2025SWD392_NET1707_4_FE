@@ -1,9 +1,7 @@
 import React, { useState, useEffect, useMemo, useCallback } from "react";
-import Authorization from "../../../middleware/Authorization";
 import BASE from "../../../constants/base";
-
 import "./Price.css";
-import ROLES from "../../../constants/role";
+
 
 const formatPrice = (price) =>
   new Intl.NumberFormat("en-US", {
@@ -162,7 +160,7 @@ const Price = React.memo(() => {
   }
 
   return (
-    <Authorization requiredRole={ROLES.CUSTOMER}>
+
     <div className="price-container">
       <div className="price-categories">
         {categories.map((category) => {
@@ -253,7 +251,7 @@ const Price = React.memo(() => {
         </div>
       </div>
     </div>
-    </Authorization>
+
   );
 });
 

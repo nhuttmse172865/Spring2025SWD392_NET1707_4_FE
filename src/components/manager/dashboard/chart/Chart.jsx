@@ -2,6 +2,9 @@ import React, { useEffect, useMemo, useRef, useState } from "react";
 import DASHBOARD from "../../../../constants/dashboard";
 import findClosestNumber from "../../../../helpers/CaculateClosestNumber";
 import CALENDAR from "../../../../constants/calendar";
+import axios from "axios";
+import BASE from "../../../../constants/base";
+import formatDate from "../../../../helpers/FormatDate";
 
 const Chart = () => {
   const svgRef = useRef(null);
@@ -22,25 +25,28 @@ const Chart = () => {
     DASHBOARD.STATUS_CHART.WEEKLY
   );
   const [activeChooseStatus, setActiveChooseStatus] = useState(false);
-
-  const revenueData = [10, 1, 1, 1, 2, 2, 10];
+  const [revenueData, setRevenueData] = useState();
 
   const handleMouseMove = (event) => {
-    const xPosition = event.clientX - leftChart;
-    if (!arrayX) {
-    }
-    const closestNumber = findClosestNumber(xPosition, arrayX);
-
-    const index = arrayX.indexOf(closestNumber);
-    if (index > pointsChart.length - 1) {
-      setIndexArrayHover(pointsChart.length - 1);
-    } else {
-      setIndexArrayHover(index);
+    if (arrayX) {
+      const xPosition = event.clientX - leftChart;
+      const closestNumber = findClosestNumber(xPosition, arrayX);
+      const index = arrayX.indexOf(closestNumber);
+      if (index > pointsChart.length - 1) {
+        setIndexArrayHover(pointsChart.length - 1);
+      } else {
+        setIndexArrayHover(index);
+      }
     }
   };
 
   const handleChangeStatus = (item) => {
     setStatusActive(item);
+    setRevenueData();
+    setDataPoints();
+    setPath();
+    setLineCurrent();
+    setGradientPath();
     switch (item) {
       case DASHBOARD.STATUS_CHART.WEEKLY:
         setArrayVertical(CALENDAR.WEEK);
@@ -51,6 +57,23 @@ const Chart = () => {
       case DASHBOARD.STATUS_CHART.YEARLY:
         setArrayVertical(DASHBOARD.LIST_YEAR);
         break;
+    }
+  };
+
+  const handleFetchDataTransactions = async () => {
+    try {
+      const response = await axios.get(
+        `${BASE.BASE_URL}/dash-board/revenue-overview/${
+          statusActive.path
+        }?date=${formatDate(new Date())}`
+      );
+      if (!response || response.status !== 200) throw new Error();
+      const dataPoints = response.data.data
+        .filter((item) => item.date !== null)
+        .sort((a, b) => new Date(a.date) - new Date(b.date));
+      setRevenueData(dataPoints);
+    } catch (error) {
+      console.log(error);
     }
   };
 
@@ -73,83 +96,95 @@ const Chart = () => {
   }, [indexArrayHover, pointsChart]);
 
   useEffect(() => {
-    const svg = svgRef.current;
-    const padding = 20;
-    const height = svg.clientHeight - 2 * padding;
-    const width = svg.clientWidth - 2 * padding;
+    if (revenueData) {
+      const revenueDataPoints =
+        Array.isArray(revenueData) && revenueData.map((item) => item.value);
+      const svg = svgRef.current;
+      const padding = 20;
+      const height = svg.clientHeight - 2 * padding;
+      const width = svg.clientWidth - 2 * padding;
 
-    const rect = svg.getBoundingClientRect();
-    setLeftChart(rect.left);
+      const rect = svg.getBoundingClientRect();
+      setLeftChart(rect.left);
 
-    const maxRevenue = Math.max(...revenueData) + Math.max(...revenueData) / 2;
-    const gapX = width / (arrayVertical.length - 1);
-    setSpaceX(gapX);
-    const arrayX = Array.from(
-      { length: arrayVertical.length },
-      (_, i) => 0 + i * gapX
-    );
-    setArrayX(arrayX);
-    const points = revenueData.map((revenue, index) => {
-      const x = padding + index * gapX;
-      const y = padding + Math.abs(height - (height * revenue) / maxRevenue);
-      return { x, y };
-    });
-    setPointChart(points);
+      const maxRevenue =
+        Math.max(...revenueDataPoints) + Math.max(...revenueDataPoints) / 2;
+      const gapX = width / (arrayVertical.length - 1);
+      setSpaceX(gapX);
+      const arrayX = Array.from(
+        { length: arrayVertical.length },
+        (_, i) => 0 + i * gapX
+      );
+      setArrayX(arrayX);
+      const points = revenueDataPoints.map((revenue, index) => {
+        const x = padding + index * gapX;
+        const y = padding + Math.abs(height - (height * revenue) / maxRevenue);
+        return { x, y };
+      });
+      setPointChart(points);
 
-    let pathD = `M ${points[0].x} ${points[0].y}`;
-    for (let i = 0; i < points.length - 1; i++) {
-      const xMid = (points[i].x + points[i + 1].x) / 2;
-      const yMid = (points[i].y + points[i + 1].y) / 2;
-      const cpX1 = (xMid + points[i].x) / 2;
-      const cpX2 = (xMid + points[i + 1].x) / 2;
-      pathD += ` Q ${cpX1} ${points[i].y}, ${xMid} ${yMid}`;
-      pathD += ` Q ${cpX2} ${points[i + 1].y}, ${points[i + 1].x} ${
-        points[i + 1].y
-      }`;
+      let pathD = `M ${points[0].x} ${points[0].y}`;
+      for (let i = 0; i < points.length - 1; i++) {
+        const xMid = (points[i].x + points[i + 1].x) / 2;
+        const yMid = (points[i].y + points[i + 1].y) / 2;
+        const cpX1 = (xMid + points[i].x) / 2;
+        const cpX2 = (xMid + points[i + 1].x) / 2;
+        pathD += ` Q ${cpX1} ${points[i].y}, ${xMid} ${yMid}`;
+        pathD += ` Q ${cpX2} ${points[i + 1].y}, ${points[i + 1].x} ${
+          points[i + 1].y
+        }`;
+      }
+      setPath(pathD);
+
+      let gradientPathD = `M ${points[0].x} ${points[0].y}`;
+      gradientPathD += pathD.substring(1);
+      for (let i = points.length - 1; i >= 0; i--) {
+        gradientPathD += `L ${points[i].x} ${height + 2 * padding}`;
+      }
+      gradientPathD += `Z`;
+
+      setGradientPath(gradientPathD);
+
+      const dataPoints = [
+        <circle
+          key={points.length - 1}
+          cx={points[points.length - 1].x}
+          cy={points[points.length - 1].y}
+          r="6"
+          fill="rgba(255, 79, 157, 0.5)"
+          className="cursor-pointer data-point-animation"
+        />,
+        <circle
+          key={points.length - 1}
+          cx={points[points.length - 1].x}
+          cy={points[points.length - 1].y}
+          r="4"
+          fill="#FF60A7"
+          className="cursor-pointer relative z-40"
+        />,
+      ];
+
+      const lineCurrent = (
+        <line
+          x1={points[points.length - 1].x}
+          y1="20"
+          x2={points[points.length - 1].x}
+          y2={height + padding}
+          strokeWidth="2"
+          stroke="#FF60A7"
+        />
+      );
+      setLineCurrent(lineCurrent);
+      setDataPoints(dataPoints);
+      setIndexArrayHover(revenueDataPoints.length - 1);
     }
-    setPath(pathD);
+  }, [arrayVertical, revenueData]);
 
-    let gradientPathD = `M ${points[0].x} ${points[0].y}`;
-    gradientPathD += pathD.substring(1);
-    for (let i = points.length - 1; i >= 0; i--) {
-      gradientPathD += `L ${points[i].x} ${height + 2 * padding}`;
+  useEffect(() => {
+    if (statusActive) {
+      handleFetchDataTransactions();
     }
-    gradientPathD += `Z`;
-
-    setGradientPath(gradientPathD);
-
-    const dataPoints = [
-      <circle
-        key={points.length - 1}
-        cx={points[points.length - 1].x}
-        cy={points[points.length - 1].y}
-        r="6"
-        fill="rgba(255, 79, 157, 0.5)"
-        className="cursor-pointer data-point-animation"
-      />,
-      <circle
-        key={points.length - 1}
-        cx={points[points.length - 1].x}
-        cy={points[points.length - 1].y}
-        r="4"
-        fill="#FF60A7"
-        className="cursor-pointer relative z-40"
-      />,
-    ];
-
-    const lineCurrent = (
-      <line
-        x1={points[points.length - 1].x}
-        y1="20"
-        x2={points[points.length - 1].x}
-        y2={height + padding}
-        strokeWidth="2"
-        stroke="#FF60A7"
-      />
-    );
-    setLineCurrent(lineCurrent);
-    setDataPoints(dataPoints);
-  }, [arrayVertical]);
+  }, [statusActive]);
 
   return (
     <div className="col-span-7 bg-white rounded-[.375rem] p-5 relative h-[400px] flex flex-col">
@@ -162,7 +197,7 @@ const Chart = () => {
           onClick={() => setActiveChooseStatus((prev) => !prev)}
         >
           <span className="text-[14px] text-white">
-            {statusActive && statusActive}
+            {statusActive && statusActive.name}
           </span>
           {activeChooseStatus && (
             <ul className="absolute border-input-form-login w-full left-0 top-[100%] px-3.5 bg-white mt-1 z-[500]">
@@ -171,7 +206,7 @@ const Chart = () => {
                   onClick={() => handleChangeStatus(item)}
                   className="text-[14px] text-[rgba(0,0,0,0.5)] py-1 hover:text-(--color-primary-100)"
                 >
-                  {item}
+                  {item.name}
                 </li>
               ))}
             </ul>
@@ -201,21 +236,31 @@ const Chart = () => {
           {lineCurrent && lineCurrent}
           {dataPoints && dataPoints}
         </svg>
-        <div
-          className="absolute z-50 border-input-form-login min-w-[100px] p-2 bg-white ease-linear duration-300"
-          style={{
-            left: revenueX,
-            top: revenueY,
-            transform: "translateY(-100%)",
-          }}
-        >
-          <h6 className="text-[13px] text-[rgba(0,0,0,0.5)]">
-            {arrayVertical && arrayVertical[indexArrayHover]}
-          </h6>
-          <span className="text-[14px] text-(--color-primary-100)">
-            {revenueData[indexArrayHover]}$
-          </span>
-        </div>
+        {arrayVertical && revenueData && pointsChart && (
+          <div
+            className="absolute z-50 border-input-form-login min-w-[100px] p-2 bg-white ease-linear duration-300"
+            style={{
+              left: revenueX,
+              top: revenueY,
+              transform: "translateY(-100%)",
+            }}
+          >
+            <h6 className="text-[13px] text-[rgba(0,0,0,0.5)]">
+              {arrayVertical && arrayVertical[indexArrayHover]}{" "}
+              {revenueData && revenueData[indexArrayHover]?.date !== undefined && (
+                <span className="text-[12px] text-[rgba(0,0,0,0.5)]">
+             
+                  {statusActive === DASHBOARD.STATUS_CHART.YEARLY
+                    ? formatDate(new Date(revenueData[indexArrayHover]?.date), true)
+                    : revenueData[indexArrayHover]?.date}
+                </span>
+              )}
+            </h6>
+            <span className="text-[14px] text-(--color-primary-100)">
+              {revenueData && revenueData[indexArrayHover]?.value}$
+            </span>
+          </div>
+        )}
         <div className="flex justify-between px-5">
           {arrayVertical &&
             arrayVertical.map((item, index) => (

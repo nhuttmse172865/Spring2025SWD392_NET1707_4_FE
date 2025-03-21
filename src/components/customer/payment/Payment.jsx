@@ -51,7 +51,7 @@ const Payment = () => {
       }
 
       const response = await fetch(
-        `${BASE.BASE_URL}/vnpay/create-payment-url?appointmentId=${appointmentId}&amount=${totalCostVND}&returnUrl=http://localhost:5173/payment-return`,
+        `${BASE.BASE_URL}/vnpay/create-payment-url?appointmentId=${appointmentId}&amount=${totalCostVND}&returnUrl=${BASE.BASE_MY_HOST}/payment-return`,
         {
           method: "GET",
           headers: {

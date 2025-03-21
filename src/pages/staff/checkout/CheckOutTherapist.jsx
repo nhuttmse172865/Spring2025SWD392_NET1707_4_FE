@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
-import "./CheckOut.css"; 
+import "./CheckOut.css";
 import { FaQrcode } from "react-icons/fa";
-import { Button, Form, Input, Modal ,Spin,DatePicker ,Pagination} from "antd";
+import { Button, Form, Input, Modal, Spin, DatePicker, Pagination } from "antd";
 import { Html5QrcodeScanner } from "html5-qrcode";
 import axios from "axios";
 import BASE from "../../../constants/base";
@@ -10,7 +10,6 @@ import { useSearchParams } from "react-router-dom";
 const process = import.meta.env.VITE_APP_TUVAN;
 
 const CheckOutTherapist = () => {
- 
   const [isCheckOutModalVisible, setIsCheckOutModalVisible] = useState(false);
   const [loading, setLoading] = useState(false);
   const [selectedProduct, setSelectedProduct] = useState(null);
@@ -31,27 +30,25 @@ const CheckOutTherapist = () => {
   }, [searchParams]);
   // useEffect(() => {
   //   filterAppointmentsByDate();
-  // }, [selectedDate, products,searchPhone]); 
+  // }, [selectedDate, products,searchPhone]);
   // useEffect(() => {
   //   setFilteredProducts(products);
   //   console.log(filteredProducts)
   // }, [products]);
-   useEffect(() => {
-      filterAppointmentsByDate();
-    }, [products,searchPhone]); 
+  useEffect(() => {
+    filterAppointmentsByDate();
+  }, [products, searchPhone]);
   useEffect(() => {
     return () => {
-     
-      localStorage.removeItem('pendingDetailId');
+      localStorage.removeItem("pendingDetailId");
     };
   }, []);
   const filterAppointmentsByDate = () => {
     const filtered = products.filter((product) =>
-     
-         product?.account?.phone?.includes(searchPhone)
+      product?.account?.phone?.includes(searchPhone)
     );
     setFilteredProducts(filtered);
-};
+  };
   const fetchAppointments = async () => {
     setLoading(true);
     try {
@@ -67,22 +64,19 @@ const CheckOutTherapist = () => {
     setLoading(false);
   };
 
-
-
-
-
-
   const handleCheckOutCancel = () => {
     setIsCheckOutModalVisible(false);
     setSelectedProduct(null);
-    localStorage.removeItem('pendingDetailId'); 
+    localStorage.removeItem("pendingDetailId");
   };
 
   const showAppointmentDetail = async (product) => {
     setLoading(true);
     try {
-      const res = await axios.get(`${BASE.BASE_URL}/appointments/${product.id}`);
-      setSelectedProduct(res.data.data); 
+      const res = await axios.get(
+        `${BASE.BASE_URL}/appointments/${product.id}`
+      );
+      setSelectedProduct(res.data.data);
       setIsCheckOutModalVisible(true);
     } catch (error) {
       console.error("Error fetching appointment details:", error);
@@ -91,27 +85,26 @@ const CheckOutTherapist = () => {
   };
   const handleTransfer = async (appointmentId) => {
     if (!selectedProduct) return;
-    
+
     const tuVanServices = JSON.parse(process || "[]");
     const isTuVanService = tuVanServices.includes(selectedProduct.service.name);
-    
-    // Calculate amount based on the appointment total
-    const amount = isTuVanService ? selectedProduct.total * 25000 * 0.1 : selectedProduct.total * 25000 * 0.1;
-    const returnUrl = encodeURIComponent(
-  window.location.hostname === "localhost"
-    ? "http://localhost:5173/staff/checkoutTherapist"
-    : "http://34.126.143.212/staff/checkoutTherapist"
-);
 
-  
+    // Calculate amount based on the appointment total
+    const amount = isTuVanService
+      ? selectedProduct.total * 25000 * 0.1
+      : selectedProduct.total * 25000 * 0.1;
+    const returnUrl = encodeURIComponent(
+      `${BASE.BASE_MY_HOST}/staff/checkoutTherapist`
+    );
+
     // Store the appointment ID in localStorage
-    localStorage.setItem('pendingAppointmentId', appointmentId);
-    
+    localStorage.setItem("pendingAppointmentId", appointmentId);
+
     try {
       const response = await axios.get(
         `${BASE.BASE_URL}/vnpay/create-payment-url?appointmentId=${appointmentId}&amount=${amount}&returnUrl=${returnUrl}`
       );
-      
+
       console.log("VNPay response:", response);
       if (response.data.data) {
         window.location.href = response.data.data;
@@ -125,32 +118,35 @@ const CheckOutTherapist = () => {
 
   const handleSavePayment = async () => {
     const vnp_responseCode = searchParams.get("vnp_ResponseCode");
-    
+
     if (vnp_responseCode === "00") {
       const appointmentId = parseInt(searchParams.get("vnp_OrderInfo"));
       const amount = parseInt(searchParams.get("vnp_Amount")) / 100;
       const transactionCode = searchParams.get("vnp_TransactionNo");
       const method = searchParams.get("vnp_CardType");
       const payTime = searchParams.get("vnp_PayDate");
-      
+
       try {
-        const paymentResponse = await axios.post(`${BASE.BASE_URL}/payment/create`, {
-          appointmentId,
-          amount,
-          transactionCode,
-          method,
-          payTime,
-          responseCode: vnp_responseCode,
-        });
-  
+        const paymentResponse = await axios.post(
+          `${BASE.BASE_URL}/payment/create`,
+          {
+            appointmentId,
+            amount,
+            transactionCode,
+            method,
+            payTime,
+            responseCode: vnp_responseCode,
+          }
+        );
+
         console.log("Payment save response:", paymentResponse);
-  
+
         if (paymentResponse.status === 201) {
           console.log("Payment saved successfully");
-          
+
           // Get updated products
           await fetchAppointments();
-          
+
           Modal.success({
             title: "Payment Successful",
             content: "The appointment has been checked out successfully!",
@@ -163,7 +159,10 @@ const CheckOutTherapist = () => {
           });
         }
       } catch (error) {
-        console.error("Error saving payment:", error.response ? error.response.data : error.message);
+        console.error(
+          "Error saving payment:",
+          error.response ? error.response.data : error.message
+        );
         Modal.error({
           title: "Payment Failed",
           content: "There was an issue processing the payment.",
@@ -172,37 +171,44 @@ const CheckOutTherapist = () => {
     }
   };
 
-
   const handleCashPayment = async (appointmentId) => {
     if (!selectedProduct) return;
-    
+
     try {
-     
       const tuVanServices = JSON.parse(process || "[]");
-      const isTuVanService = tuVanServices.includes(selectedProduct.service.name);
-      const amount = isTuVanService ? selectedProduct.total * 25000 * 0.1 : selectedProduct.total * 25000 * 0.1;
-      
-      const paymentResponse = await axios.post(`${BASE.BASE_URL}/payment/create`, {
-        appointmentId: appointmentId,
-        amount: amount,
-        transactionCode: "14837441", 
-        method: "CASH", 
-        payTime: dayjs().format("YYYYMMDDHHmmss"),
-        responseCode: "00" 
-      });
-      
+      const isTuVanService = tuVanServices.includes(
+        selectedProduct.service.name
+      );
+      const amount = isTuVanService
+        ? selectedProduct.total * 25000 * 0.1
+        : selectedProduct.total * 25000 * 0.1;
+
+      const paymentResponse = await axios.post(
+        `${BASE.BASE_URL}/payment/create`,
+        {
+          appointmentId: appointmentId,
+          amount: amount,
+          transactionCode: "14837441",
+          method: "CASH",
+          payTime: dayjs().format("YYYYMMDDHHmmss"),
+          responseCode: "00",
+        }
+      );
+
       console.log("Cash payment response:", paymentResponse);
-      
-   
+
       await fetchAppointments();
       handleCheckOutCancel();
-      
+
       Modal.success({
         title: "Payment Successful",
         content: "Cash payment has been processed successfully!",
       });
     } catch (error) {
-      console.error("Error processing cash payment:", error.response ? error.response.data : error.message);
+      console.error(
+        "Error processing cash payment:",
+        error.response ? error.response.data : error.message
+      );
       Modal.error({
         title: "Payment Failed",
         content: "There was an issue processing the cash payment.",
@@ -213,19 +219,14 @@ const CheckOutTherapist = () => {
   return (
     <div className="checkin-container">
       <div className="checkin-header">
-        <div className="header-actions">
-          
-         
-        </div>
+        <div className="header-actions"></div>
 
         <div style={{ display: "flex", gap: "20px", marginBottom: "10px" }}>
-       
           <DatePicker
             value={selectedDate}
             onChange={(date) => setSelectedDate(date || dayjs())}
             format="YYYY-MM-DD"
           />
-       
         </div>
       </div>
 {loading ? ( 
@@ -295,60 +296,83 @@ const CheckOutTherapist = () => {
             style={{ marginTop: "20px", textAlign: "center" }}
             showSizeChanger={false} 
           />
- </>
-)}
-      
-     
+        </>
+      )}
 
-     
       <Modal
-  title="Information"
-  open={isCheckOutModalVisible}
-  onCancel={handleCheckOutCancel}
-  footer={[
-    <Button key="cancel" className="checkout-cancel-btn" onClick={handleCheckOutCancel}>
-      Cancel
-    </Button>,
-    <Button  key="cash" type="default" onClick={() => handleCashPayment(selectedProduct.id)}  >
-      Cash Payment
-    </Button>,
-    <Button key="pay" type="primary" onClick={() => handleTransfer(selectedProduct.id)}>
-      Online Payment
-    </Button>
-  ]}
-  className="checkout-modal"
->
-{selectedProduct && selectedProduct.appointment_details ? (
-  <div className="checkout-info">
-    {selectedProduct.appointment_details.map((detail) => (
-      <div key={detail.id} className="appointment-item">
-        <p><strong>Service detail:</strong> {detail.name}</p>
-        <p>
-  <strong>Status: </strong> 
-  <span style={{ color: detail.status === "COMPLETED" ? "green" : detail.status === "CHECKIN" ? "red" : "black" }}>
-    {detail.status}
-  </span>
-</p>
+        title="Information"
+        open={isCheckOutModalVisible}
+        onCancel={handleCheckOutCancel}
+        footer={[
+          <Button
+            key="cancel"
+            className="checkout-cancel-btn"
+            onClick={handleCheckOutCancel}
+          >
+            Cancel
+          </Button>,
+          <Button
+            key="cash"
+            type="default"
+            onClick={() => handleCashPayment(selectedProduct.id)}
+          >
+            Cash Payment
+          </Button>,
+          <Button
+            key="pay"
+            type="primary"
+            onClick={() => handleTransfer(selectedProduct.id)}
+          >
+            Online Payment
+          </Button>,
+        ]}
+        className="checkout-modal"
+      >
+        {selectedProduct && selectedProduct.appointment_details ? (
+          <div className="checkout-info">
+            {selectedProduct.appointment_details.map((detail) => (
+              <div key={detail.id} className="appointment-item">
+                <p>
+                  <strong>Service detail:</strong> {detail.name}
+                </p>
+                <p>
+                  <strong>Status: </strong>
+                  <span
+                    style={{
+                      color:
+                        detail.status === "COMPLETED"
+                          ? "green"
+                          : detail.status === "CHECKIN"
+                          ? "red"
+                          : "black",
+                    }}
+                  >
+                    {detail.status}
+                  </span>
+                </p>
 
-        <p><strong>Price:</strong> ${detail.price}</p>
-        <p><strong>Start:</strong> {detail.startHour}</p>
-        <p><strong>End:</strong> {detail.endHour}</p>
-        <p><strong>Day:</strong> {detail.day}</p>
-        <p><strong>Therapist:</strong> {detail.therapist?.account?.name}</p>
-   
-        
-       
-      </div>
-    ))}
-  </div>
-) : (
-  <p>No appointment details available</p>
-)}
-
-
-</Modal>
-  
-
+                <p>
+                  <strong>Price:</strong> ${detail.price}
+                </p>
+                <p>
+                  <strong>Start:</strong> {detail.startHour}
+                </p>
+                <p>
+                  <strong>End:</strong> {detail.endHour}
+                </p>
+                <p>
+                  <strong>Day:</strong> {detail.day}
+                </p>
+                <p>
+                  <strong>Therapist:</strong> {detail.therapist?.account?.name}
+                </p>
+              </div>
+            ))}
+          </div>
+        ) : (
+          <p>No appointment details available</p>
+        )}
+      </Modal>
     </div>
   );
 };
