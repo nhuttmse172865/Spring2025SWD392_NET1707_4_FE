@@ -12,7 +12,7 @@ const CheckIn = () => {
   const [loading, setLoading] = useState(false);
   const [selectedProduct, setSelectedProduct] = useState(null);
   const [currentPage, setCurrentPage] = useState(1);
-  const pageSize = 1000;
+  const pageSize = 50;
   const [totalItems, setTotalItems] = useState(0);
   const [selectedDate, setSelectedDate] = useState(dayjs());
   const [filteredProducts, setFilteredProducts] = useState([]);
@@ -154,7 +154,7 @@ useEffect(() => {
         <tbody>
   {filteredProducts.length > 0 ? (
     filteredProducts
-      .filter((product) => product.status !== "CANCELLED"&& product.status !=="COMPLETED" ) 
+      .filter((product) => product.status !== "CANCELLED"&& product.status !=="COMPLETED" ).sort((a, b) => new Date(b.createdTime) - new Date(a.createdTime))
       .map((product) => (
         <tr key={product.id}>
           <td>{product.account.name}</td>
@@ -190,6 +190,7 @@ useEffect(() => {
   total={totalItems}
   onChange={(page) => setCurrentPage(page)}
   style={{ marginTop: "20px", textAlign: "center" }}
+  showSizeChanger={false} 
 />
  </>
 )}
@@ -197,7 +198,7 @@ useEffect(() => {
      
 
      
-      <Modal
+<Modal
   title="Information"
   open={isCheckOutModalVisible}
   onCancel={handleCheckOutCancel}
@@ -205,40 +206,46 @@ useEffect(() => {
     <Button key="cancel" className="checkout-cancel-btn" onClick={handleCheckOutCancel}>
       Cancel
     </Button>,
-    
-      
   ]}
   className="checkout-modal"
 >
-{selectedProduct && selectedProduct.appointment_details ? (
-  selectedProduct.appointment_details.map((detail) => (
-    <div key={detail.id} className="appointment-item">
-      <p><strong>Service detail:</strong> {detail.name}</p>
-      <p><strong>Status:</strong> {detail.status}</p>
-      <p><strong>Price:</strong> ${detail.price}</p>
-      <p><strong>Start:</strong> {detail.startHour}</p>
-      <p><strong>End:</strong> {detail.endHour}</p>
-      <p><strong>Therapist:</strong> {detail.therapist?.account?.name}</p>
-      <p><strong>Day:</strong> {detail.day}</p>
-     
-      
-      <Button
-        type="primary"
-        onClick={() => handleCheckin(detail.id)}
-        disabled={detail.status === "CHECKIN" || detail.status === "COMPLETED" || detail.status === "CANCELLED"}
-        className="checkout-cancel-btn "
-      >
-        {detail.status === "CHECKIN" ? "Checked In" : "Check In"}
-      </Button>
-    </div>
-  ))
-) : (
-  <p>No appointment details available</p>
-)}
+  {selectedProduct && selectedProduct.appointment_details ? (
+    selectedProduct.appointment_details
+      .sort((a, b) => new Date(a.startHour) - new Date(b.startHour)) 
+      .map((detail, index, arr) => {
+        
+        const previousCheckedIn = index === 0 || arr[index - 1].status === "CHECKIN";
+        return (
+          <div key={detail.id} className="appointment-item">
+            <p><strong>Service detail:</strong> {detail.name}</p>
+            <p><strong>Status:</strong> {detail.status}</p>
+            <p><strong>Price:</strong> ${detail.price}</p>
+            <p><strong>Start:</strong> {detail.startHour}</p>
+            <p><strong>End:</strong> {detail.endHour}</p>
+            <p><strong>Therapist:</strong> {detail.therapist?.account?.name}</p>
+            <p><strong>Day:</strong> {detail.day}</p>
 
-
-
+            <Button
+              type="primary"
+              onClick={() => handleCheckin(detail.id)}
+              disabled={
+                detail.status === "CHECKIN" ||
+                detail.status === "COMPLETED" ||
+                detail.status === "CANCELLED" ||
+                !previousCheckedIn 
+              }
+              className="checkout-cancel-btn"
+            >
+              {detail.status === "CHECKIN" ? "Checked In" : "Check In"}
+            </Button>
+          </div>
+        );
+      })
+  ) : (
+    <p>No appointment details available</p>
+  )}
 </Modal>
+
   
 
     </div>

@@ -253,7 +253,7 @@ const CheckOutTherapist = () => {
       .filter((product) => {
         
         return tuVanServices.includes(product.service?.name);
-      })
+      }) .filter((product) => product.status !== "COMPLETED")
       .map((product) => (
         <tr key={product.id}>
           <td>{product.account.name}</td>
@@ -293,6 +293,7 @@ const CheckOutTherapist = () => {
             total={totalItems}
             onChange={(page) => setCurrentPage(page)}
             style={{ marginTop: "20px", textAlign: "center" }}
+            showSizeChanger={false} 
           />
  </>
 )}

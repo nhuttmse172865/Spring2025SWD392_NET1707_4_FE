@@ -14,7 +14,7 @@ const CheckIn = () => {
   const [loading, setLoading] = useState(false);
   const [selectedProduct, setSelectedProduct] = useState(null);
   const [currentPage, setCurrentPage] = useState(1);
-  const pageSize = 1000;
+  const pageSize = 50;
   const [totalItems, setTotalItems] = useState(0);
   const [selectedDate, setSelectedDate] = useState(dayjs());
   const [filteredProducts, setFilteredProducts] = useState([]);
@@ -285,7 +285,7 @@ const handleCashPayment = async (detail) => {
                <td>{product.service.name}</td>
                <td>{product.account.phone}</td>
                <td>${product.total}</td>
-               <td>{dayjs(product.createdTime).add(1, 'day').format("YYYY-MM-DD")}</td>
+               <td>{dayjs(product.createdTime).format("YYYY-MM-DD")}</td>
                <td>{product.status}</td>
                <td>
                  <Button
@@ -313,6 +313,7 @@ const handleCashPayment = async (detail) => {
   total={totalItems}
   onChange={(page) => setCurrentPage(page)}
   style={{ marginTop: "20px", textAlign: "center" }}
+  showSizeChanger={false} 
 />
  </>
 )}
