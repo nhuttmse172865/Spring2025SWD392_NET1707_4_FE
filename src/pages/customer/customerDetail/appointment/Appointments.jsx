@@ -42,9 +42,13 @@ const Appointments = () => {
     25000 *
     0.1;
 
-  const getTherapistsFromDetails = (appointment) =>
-    appointment.service?.service_therapists?.[0]?.therapist?.account?.name ||
-    "N/A";
+  // Sửa hàm getTherapistsFromDetails để lấy therapist cuối cùng trong danh sách
+  const getTherapistsFromDetails = (appointment) => {
+    const therapists = appointment.service?.service_therapists;
+    return therapists?.length > 0
+      ? therapists[therapists.length - 1]?.therapist?.account?.name
+      : "N/A";
+  };
 
   useEffect(() => {
     if (accountId) {
