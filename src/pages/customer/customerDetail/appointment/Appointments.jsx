@@ -188,12 +188,14 @@ const Appointments = () => {
       );
       const result = await response.json();
       if (result.status === 200) {
-        toast.success("Appointment cancelled successfully!");
         setAppointments((prev) =>
           prev.filter((appt) => appt.id !== selectedAppointmentId)
         );
         setShowCancelModal(false);
         setShowConfirmModal(false);
+        setTimeout(() => {
+          toast.success("Appointment cancelled successfully!");
+        }, 0);
       } else {
         toast.error(`Failed to cancel: ${result.message}`);
       }
