@@ -156,6 +156,7 @@ const ServiceDetails = React.memo(() => {
       });
     } else {
       localStorage.setItem("bookedServiceId", selectedService.id);
+      localStorage.removeItem("selectedService");
       navigate("/booking");
     }
   }, [customer, accountId, selectedService, navigate]);
