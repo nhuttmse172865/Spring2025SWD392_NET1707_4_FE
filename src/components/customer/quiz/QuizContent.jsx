@@ -4,9 +4,8 @@ import { useNavigate } from "react-router-dom";
 import useLocalStorage from "use-local-storage";
 import LOCALSTORAGE_NAME from "../../../constants/localStorageName";
 import BASE from "../../../constants/base";
-import Authorization from "../../../middleware/Authorization";
 import "./QuizContent.css";
-import ROLES from "../../../constants/role";
+
 
 const Modal = ({ isOpen, onClose, skinTypeData, issueSkinData }) => {
   if (!isOpen) return null;
@@ -319,7 +318,7 @@ const QuizContent = () => {
   }
 
   return (
-    <Authorization requiredRole={ROLES.CUSTOMER}>
+
     <div className="app-container">
       <div className="content">
         <div className="questionnaire-container">
@@ -526,7 +525,7 @@ const QuizContent = () => {
         issueSkinData={issueSkinData}
       />
     </div>
-    </Authorization>
+
   );
 };
 
