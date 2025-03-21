@@ -6,7 +6,6 @@ import BASE from "../../../constants/base";
 import useLocalStorage from "use-local-storage";
 import LOCALSTORAGE_NAME from "../../../constants/localStorageName";
 import { ToastContainer, toast } from "react-toastify";
-import Authorization from "../../../middleware/Authorization";
 import "react-toastify/dist/ReactToastify.css";
 import "./Content.css";
 
@@ -149,7 +148,7 @@ const Content = React.memo(() => {
   }, [sortedServices, currentPage]);
 
   return (
-    <Authorization requiredRole={ROLES.CUSTOMER}>
+
       <div className="spa-container">
         <ToastContainer />
 
@@ -230,7 +229,6 @@ const Content = React.memo(() => {
           nextClassName={"next-item"}
         />
       </div>
-    </Authorization>
   );
 });
 

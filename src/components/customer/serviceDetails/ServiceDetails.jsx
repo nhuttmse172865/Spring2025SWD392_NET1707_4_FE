@@ -7,7 +7,6 @@ import BASE from "../../../constants/base";
 import useLocalStorage from "use-local-storage";
 import LOCALSTORAGE_NAME from "../../../constants/localStorageName";
 import { ToastContainer, toast } from "react-toastify";
-import Authorization from "../../../middleware/Authorization";
 import "react-toastify/dist/ReactToastify.css";
 import "./ServiceDetails.css";
 import ROLES from "../../../constants/role";
@@ -282,7 +281,7 @@ const ServiceDetails = React.memo(() => {
   }
 
   return (
-    <Authorization requiredRole={ROLES.CUSTOMER}>
+ 
     <div className="service-details-container">
       <ToastContainer />
       <button className="back-button" onClick={handleBack}>
@@ -367,7 +366,7 @@ const ServiceDetails = React.memo(() => {
 
       {showModal && <FeedbackModal />}
     </div>
-    </Authorization>
+
   );
 });
 
