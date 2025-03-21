@@ -180,7 +180,7 @@ const RecordBooking = () => {
 
   return (
     <div className="record-booking-container">
-      <Table className="record-booking-table" dataSource={bookings} columns={columns} rowKey="key" loading={isLoading} />
+      <Table className="record-booking-table"  dataSource={bookings.filter(booking => booking.appointment?.status !== "CANCELLED").sort((a, b) => new Date(b.date) - new Date(a.date))}columns={columns} rowKey="key" loading={isLoading} />
 
       <Modal 
         title="Record result"

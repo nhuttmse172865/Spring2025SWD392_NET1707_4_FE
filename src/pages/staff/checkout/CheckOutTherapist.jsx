@@ -229,67 +229,72 @@ const CheckOutTherapist = () => {
           />
         </div>
       </div>
-      {loading ? (
-        <div className="loading-container">
-          <Spin size="large" />
-        </div>
-      ) : (
-        <>
-          <table className="checkin-table">
-            <thead>
-              <tr>
-                <th>Name</th>
-                <th>Service</th>
-                <th>Phone</th>
-                <th>Total</th>
-                <th>Status</th>
-                <th>Day</th>
-                <th>Actions</th>
-              </tr>
-            </thead>
-            <tbody>
-              {filteredProducts.length > 0 ? (
-                filteredProducts
-                  .filter((product) => {
-                    return tuVanServices.includes(product.service?.name);
-                  })
-                  .map((product) => (
-                    <tr key={product.id}>
-                      <td>{product.account.name}</td>
-                      <td>{product.service?.name || "No Service"}</td>
-                      <td>{product.account.phone}</td>
-                      <td>${product.total}</td>
-                      <td>{product.status}</td>
-                      <td>{dayjs(product.createdTime).format("YYYY-MM-DD")}</td>
-                      <td>
-                        <div className="btn-action-checkinout">
-                          <Button
-                            className="checkout-button"
-                            style={{ gap: "10px" }}
-                            onClick={() => showAppointmentDetail(product)}
-                          >
-                            View detail
-                          </Button>
-                        </div>
-                      </td>
-                    </tr>
-                  ))
-              ) : (
-                <tr>
-                  <td colSpan="7" style={{ textAlign: "center" }}>
-                    No matching appointments found
-                  </td>
-                </tr>
-              )}
-            </tbody>
-          </table>
+{loading ? ( 
+  <div className="loading-container">
+    <Spin size="large"/>
+  </div>
+) : (
+ 
+ <>
+ <table className="checkin-table">
+        <thead>
+          <tr>
+            <th>Name</th>
+            <th>Service</th>
+            <th>Phone</th>
+            <th>Total</th>
+            <th>Status</th>
+            <th>Day</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+  {filteredProducts.length > 0 ? (
+    filteredProducts
+      .filter((product) => {
+        
+        return tuVanServices.includes(product.service?.name);
+      }) .filter((product) => product.status !== "COMPLETED")
+      .map((product) => (
+        <tr key={product.id}>
+          <td>{product.account.name}</td>
+          <td>{product.service?.name || "No Service"}</td>
+          <td>{product.account.phone}</td>
+          <td>${product.total}</td>
+          <td>{product.status}</td>
+          <td>{dayjs(product.createdTime).format("YYYY-MM-DD")}</td>
+          <td>
+            <div className="btn-action-checkinout">
+              <Button
+                className="checkout-button"
+                style={{ gap: "10px" }}
+                onClick={() => showAppointmentDetail(product)}
+              >
+                View detail
+              </Button>
+            </div>
+          </td>
+        </tr>
+      ))
+  ) : (
+    <tr>
+      <td colSpan="7" style={{ textAlign: "center" }}>
+        No matching appointments found
+      </td>
+    </tr>
+  )}
+</tbody>
 
-          <Pagination
+
+      </table>
+       
+       <Pagination
             current={currentPage}
             pageSize={pageSize}
             total={totalItems}
             onChange={(page) => setCurrentPage(page)}
             style={{ marginTop: "20px", textAlign: "center" }}
+            showSizeChanger={false} 
           />
         </>
       )}
