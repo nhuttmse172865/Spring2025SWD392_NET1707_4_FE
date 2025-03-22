@@ -187,6 +187,7 @@ const Appointments = () => {
         }
       );
       const result = await response.json();
+
       if (result.status === 200) {
         setAppointments((prev) =>
           prev.filter((appt) => appt.id !== selectedAppointmentId)
@@ -223,8 +224,7 @@ const Appointments = () => {
             <div className="appointment-date">{appointment.date}</div>
             <div className="appointment-service">{appointment.service}</div>
             <div className="appointment-price">{appointment.totalPrice}</div>
-            <div className="appointment-therapists">
-              {appointment.therapists}
+            <div className="appointment-therapists">              
             </div>
             <div className="appointment-status">
               <span className={`status-${appointment.status.toLowerCase()}`}>
