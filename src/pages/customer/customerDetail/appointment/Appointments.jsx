@@ -214,7 +214,6 @@ const Appointments = () => {
           <div className="header-date">DATE</div>
           <div className="header-service">SERVICE</div>
           <div className="header-price">TOTAL PRICE</div>
-          <div className="header-therapists">THERAPISTS</div>
           <div className="header-status">STATUS</div>
           <div className="header-actions"></div>
         </div>
@@ -224,8 +223,7 @@ const Appointments = () => {
             <div className="appointment-date">{appointment.date}</div>
             <div className="appointment-service">{appointment.service}</div>
             <div className="appointment-price">{appointment.totalPrice}</div>
-            <div className="appointment-therapists">              
-            </div>
+
             <div className="appointment-status">
               <span className={`status-${appointment.status.toLowerCase()}`}>
                 {appointment.status}

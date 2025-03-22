@@ -61,6 +61,7 @@ const ContentModal = ({ appointment }) => {
               start_hour: detail.startHour.slice(0, 5),
               name: detail.name,
               status: detail.status,
+              therapist_name: detail.therapist?.account.name || "N/A",
             })
           );
           setDetails(formattedDetails);
@@ -197,6 +198,7 @@ const ContentModal = ({ appointment }) => {
                 <th>Countdown</th>
                 <th>Price</th>
                 <th>Status</th>
+                <th>Therapist</th>
                 <th>Action</th>
               </tr>
             </thead>
@@ -212,6 +214,7 @@ const ContentModal = ({ appointment }) => {
                   </td>
                   <td>{detail.price}</td>
                   <td>{detail.status}</td>
+                  <td>{detail.therapist_name}</td>
                   <td>
                     {detail.status === "COMPLETED" && (
                       <button
