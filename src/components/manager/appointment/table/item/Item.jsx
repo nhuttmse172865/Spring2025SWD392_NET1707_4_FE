@@ -16,7 +16,7 @@ const Item = ({ active = false, listTitle, item, index }) => {
       <li>{item?.account.email}</li>
       <li>{item?.service.name}</li>
       <li>{item?.appointment_details[0]?.therapist?.account?.name}</li>
-      <li>{"2025-03-09"}</li>
+      <li>{item?.appointment_details[0]?.day}</li>
       <li>{item?.total}</li>
       <li>{item?.status}</li>
     </ul>
