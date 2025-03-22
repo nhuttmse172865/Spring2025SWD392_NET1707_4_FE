@@ -187,6 +187,7 @@ const Appointments = () => {
         }
       );
       const result = await response.json();
+
       if (result.status === 200) {
         setAppointments((prev) =>
           prev.filter((appt) => appt.id !== selectedAppointmentId)
