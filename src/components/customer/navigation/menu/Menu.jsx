@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect } from "react";
 import "./Menu.css";
 import axios from "axios";
@@ -14,15 +15,26 @@ const Menu = () => {
   const [openCategories, setOpenCategories] = useState(() => {
     const savedCategories =
       JSON.parse(localStorage.getItem("selectedCategories")) || [];
-    return savedCategories.reduce((acc, id) => ({ ...acc, [id]: true }), {});
+    return savedCategories.length > 0
+      ? savedCategories.reduce((acc, id) => ({ ...acc, [id]: true }), {})
+      : {};
   });
 
   const [selectedPriceRanges, setSelectedPriceRanges] = useState(() => {
-    return JSON.parse(localStorage.getItem("selectedPriceRanges")) || [];
+    const savedPriceRanges =
+      JSON.parse(localStorage.getItem("selectedPriceRanges")) || [];
+    return savedPriceRanges.length > 0 ? savedPriceRanges : [];
+  });
+
+  const [selectedSkinTypes, setSelectedSkinTypes] = useState(() => {
+    const savedSkinTypes =
+      JSON.parse(localStorage.getItem("selectedSkinTypes")) || [];
+    return savedSkinTypes.length > 0 ? savedSkinTypes : [];
   });
 
   const [categories, setCategories] = useState([]);
   const [services, setServices] = useState([]);
+  const [skinTypes, setSkinTypes] = useState([]);
 
   useEffect(() => {
     const fetchCategories = async () => {
@@ -30,11 +42,6 @@ const Menu = () => {
         const response = await axios.get(`${BASE.BASE_URL}/category/getAll`);
         if (response.data.data && Array.isArray(response.data.data)) {
           setCategories(response.data.data);
-        } else {
-          console.error(
-            "Categories data is not an array or is missing:",
-            response.data
-          );
         }
       } catch (error) {
         console.error("Error fetching categories:", error);
@@ -48,19 +55,51 @@ const Menu = () => {
         );
         if (response.data.data && Array.isArray(response.data.data)) {
           setServices(response.data.data);
-        } else {
-          console.error(
-            "Services data is not an array or is missing:",
-            response.data
-          );
         }
       } catch (error) {
         console.error("Error fetching services:", error);
       }
     };
 
+    const fetchSkinTypes = async () => {
+      try {
+        const response = await axios.get(`${BASE.BASE_URL}/skinType/getAll`, {
+          headers: { accept: "*/*" },
+        });
+        if (response.data.data && Array.isArray(response.data.data)) {
+          setSkinTypes(response.data.data);
+        }
+      } catch (error) {
+        console.error("Error fetching skin types:", error);
+      }
+    };
+
     fetchCategories();
     fetchServices();
+    fetchSkinTypes();
+
+    // Kiểm tra và xóa nếu localStorage rỗng
+    if (
+      JSON.parse(localStorage.getItem("selectedCategories"))?.length === 0 ||
+      !localStorage.getItem("selectedCategories")
+    ) {
+      localStorage.removeItem("selectedCategories");
+      setOpenCategories({});
+    }
+    if (
+      JSON.parse(localStorage.getItem("selectedPriceRanges"))?.length === 0 ||
+      !localStorage.getItem("selectedPriceRanges")
+    ) {
+      localStorage.removeItem("selectedPriceRanges");
+      setSelectedPriceRanges([]);
+    }
+    if (
+      JSON.parse(localStorage.getItem("selectedSkinTypes"))?.length === 0 ||
+      !localStorage.getItem("selectedSkinTypes")
+    ) {
+      localStorage.removeItem("selectedSkinTypes");
+      setSelectedSkinTypes([]);
+    }
   }, []);
 
   const toggleCategory = (categoryId) => {
@@ -72,14 +111,19 @@ const Menu = () => {
     } else {
       selectedCategories.push(categoryId);
     }
-    localStorage.setItem(
-      "selectedCategories",
-      JSON.stringify(selectedCategories)
-    );
 
-    setOpenCategories(
-      selectedCategories.reduce((acc, id) => ({ ...acc, [id]: true }), {})
-    );
+    if (selectedCategories.length === 0) {
+      localStorage.removeItem("selectedCategories");
+      setOpenCategories({});
+    } else {
+      localStorage.setItem(
+        "selectedCategories",
+        JSON.stringify(selectedCategories)
+      );
+      setOpenCategories(
+        selectedCategories.reduce((acc, id) => ({ ...acc, [id]: true }), {})
+      );
+    }
     window.location.reload();
   };
 
@@ -92,11 +136,34 @@ const Menu = () => {
         )
       : [...selectedPriceRanges, range];
 
+    if (updatedSelections.length === 0) {
+      localStorage.removeItem("selectedPriceRanges");
+    } else {
+      localStorage.setItem(
+        "selectedPriceRanges",
+        JSON.stringify(updatedSelections)
+      );
+    }
+
     setSelectedPriceRanges(updatedSelections);
-    localStorage.setItem(
-      "selectedPriceRanges",
-      JSON.stringify(updatedSelections)
-    );
+    window.location.reload();
+  };
+
+  const handleSkinTypeChange = (skinTypeName) => {
+    const updatedSelections = selectedSkinTypes.includes(skinTypeName)
+      ? selectedSkinTypes.filter((name) => name !== skinTypeName)
+      : [...selectedSkinTypes, skinTypeName];
+
+    if (updatedSelections.length === 0) {
+      localStorage.removeItem("selectedSkinTypes");
+    } else {
+      localStorage.setItem(
+        "selectedSkinTypes",
+        JSON.stringify(updatedSelections)
+      );
+    }
+
+    setSelectedSkinTypes(updatedSelections);
     window.location.reload();
   };
 
@@ -144,6 +211,24 @@ const Menu = () => {
               </div>
             ))}
         </div>
+      </div>
+
+      <div className="filter-section">
+        <div className="section-title">Select Skin Type</div>
+        {Array.isArray(skinTypes) &&
+          skinTypes.map((skinType) => (
+            <div key={skinType.id} className="filter-item">
+              <input
+                type="checkbox"
+                id={`skin-${skinType.id}`}
+                checked={selectedSkinTypes.includes(skinType.name)}
+                onChange={() => handleSkinTypeChange(skinType.name)}
+              />
+              <label htmlFor={`skin-${skinType.id}`}>
+                {skinType.name || `Skin Type ${skinType.id}`}
+              </label>
+            </div>
+          ))}
       </div>
 
       <div className="filter-section">

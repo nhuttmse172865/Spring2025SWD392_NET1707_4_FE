@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from "react";
 import BASE from "../../../../../constants/base";
 import "./ContentModal.css";
@@ -6,23 +5,19 @@ import { ToastContainer, toast } from "react-toastify";
 import useLocalStorage from "use-local-storage";
 import LOCALSTORAGE_NAME from "../../../../../constants/localStorageName";
 import "react-toastify/dist/ReactToastify.css";
+import { useNavigate } from "react-router-dom";
 
 const ContentModal = ({ appointment }) => {
   const [details, setDetails] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-  const [showFeedbackModal, setShowFeedbackModal] = useState(false);
-  const [selectedDetailId, setSelectedDetailId] = useState(null);
-  const [rating, setRating] = useState(0);
-  const [feedbackText, setFeedbackText] = useState("");
-  const [isSubmitting, setIsSubmitting] = useState(false);
   const [accountId, setAccountId] = useState(null);
   const [customer] = useLocalStorage(
     LOCALSTORAGE_NAME.CUSTOMER_INFORMATION_CACHE,
     ""
   );
-  const [feedbackSubmitted, setFeedbackSubmitted] = useState(new Set());
   const [countdowns, setCountdowns] = useState([]);
+  const navigate = useNavigate();
 
   useEffect(() => {
     if (customer) {
@@ -61,6 +56,7 @@ const ContentModal = ({ appointment }) => {
               start_hour: detail.startHour.slice(0, 5),
               name: detail.name,
               status: detail.status,
+              therapist: detail.therapist, // Keep the full therapist object
               therapist_name: detail.therapist?.account.name || "N/A",
             })
           );
@@ -111,60 +107,10 @@ const ContentModal = ({ appointment }) => {
     return `${days}d ${hours}h ${minutes}m`;
   };
 
-  const openFeedbackModal = (detailId) => {
-    setSelectedDetailId(detailId);
-    setShowFeedbackModal(true);
-    setRating(0);
-    setFeedbackText("");
-  };
-
-  const closeFeedbackModal = () => {
-    setShowFeedbackModal(false);
-    setSelectedDetailId(null);
-  };
-
-  const handleSubmitFeedback = async () => {
-    if (rating === 0) {
-      toast.error("Please select a rating");
-      return;
-    }
-    if (!feedbackText.trim()) {
-      toast.error("Please provide feedback text");
-      return;
-    }
-    const selectedDetail = details.find(
-      (detail) => detail.detail_id === selectedDetailId
-    );
-    const requestBody = {
-      content: feedbackText,
-      rating: rating,
-      customerId: accountId,
-      serDetailName: selectedDetail?.name,
-    };
-
-    setIsSubmitting(true);
-    try {
-      const response = await fetch(`${BASE.BASE_URL}/feedback/create`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          accept: "*/*",
-        },
-        body: JSON.stringify(requestBody),
-      });
-      if (!response.ok) {
-        throw new Error("Failed to submit feedback");
-      }
-
-      toast.success("Feedback submitted successfully!");
-      setFeedbackSubmitted((prev) => new Set(prev).add(selectedDetailId));
-      closeFeedbackModal();
-    } catch (error) {
-      toast.error("Failed to submit feedback");
-      console.error("Error submitting feedback:", error);
-    } finally {
-      setIsSubmitting(false);
-    }
+  const handleViewTherapist = (therapist) => {
+    navigate(`/customer-view/therapist/${therapist.id}`, {
+      state: { therapist: therapist },
+    });
   };
 
   if (!appointment) return null;
@@ -216,17 +162,12 @@ const ContentModal = ({ appointment }) => {
                   <td>{detail.status}</td>
                   <td>{detail.therapist_name}</td>
                   <td>
-                    {detail.status === "COMPLETED" && (
+                    {detail.status === "COMPLETED" && detail.therapist && (
                       <button
-                        className={`feedback-btn ${
-                          feedbackSubmitted.has(detail.detail_id)
-                            ? "disabled"
-                            : ""
-                        }`}
-                        onClick={() => openFeedbackModal(detail.detail_id)}
-                        disabled={feedbackSubmitted.has(detail.detail_id)}
+                        className="feedback-btn"
+                        onClick={() => handleViewTherapist(detail.therapist)}
                       >
-                        Feedback
+                        Feedback Therapist
                       </button>
                     )}
                   </td>
@@ -237,42 +178,6 @@ const ContentModal = ({ appointment }) => {
         </div>
       ) : (
         <p>No appointment details available.</p>
-      )}
-
-      {showFeedbackModal && (
-        <div className="feedback-modal-overlay">
-          <div className="feedback-modal">
-            <button className="close-btn" onClick={closeFeedbackModal}>
-              ×
-            </button>
-            <h2>We need your feedback</h2>
-            <p>How would you rate your experience with the app today?</p>
-            <div className="star-rating">
-              {[1, 2, 3, 4, 5].map((star) => (
-                <span
-                  key={star}
-                  className={`star ${rating >= star ? "filled" : ""}`}
-                  onClick={() => setRating(star)}
-                >
-                  ★
-                </span>
-              ))}
-            </div>
-            <textarea
-              placeholder="Write your note"
-              value={feedbackText}
-              onChange={(e) => setFeedbackText(e.target.value)}
-              className="feedback-textarea"
-            />
-            <button
-              className="submit-btn"
-              onClick={handleSubmitFeedback}
-              disabled={isSubmitting}
-            >
-              {isSubmitting ? "Submitting..." : "Submit"}
-            </button>
-          </div>
-        </div>
       )}
     </div>
   );

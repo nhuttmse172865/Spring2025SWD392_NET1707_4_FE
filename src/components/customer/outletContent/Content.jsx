@@ -1,3 +1,5 @@
+
+
 import React, { useState, useEffect, useMemo, useCallback } from "react";
 import { useNavigate } from "react-router-dom";
 import ReactPaginate from "react-paginate";
@@ -8,8 +10,6 @@ import LOCALSTORAGE_NAME from "../../../constants/localStorageName";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import "./Content.css";
-
-import ROLES from "../../../constants/role";
 
 const SERVICES_PER_PAGE = 9;
 
@@ -89,6 +89,8 @@ const Content = React.memo(() => {
         });
       } else {
         localStorage.setItem("selectedServiceId", id);
+        localStorage.removeItem("selectedSkinTypes");
+
         navigate("/booking");
       }
     },
@@ -101,6 +103,7 @@ const Content = React.memo(() => {
 
   const filteredServices = useMemo(() => {
     let filtered = [...services];
+
     const selectedCategories =
       JSON.parse(localStorage.getItem("selectedCategories")) || [];
     if (selectedCategories.length) {
@@ -108,6 +111,7 @@ const Content = React.memo(() => {
         selectedCategories.includes(service.categoryId)
       );
     }
+
     const selectedPriceRanges =
       JSON.parse(localStorage.getItem("selectedPriceRanges")) || [];
     if (selectedPriceRanges.length) {
@@ -117,6 +121,21 @@ const Content = React.memo(() => {
         )
       );
     }
+
+    const selectedSkinTypes =
+      JSON.parse(localStorage.getItem("selectedSkinTypes")) || [];
+    if (Array.isArray(selectedSkinTypes) && selectedSkinTypes.length === 0) {
+      localStorage.removeItem("selectedSkinTypes");
+    } else if (selectedSkinTypes.length > 0) {
+      filtered = filtered.filter(
+        (service) =>
+          service.skinTypeName && // Ensure skinTypeName exists
+          service.skinTypeName.some((skinType) =>
+            selectedSkinTypes.includes(skinType)
+          )
+      );
+    }
+
     return filtered;
   }, [services]);
 
@@ -148,87 +167,97 @@ const Content = React.memo(() => {
   }, [sortedServices, currentPage]);
 
   return (
+    <div className="spa-container">
+      <ToastContainer />
 
-      <div className="spa-container">
-        <ToastContainer />
-
-        <div className="sort-container">
-          <span className="sort-label">Sort by:</span>
-          <div className="sort-buttons">
-            {[
-              { type: "default", label: "Default" },
-              { type: "nameAZ", label: "Name A-Z" },
-              { type: "nameZA", label: "Name Z-A" },
-              { type: "priceLowHigh", label: "Price Low to High" },
-              { type: "priceHighLow", label: "Price High to Low" },
-            ].map(({ type, label }) => (
-              <button
-                key={type}
-                className={`sort-button ${sortType === type ? "active" : ""}`}
-                onClick={() => setSortType(type)}
-              >
-                {label}
-              </button>
-            ))}
-          </div>
-        </div>
-
-        <div className="services-grid">
-          {currentServices.map((service) => (
-            <div
-              key={service.id || service.name}
-              className="service-card"
-              onClick={() => handleServiceClick(service)}
+      <div className="sort-container">
+        <span className="sort-label">Sort by:</span>
+        <div className="sort-buttons">
+          {[
+            { type: "default", label: "Default" },
+            { type: "nameAZ", label: "Name A-Z" },
+            { type: "nameZA", label: "Name Z-A" },
+            { type: "priceLowHigh", label: "Price Low to High" },
+            { type: "priceHighLow", label: "Price High to Low" },
+          ].map(({ type, label }) => (
+            <button
+              key={type}
+              className={`sort-button ${sortType === type ? "active" : ""}`}
+              onClick={() => setSortType(type)}
             >
-              <div className="service-image-container">
-                <img
-                  src={
-                    service.image && service.image.length > 0
-                      ? service.image[0].url
-                      : "https://via.placeholder.com/150"
-                  }
-                  alt={service.name}
-                  className="service-image-main"
-                  loading="lazy"
-                  onError={(e) =>
-                    (e.target.src = "https://via.placeholder.com/150")
-                  }
-                />
-              </div>
-              <div className="service-info">
-                <h3 className="service-title">Service: {service.name}</h3>
-                <div className="service-action">
-                  <p className="service-price">{formatPrice(service.total)}</p>
-                  <button
-                    className="book-button"
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      handleBookClick(service.id);
-                    }}
-                  >
-                    Book
-                  </button>
-                </div>
-              </div>
-            </div>
+              {label}
+            </button>
           ))}
         </div>
-
-        <ReactPaginate
-          previousLabel={"<"}
-          nextLabel={">"}
-          breakLabel={"..."}
-          pageCount={pageCount}
-          marginPagesDisplayed={2}
-          pageRangeDisplayed={5}
-          onPageChange={handlePageClick}
-          containerClassName={"pagination"}
-          activeClassName={"active"}
-          pageClassName={"page-item"}
-          previousClassName={"previous-item"}
-          nextClassName={"next-item"}
-        />
       </div>
+
+      {sortedServices.length === 0 ? (
+        <div className="no-results">
+          <p>No services found matching your selected filters.</p>
+          <p>Please try adjusting your price range or skin type selections.</p>
+        </div>
+      ) : (
+        <>
+          <div className="services-grid">
+            {currentServices.map((service) => (
+              <div
+                key={service.id || service.name}
+                className="service-card"
+                onClick={() => handleServiceClick(service)}
+              >
+                <div className="service-image-container">
+                  <img
+                    src={
+                      service.image && service.image.length > 0
+                        ? service.image[0].url
+                        : "https://via.placeholder.com/150"
+                    }
+                    alt={service.name}
+                    className="service-image-main"
+                    loading="lazy"
+                    onError={(e) =>
+                      (e.target.src = "https://via.placeholder.com/150")
+                    }
+                  />
+                </div>
+                <div className="service-info">
+                  <h3 className="service-title">Service: {service.name}</h3>
+                  <div className="service-action">
+                    <p className="service-price">
+                      {formatPrice(service.total)}
+                    </p>
+                    <button
+                      className="book-button"
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        handleBookClick(service.id);
+                      }}
+                    >
+                      Book
+                    </button>
+                  </div>
+                </div>
+              </div>
+            ))}
+          </div>
+
+          <ReactPaginate
+            previousLabel={"<"}
+            nextLabel={">"}
+            breakLabel={"..."}
+            pageCount={pageCount}
+            marginPagesDisplayed={2}
+            pageRangeDisplayed={5}
+            onPageChange={handlePageClick}
+            containerClassName={"pagination"}
+            activeClassName={"active"}
+            pageClassName={"page-item"}
+            previousClassName={"previous-item"}
+            nextClassName={"next-item"}
+          />
+        </>
+      )}
+    </div>
   );
 });
 

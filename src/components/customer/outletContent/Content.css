@@ -230,3 +230,15 @@
 .toast-button:hover {
   background-color: #e0437a;
 }
+.no-results {
+  text-align: center;
+  padding: 20px;
+  margin: 20px 0;
+  background-color: #f8f9fa;
+  border-radius: 8px;
+}
+
+.no-results p {
+  margin: 10px 0;
+  color: #666;
+}

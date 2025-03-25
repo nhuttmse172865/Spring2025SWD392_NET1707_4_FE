@@ -1,4 +1,3 @@
-
 import React, { useEffect, useState, useMemo, useCallback } from "react";
 import { ArrowLeft } from "lucide-react";
 import { useNavigate } from "react-router-dom";
@@ -156,6 +155,7 @@ const ServiceDetails = React.memo(() => {
     } else {
       localStorage.setItem("bookedServiceId", selectedService.id);
       localStorage.removeItem("selectedService");
+      localStorage.removeItem("selectedSkinTypes");
       navigate("/booking");
     }
   }, [customer, accountId, selectedService, navigate]);
@@ -281,7 +281,6 @@ const ServiceDetails = React.memo(() => {
   }
 
   return (
- 
     <div className="service-details-container">
       <ToastContainer />
       <button className="back-button" onClick={handleBack}>
@@ -366,7 +365,6 @@ const ServiceDetails = React.memo(() => {
 
       {showModal && <FeedbackModal />}
     </div>
-
   );
 });
 

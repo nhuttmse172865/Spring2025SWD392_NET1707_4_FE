@@ -6,34 +6,39 @@ import LOCALSTORAGE_NAME from "../../../constants/localStorageName";
 import BASE from "../../../constants/base";
 import "./QuizContent.css";
 
-
 const Modal = ({ isOpen, onClose, skinTypeData, issueSkinData }) => {
   if (!isOpen) return null;
 
   return (
     <div className="modal-overlay">
       <div className="modal-content1">
-        {skinTypeData && (
+        {skinTypeData || issueSkinData ? (
           <>
-            <h2>{skinTypeData.name}</h2>
-            <p>{skinTypeData.description}</p>
+            {skinTypeData && (
+              <>
+                <h2>Your Skin Type: {skinTypeData.name}</h2>
+                <p>{skinTypeData.description}</p>
+              </>
+            )}
+            {issueSkinData && issueSkinData.length > 0 && (
+              <>
+                <h2>Your Skin Issues</h2>
+                {issueSkinData.map((issue, index) => (
+                  <div key={index} className="issue-item">
+                    <h3>{issue.name}</h3>
+                    <p>
+                      <strong>Cause:</strong> {issue.cause}
+                    </p>
+                    <p>
+                      <strong>Description:</strong> {issue.description}
+                    </p>
+                  </div>
+                ))}
+              </>
+            )}
           </>
-        )}
-        {issueSkinData && issueSkinData.length > 0 && (
-          <>
-            <h2>Skin Issues</h2>
-            {issueSkinData.map((issue, index) => (
-              <div key={index} className="issue-item">
-                <h3>{issue.name}</h3>
-                <p>
-                  <strong>Cause:</strong> {issue.cause}
-                </p>
-                <p>
-                  <strong>Description:</strong> {issue.description}
-                </p>
-              </div>
-            ))}
-          </>
+        ) : (
+          <p>No data available yet.</p>
         )}
         <button className="modal-button" onClick={onClose}>
           Continue
@@ -190,10 +195,10 @@ const QuizContent = () => {
       if (result.status === 200 && result.data) {
         if (typeId === 1) {
           setSkinTypeData(result.data);
-          setIssueSkinData(null);
+          // Do not reset issueSkinData here
         } else {
           setIssueSkinData(result.data);
-          setSkinTypeData(null);
+          // Do not reset skinTypeData here
         }
         setShowModal(true);
       }
@@ -299,8 +304,9 @@ const QuizContent = () => {
 
   const closeModal = () => {
     setShowModal(false);
-    setSkinTypeData(null);
-    setIssueSkinData(null);
+    // Optionally reset states here if desired, but not necessary for display
+    // setSkinTypeData(null);
+    // setIssueSkinData(null);
   };
 
   const handleSeeMore = (serviceId) => {
@@ -318,7 +324,6 @@ const QuizContent = () => {
   }
 
   return (
-
     <div className="app-container">
       <div className="content">
         <div className="questionnaire-container">
@@ -525,7 +530,6 @@ const QuizContent = () => {
         issueSkinData={issueSkinData}
       />
     </div>
-
   );
 };
 
