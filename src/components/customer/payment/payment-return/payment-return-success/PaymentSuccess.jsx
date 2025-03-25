@@ -16,9 +16,9 @@ const PaymentSuccess = () => {
         <div className="status-icon success">
           <CheckCircle size={80} strokeWidth={2} color="#28a745" />
         </div>
-        <h2>Payment Successful!</h2>
+        <h2>Booking Successful!</h2>
         <p className="status-message">
-          Your payment has been processed successfully.
+          Your booking has been processed successfully.
         </p>
         <p className="status-detail">
           Thank you for your booking! Your appointment is now confirmed. We'll

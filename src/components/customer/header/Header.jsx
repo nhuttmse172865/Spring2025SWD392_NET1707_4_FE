@@ -76,6 +76,12 @@ const Header = ({
           <li onClick={() => navigate("/price")} style={{ cursor: "pointer" }}>
             Price
           </li>
+          <li
+            onClick={() => navigate("/customer-view/therapist")}
+            style={{ cursor: "pointer" }}
+          >
+            Doctor
+          </li>
           <li onClick={() => navigate("/quiz")} style={{ cursor: "pointer" }}>
             Quiz
           </li>
@@ -89,7 +95,7 @@ const Header = ({
             onClick={() => navigate("/contact")}
             style={{ cursor: "pointer" }}
           >
-            Contact us
+            Contact
           </li>
         </ul>
         <div className="header-logo">

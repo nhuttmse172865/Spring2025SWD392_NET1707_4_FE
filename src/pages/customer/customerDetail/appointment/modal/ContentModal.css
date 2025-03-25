@@ -1,8 +1,8 @@
 .popup-content {
   background-color: white;
   border-radius: 8px;
-  width: 90%;
-  max-width: 1000px;
+  width: 100%;
+  max-width: 1200px;
   height: auto;
   min-height: 400px;
   padding: 30px;
