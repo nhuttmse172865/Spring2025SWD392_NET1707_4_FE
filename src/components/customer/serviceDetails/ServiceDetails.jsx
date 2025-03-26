@@ -8,16 +8,12 @@ import LOCALSTORAGE_NAME from "../../../constants/localStorageName";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import "./ServiceDetails.css";
-import ROLES from "../../../constants/role";
 
 const ServiceDetails = React.memo(() => {
   const [selectedService, setSelectedService] = useState(null);
   const [serviceDetail, setServiceDetail] = useState([]);
   const [serviceSteps, setServiceSteps] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [feedbacks, setFeedbacks] = useState({});
-  const [showModal, setShowModal] = useState(false);
-  const [selectedDetailId, setSelectedDetailId] = useState(null);
   const [accountId, setAccountId] = useState(null);
   const navigate = useNavigate();
   const [customer] = useLocalStorage(
@@ -160,118 +156,6 @@ const ServiceDetails = React.memo(() => {
     }
   }, [customer, accountId, selectedService, navigate]);
 
-  const fetchFeedback = useCallback(
-    async (detailId) => {
-      try {
-        const detail = serviceDetail.find((d) => d.id === detailId);
-        const response = await axios.post(
-          `${BASE.BASE_URL}/feedback/getBySerDetail?page=0&size=10`,
-          { value: detail?.name || "" },
-          {
-            headers: {
-              accept: "*/*",
-              "Content-Type": "application/json",
-            },
-          }
-        );
-        const feedbackData = response.data.data || [];
-        setFeedbacks((prev) => ({
-          ...prev,
-          [detailId]: feedbackData,
-        }));
-        setSelectedDetailId(detailId);
-        setShowModal(true);
-      } catch (error) {
-        console.error(
-          `Error fetching feedback for detailId ${detailId}:`,
-          error
-        );
-        setFeedbacks((prev) => ({
-          ...prev,
-          [detailId]: [],
-        }));
-        setSelectedDetailId(detailId);
-        setShowModal(true);
-      }
-    },
-    [serviceDetail]
-  );
-
-  const fetchCustomerName = useCallback(async (customerId) => {
-    try {
-      const response = await axios.get(`${BASE.BASE_URL}/info/${customerId}`, {
-        headers: {
-          accept: "*/*",
-        },
-      });
-      return response.data.data?.name || "Unknown Customer";
-    } catch (error) {
-      console.error(
-        `Error fetching customer info for ID ${customerId}:`,
-        error
-      );
-      return "Unknown Customer";
-    }
-  }, []);
-
-  const renderStars = (rating) => (
-    <div className="star-rating1">
-      {[...Array(5)].map((_, index) => (
-        <span key={index} className={`star ${index < rating ? "filled" : ""}`}>
-          ★
-        </span>
-      ))}
-    </div>
-  );
-
-  const FeedbackModal = () => {
-    const currentFeedbacks = feedbacks[selectedDetailId] || [];
-    const [customerNames, setCustomerNames] = useState({});
-
-    useEffect(() => {
-      const fetchNames = async () => {
-        const names = {};
-        for (const feedback of currentFeedbacks) {
-          if (!names[feedback.customerId]) {
-            names[feedback.customerId] = await fetchCustomerName(
-              feedback.customerId
-            );
-          }
-        }
-        setCustomerNames(names);
-      };
-      fetchNames();
-    }, [currentFeedbacks]);
-
-    return (
-      <div className="modal-overlay" onClick={() => setShowModal(false)}>
-        <div className="modal-content" onClick={(e) => e.stopPropagation()}>
-          <h3 className="modal-titlee">Customer Feedback</h3>
-          <button className="modal-close" onClick={() => setShowModal(false)}>
-            ×
-          </button>
-          {currentFeedbacks.length > 0 ? (
-            <div className="feedback-list">
-              {currentFeedbacks.map((feedback) => (
-                <div key={feedback.id} className="feedback-item">
-                  <p className="feedback-name">
-                    Name: {customerNames[feedback.customerId] || "Loading..."}
-                  </p>
-                  <div className="feedback-rating">
-                    Rating: {renderStars(feedback.rating)}
-                  </div>
-                  <p className="feedback-body">Comment: {feedback.body}</p>
-                </div>
-              ))}
-            </div>
-          ) : (
-            <p className="no-feedback">No feedback available.</p>
-          )}
-        </div>
-      </div>
-    );
-  };
-
   if (loading) {
     return <p className="text-center text-blue-500">Loading...</p>;
   }
@@ -302,7 +186,7 @@ const ServiceDetails = React.memo(() => {
         </button>
       </div>
       <p className="service-gap">
-        Interval between uses: {selectedService.gapDay || "N/A"} day
+        Interval between uses: {selectedService.gapDay || "0"} day
       </p>
 
       {serviceDetail.length > 0 ? (
@@ -335,12 +219,6 @@ const ServiceDetails = React.memo(() => {
                   <p className="detail-price">
                     Price: {formatPrice(detail.price)}
                   </p>
-                  <button
-                    className="view-comment-btn"
-                    onClick={() => fetchFeedback(detail.id)}
-                  >
-                    View Comments
-                  </button>
                 </div>
                 {stepsData.length > 0 && (
                   <div className="service-steps">
@@ -362,8 +240,6 @@ const ServiceDetails = React.memo(() => {
       ) : (
         <p className="no-service-details">No Service Details Available.</p>
       )}
-
-      {showModal && <FeedbackModal />}
     </div>
   );
 });
