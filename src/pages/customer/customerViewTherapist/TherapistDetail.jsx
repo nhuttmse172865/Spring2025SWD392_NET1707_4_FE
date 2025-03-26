@@ -64,7 +64,7 @@ const TherapistDetail = () => {
   const location = useLocation();
   const navigate = useNavigate();
   const therapist = location.state?.therapist;
-  const [comments, setComments] = useState([]); // Khởi tạo comments rỗng thay vì initialComments
+  const [comments, setComments] = useState([]);
   const [newComment, setNewComment] = useState("");
   const [accountId, setAccountId] = useState(null);
   const [customer] = useLocalStorage(
@@ -72,7 +72,14 @@ const TherapistDetail = () => {
     ""
   );
 
-  // Xử lý JWT token để lấy accountId
+  // Fetch comments and customer names
+  useEffect(() => {
+    if (therapist?.id) {
+      fetchComments();
+    }
+  }, [therapist]);
+
+  // Decode JWT token
   useEffect(() => {
     if (customer) {
       try {
@@ -93,26 +100,57 @@ const TherapistDetail = () => {
     }
   }, [customer]);
 
+  const fetchComments = async () => {
+    try {
+      // Fetch comments
+      const commentsResponse = await axios.get(
+        `${BASE.BASE_URL}/feedback/getByThe?therapistId=${therapist.id}&page=0&size=10`,
+        {
+          headers: { accept: "*/*" },
+        }
+      );
+
+      const commentsData = commentsResponse.data.data;
+
+      // Fetch customer names for each comment
+      const commentsWithNames = await Promise.all(
+        commentsData.map(async (comment) => {
+          const customerResponse = await axios.get(
+            `${BASE.BASE_URL}/info/${comment.customerId}`,
+            {
+              headers: { accept: "*/*" },
+            }
+          );
+          return {
+            id: comment.id,
+            text: comment.body,
+            user: customerResponse.data.data.name,
+          };
+        })
+      );
+
+      setComments(commentsWithNames);
+    } catch (error) {
+      console.error("Failed to fetch comments:", error);
+    }
+  };
+
   if (!therapist) {
     return <p>No therapist.</p>;
   }
 
   const selectedBio = bioData[therapist.speciality] || defaultBio;
 
-  // Xử lý submit comment với API trực tiếp
   const handleCommentSubmit = async (e) => {
     e.preventDefault();
     if (newComment.trim() && accountId && therapist.id) {
       try {
-        // Chuẩn bị dữ liệu gửi đi
         const payload = {
           content: newComment,
           customerId: accountId,
           therapistId: therapist.id,
         };
-        console.log("Data gửi về API:", payload); // Log dữ liệu trước khi gửi
 
-        // Gọi API trực tiếp
         await axios.post(`${BASE.BASE_URL}/feedback/create`, payload, {
           headers: {
             accept: "*/*",
@@ -120,18 +158,12 @@ const TherapistDetail = () => {
           },
         });
 
-        const newCommentObj = {
-          id: comments.length + 1,
-          user: "Anonymous",
-          text: newComment,
-        };
-        setComments([newCommentObj, ...comments]);
+        // Refresh comments after successful submission
+        await fetchComments();
         setNewComment("");
       } catch (error) {
         console.error("Failed to submit comment:", error);
       }
-    } else {
-      console.log("Missing required fields for submission");
     }
   };
 
