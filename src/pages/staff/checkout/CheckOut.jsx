@@ -357,7 +357,8 @@ const handleCashPayment = async (detail) => {
   className="checkout-confirm-btn"
   type="primary"
   onClick={() => handleCashPayment(detail)}
-  disabled={detail.status === "COMPLETED" || detail.status === "PENDING" || detail.status==="CONFIRMED"}
+  disabled={detail.status === "COMPLETED" || detail.status === "PENDING" || detail.status==="CONFIRMED" 
+  || dayjs().isBefore(dayjs(`${detail.day} ${detail.startHour}`).add(15, "minutes"))}
 >
   Cash
 </Button>
@@ -366,7 +367,7 @@ const handleCashPayment = async (detail) => {
             type="primary"
             onClick={() => handleTransfer(detail)}
             style={{ marginLeft: "10px" }}
-            disabled={detail.status === "COMPLETED" || detail.status === "PENDING" || detail.status === "CONFIRMED"}
+            disabled={detail.status === "COMPLETED" || detail.status === "PENDING" || detail.status === "CONFIRMED" || dayjs().isBefore(dayjs(`${detail.day} ${detail.startHour}`).add(15, "minutes"))}
           >
             Pay 
           </Button>

@@ -37,21 +37,76 @@ const Itinerary = () => {
     }
   };
   const handleServiceChange = (value) => {
-    const service = services.find(s => s.id === value);
-    
-    if (service?.previousId) {
-      const previousService = services.find(s => s.id === service.previousId); 
-      const isPreviousBooked = stepsData.some(step => step.service && services.find(s => s.name === step.service)?.id === service.previousId);
-      
+    const currentStep = stepsData.find((s) => s.id === editingStep);
+  
+  // Nếu step đã có service, không cho thay đổi
+  if (currentStep?.service) return;
+    const selectedService = services.find((s) => s.id === value);
+
+    // Nếu dịch vụ có previousId
+    if (selectedService?.previousId) {
+      const previousService = services.find((s) => s.id === selectedService.previousId);
+
+      // Kiểm tra xem previousService đã được đặt chưa
+      const isPreviousBooked = stepsData.some(
+        (step) => step.service && services.find((s) => s.name === step.service)?.id === selectedService.previousId
+      );
+
       if (!isPreviousBooked) {
-        Modal.error({
-          title: 'Service Dependency',
-          content: `You must book "${previousService?.name}" first before booking "${service.name}".`,
+       
+        Modal.confirm({
+          title: "Service Dependency",
+          content: `Booking "${selectedService.name}" requires "${previousService.name}". Both services will be added: Step ${stepsData.length } - "${previousService.name}" and Step ${stepsData.length + 1} - "${selectedService.name}". Do you want to proceed?`,
+          onOk() {
+            // Thêm previousService và selectedService vào stepsData khi người dùng đồng ý
+            setStepsData((prev) => {
+              const newSteps = [...prev];
+              const editingStepIndex = newSteps.findIndex((s) => s.id === editingStep);
+
+              const previousStep = {
+                id: prev.length + 1,
+                step: `Step ${prev.length + 1}`,
+                service: previousService.name,
+                date: null,
+                therapist: null,
+                time: null,
+                price: previousService.price,
+              };
+
+              const currentStep = {
+                id: editingStep || prev.length + 2, 
+                step: editingStep ? newSteps[editingStepIndex]?.step : `Step ${prev.length + 2}`,
+                service: selectedService.name,
+                date: null,
+                therapist: null,
+                time: null,
+                price: selectedService.price,
+              };
+
+              if (editingStep) {
+                newSteps.splice(editingStepIndex, 1, previousStep, currentStep);
+              } else {
+                newSteps.push(previousStep, currentStep);
+              }
+
+              return newSteps.map((step, index) => ({
+                ...step,
+                id: index + 1,
+                step: `Step ${index + 1}`,
+              }));
+            });
+            setSelectedService(value);
+            setEditingStep(null);
+          },
+          onCancel() {
+            
+            setSelectedService(null);
+          },
         });
         return;
       }
     }
-  
+
     setSelectedService(value);
   };
   
@@ -116,7 +171,7 @@ const Itinerary = () => {
         time: selectedTime || null,
         price: service?.price || 0,
       };
-
+  
       setStepsData((prev) =>
         prev.map((step) => (step.id === editingStep ? updatedStep : step))
       );
@@ -162,7 +217,7 @@ const Itinerary = () => {
       }
     }
     
-  
+    setEditingStep(null);
     performDelete(stepId);
   };
   
@@ -324,8 +379,9 @@ console.log("Booking data:", bookingData);
               <Select
                 style={{ width: 200 }}
                 placeholder="Select a service"
-                onChange={handleServiceChange}
-                value={selectedService}
+                value={selectedService || ""}
+  onChange={(value) => handleServiceChange(value)}
+  disabled={editingStep !== null && !!stepsData.find((s) => s.id === editingStep)?.service}
               >
                 {services.map((service) => (
                   <Option key={service.id} value={service.id}>
