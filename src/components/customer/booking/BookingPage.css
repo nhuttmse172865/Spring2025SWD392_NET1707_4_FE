@@ -384,3 +384,64 @@ table tr:hover {
   color: black;
   border: none;
 }
+
+/*----------------------------------------*/
+.appointmentPreview-modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+}
+
+.appointmentPreview-modal-content {
+  background: white;
+  padding: 20px;
+  border-radius: 5px;
+  min-width: 700px;
+}
+
+.appointmentPreview-modal-actions {
+  margin-top: 20px;
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+}
+
+.appointmentPreview-modal-content table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 10px;
+}
+
+.appointmentPreview-modal-content th,
+.appointmentPreview-modal-content td {
+  border: 1px solid #ddd;
+  padding: 8px;
+  text-align: left;
+}
+
+.appointmentPreview-modal-content th {
+  background-color: #f2f2f2;
+}
+
+.appointmentPreview-modal-content button {
+  padding: 8px 16px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.appointmentPreview-modal-content button:first-child {
+  background-color: #ccc;
+}
+
+.appointmentPreview-modal-content button:last-child {
+  background-color: #ff4f9d;
+  color: white;
+}
