@@ -85,7 +85,7 @@ const CheckIn = () => {
 
   const appointmentId = selectedProduct.id; 
   const appointment_detailsId = detail.id;
-  const amount = detail.price * 25000 *0.9; 
+  const amount = detail.price * 25000 *0.5; 
   const returnUrl = encodeURIComponent(
       `${BASE.BASE_MY_HOST}/staff/checkout`
   );
@@ -203,7 +203,7 @@ const handleCashPayment = async (detail) => {
  
     const paymentResponse = await axios.post(`${BASE.BASE_URL}/payment/create`, {
       appointmentId: selectedProduct.id,
-      amount: detail.price * 25000* 0.9, 
+      amount: detail.price * 25000* 0.5, 
       transactionCode: "14837441", 
       method: "CASH", 
       payTime: "20250309213832",
