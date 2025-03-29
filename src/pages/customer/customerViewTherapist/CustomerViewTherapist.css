@@ -52,12 +52,11 @@
 
 .therapist-image {
   width: 100%;
-  height: 350px;
+  height: 250px;
   border-radius: 1px;
   overflow: hidden;
   display: flex;
   justify-content: center;
-  align-items: center;
 }
 
 .therapist-image img {
@@ -343,7 +342,7 @@
 
 .therapist-image img {
   width: 100%;
-  height: 350px;
+  height: 250px;
   object-fit: cover;
   border-radius: 10px;
   margin-bottom: 1.5rem;
