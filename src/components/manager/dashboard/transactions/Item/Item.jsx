@@ -14,18 +14,18 @@ const Item = ({ item, index }) => {
         gridTemplateColumns: gridColumnTemplate,
       }}
     >
-      <li className="text-[rgba(0,0,0,0.5)] limited-lines-1">{index + 1}</li>
+      <li className="text-[rgba(0,0,0,0.5)] limited-lines-1"> {item?.transactionCode}</li>
       <li className="text-[rgba(0,0,0,0.5)] limited-lines-1">
-        {item?.account?.email}
+      {item?.customerEmail}
       </li>
       <li className="text-[rgba(21,19,19,0.5)] limited-lines-1">
-        {item?.service?.name}
+      {item?.serviceName}
       </li>
       <li className="text-[rgba(0,0,0,0.5)] limited-lines-1">
-        {formatDate(new Date(item?.createdTime))}
+      {formatDate(new Date(item?.payTime))}
       </li>
       <li className="text-[rgba(21,19,19,0.5)] limited-lines-1">
-        {item?.paid}
+      {item?.amount/25000}
       </li>
       <li className="text-[rgba(0,0,0,0.5)] limited-lines-1">{item?.status}</li>
     </ul>

@@ -39,8 +39,8 @@ const LIST_TITLE_POPULAR_SERVICES = [
 
 const LIST_TITLE_TRANSACTIONS = [
   {
-    name: "No.",
-    column: 1,
+    name: "Code",
+    column: 1.3,
   },
   {
     name: "Customer",
@@ -62,7 +62,7 @@ const LIST_TITLE_TRANSACTIONS = [
 
   {
     name: "Status",
-    column: 1.5,
+    column: 1.2,
   },
 ];
 
