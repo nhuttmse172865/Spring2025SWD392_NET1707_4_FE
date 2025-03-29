@@ -59,7 +59,7 @@ const CheckIn = () => {
   };
   const handleCashPayment = async (detail) => {
     if (!selectedProduct || !detail) return;
-    
+  
     try {
       const paymentResponse = await axios.post(`${BASE.BASE_URL}/payment/create`, {
         appointmentId: selectedProduct.id,
@@ -67,23 +67,28 @@ const CheckIn = () => {
         transactionCode: "14837441",
         method: "CASH",
         payTime: "20250309213832",
-        responseCode: "00"
+        responseCode: "00",
       });
-      
+  
       console.log("Cash payment response:", paymentResponse);
-      
+  
       if (paymentResponse.status === 201) {
-        // Now update the appointment detail status with checkin instead of checkout
-        console.log(`Updating appointment detail: ${detail.id}`);
-        const response = await axios.put(`${BASE.BASE_URL}/appointment-detail/checkin/${detail.id}`);
-        console.log(`Updated appointment detail ${detail.id} response:`, response.data);
-        
-        // Show success message (updated message to reflect checkin)
+        // Kiểm tra nếu detail.price tồn tại và hợp lệ, thì gọi handleCheckin
+        if (detail.price && detail.price > 0) {
+          await handleCheckin(detail.id); // Gọi API check-in
+        } else {
+          console.log("Không gọi check-in vì detail.price không hợp lệ:", detail.price);
+          // Cập nhật trạng thái mà không cần check-in
+          const response = await axios.put(`${BASE.BASE_URL}/appointment-detail/checkin/${detail.id}`);
+          console.log(`Updated appointment detail ${detail.id} response:`, response.data);
+        }
+  
+        // Show success message
         Modal.success({
           title: "Payment Successful",
           content: "The appointment has been checked in successfully with cash payment!",
         });
-        
+  
         // Update the products list and close the modal
         await fetchAppointments();
         handleCheckOutCancel();
@@ -194,20 +199,18 @@ const CheckIn = () => {
   
   const handleSavePayment = async () => {
     const vnp_responseCode = searchParams.get("vnp_ResponseCode");
-    
+  
     if (vnp_responseCode === "00") {
       const appointmentId = parseInt(searchParams.get("vnp_OrderInfo"));
       const amount = parseInt(searchParams.get("vnp_Amount")) / 100;
       const transactionCode = searchParams.get("vnp_TransactionNo");
       const method = searchParams.get("vnp_CardType");
       const payTime = searchParams.get("vnp_PayDate");
-      
-      // Get the detail ID from localStorage instead of URL params
-      const detailId = parseInt(localStorage.getItem('pendingDetailId'));
-      
-      // Validate detailId
+  
+      const detailId = parseInt(localStorage.getItem("pendingDetailId"));
+  
       if (isNaN(detailId)) {
-        console.error("Invalid detail ID retrieved from localStorage:", localStorage.getItem('pendingDetailId'));
+        console.error("Invalid detail ID retrieved from localStorage:", localStorage.getItem("pendingDetailId"));
         return;
       }
   
@@ -225,27 +228,32 @@ const CheckIn = () => {
   
         if (paymentResponse.status === 201) {
           console.log("Payment saved successfully, updating appointment detail...");
-          
+  
           const appointmentResponse = await axios.get(`${BASE.BASE_URL}/appointments/${appointmentId}`);
           const selectedProduct = appointmentResponse.data.data;
-          
+  
           if (selectedProduct) {
-            console.log(`Updating appointment detail: ${detailId}`);
-            try {
-              // Changed from checkout to checkin
-              const response = await axios.put(`${BASE.BASE_URL}/appointment-detail/checkin/${detailId}`);
-              console.log(`Updated appointment detail ${detailId} response:`, response.data);
-              localStorage.removeItem('pendingDetailId');
-            } catch (error) {
-              console.error(`Error updating appointment detail ${detailId}:`, error.response ? error.response.data : error.message);
+            const detail = selectedProduct.appointment_details.find(d => d.id === detailId);
+            if (detail) {
+              // Kiểm tra nếu detail.price tồn tại và hợp lệ, thì gọi handleCheckin
+              if (detail.price && detail.price > 0) {
+                await handleCheckin(detailId); // Gọi API check-in
+              } else {
+                console.log("Không gọi check-in vì detail.price không hợp lệ:", detail.price);
+                const response = await axios.put(`${BASE.BASE_URL}/appointment-detail/checkin/${detailId}`);
+                console.log(`Updated appointment detail ${detailId} response:`, response.data);
+              }
+              localStorage.removeItem("pendingDetailId");
+            } else {
+              console.error("Detail not found for ID:", detailId);
             }
           } else {
             console.error("Selected product not found, cannot update appointment details.");
           }
-          
+  
           Modal.success({
             title: "Payment Successful",
-            content: "The appointment has been checked in successfully!", // Updated message
+            content: "The appointment has been checked in successfully!",
           });
           fetchAppointments();
         } else {
@@ -350,125 +358,113 @@ const CheckIn = () => {
           />
         </>
       )}
-
       <Modal
-        title="Information"
-        open={isCheckOutModalVisible}
-        onCancel={handleCheckOutCancel}
-        footer={[
-          <Button
-            key="cancel"
-            className="checkout-cancel-btn"
-            onClick={handleCheckOutCancel}
-          >
-            Cancel
-          </Button>,
-        ]}
-        className="checkout-modal"
-      >
-        {selectedProduct && selectedProduct.appointment_details ? (
-          selectedProduct.appointment_details
-            .sort((a, b) => new Date(a.startHour) - new Date(b.startHour))
-            .map((detail, index, arr) => {
-              const previousCheckedIn =
-                index === 0 || arr[index - 1].status === "CHECKIN";
-              return (
-                <div key={detail.id} className="appointment-item">
-                  <p>
-                    <strong>Service detail:</strong> {detail.name}
-                  </p>
-                  <p>
-                    <strong>Status:</strong>{" "}
-                    <span
-                      style={{
-                        color:
-                          detail.status === "COMPLETED"
-                            ? "green"
-                            : detail.status === "CHECKIN"
-                            ? "red"
-                            : "black",
-                      }}
-                    >
-                      {detail.status}
-                    </span>
-                  </p>
-                  <p>
-                    <strong>Price:</strong> ${detail.price}
-                  </p>
-                  <p>
-                    <strong>Start:</strong> {detail.startHour}
-                  </p>
-                  <p>
-                    <strong>End:</strong> {detail.endHour}
-                  </p>
-                  <p>
-                    <strong>Therapist:</strong>{" "}
-                    {detail.therapist?.account?.name}
-                  </p>
-                  <p>
-                    <strong>Day:</strong> {detail.day}
-                  </p>
+  title="Information"
+  open={isCheckOutModalVisible}
+  onCancel={handleCheckOutCancel}
+  footer={[
+    <Button
+      key="cancel"
+      className="checkout-cancel-btn"
+      onClick={handleCheckOutCancel}
+    >
+      Cancel
+    </Button>,
+  ]}
+  className="checkout-modal"
+>
+  {selectedProduct && selectedProduct.appointment_details ? (
+    selectedProduct.appointment_details
+      .sort((a, b) => new Date(a.startHour) - new Date(b.startHour))
+      .map((detail, index, arr) => {
+        const previousCheckedIn =
+          index === 0 || arr[index - 1].status === "CHECKIN";
+        const isDisabled =
+          detail.status === "CHECKIN" ||
+          detail.status === "COMPLETED" ||
+          detail.status === "CANCELLED" ||
+          !previousCheckedIn ||
+          dayjs(detail.day).format("YYYY-MM-DD") !==
+            dayjs().format("YYYY-MM-DD") ||
+          !dayjs().isBetween(
+            dayjs(`${detail.day} ${detail.startHour}`).subtract(15, "minute"),
+            dayjs(`${detail.day} ${detail.startHour}`).add(15, "minutes")
+          );
 
-                  <Button
-                    type="primary"
-                    onClick={() => handleCashPayment(detail)}
-                    disabled={
-                      detail.status === "CHECKIN" ||
-                      detail.status === "COMPLETED" ||
-                      detail.status === "CANCELLED" ||
-                      // !previousCheckedIn 
-                      !previousCheckedIn ||
-                      dayjs(detail.day).format("YYYY-MM-DD") !==
-                        dayjs().format("YYYY-MM-DD") ||
-                      !dayjs().isBetween(
-                        dayjs(`${detail.day} ${detail.startHour}`).subtract(
-                          15,
-                          "minute"
-                        ),
-                        dayjs(`${detail.day} ${detail.startHour}`).add(
-                          15,
-                          "minutes"
-                        )
-                      )
-                    }
-                    className="checkout-cancel-btn"
-                  >
-                   Cash
-                  </Button>
-                  <Button
-                 style={{ marginLeft: "10px" }}
-                    type="primary"
-                    onClick={() => handleTransfer(detail)}
-                    disabled={
-                      detail.status === "CHECKIN" ||
-                      detail.status === "COMPLETED" ||
-                      detail.status === "CANCELLED" ||
-                      // !previousCheckedIn 
-                      !previousCheckedIn ||
-                      dayjs(detail.day).format("YYYY-MM-DD") !==
-                        dayjs().format("YYYY-MM-DD") ||
-                      !dayjs().isBetween(
-                        dayjs(`${detail.day} ${detail.startHour}`).subtract(
-                          15,
-                          "minute"
-                        ),
-                        dayjs(`${detail.day} ${detail.startHour}`).add(
-                          15,
-                          "minutes"
-                        )
-                      )
-                    }
-                    className="checkout-cancel-btn"
-                  >
-                   Pay
-                  </Button>
-                </div>
-              );
-            })
-        ) : (
-          <p>No appointment details available</p>
-        )}
-      </Modal>
+        return (
+          <div key={detail.id} className="appointment-item">
+            <p>
+              <strong>Service detail:</strong> {detail.name}
+            </p>
+            <p>
+              <strong>Status:</strong>{" "}
+              <span
+                style={{
+                  color:
+                    detail.status === "COMPLETED"
+                      ? "green"
+                      : detail.status === "CHECKIN"
+                      ? "red"
+                      : "black",
+                }}
+              >
+                {detail.status}
+              </span>
+            </p>
+            <p>
+              <strong>Price:</strong> ${detail.price}
+            </p>
+            <p>
+              <strong>Start:</strong> {detail.startHour}
+            </p>
+            <p>
+              <strong>End:</strong> {detail.endHour}
+            </p>
+            <p>
+              <strong>Therapist:</strong> {detail.therapist?.account?.name}
+            </p>
+            <p>
+              <strong>Day:</strong> {detail.day}
+            </p>
+
+            {/* Điều kiện hiển thị nút dựa trên detail.price */}
+            {detail.price === 0 ? (
+              <Button
+                type="primary"
+                onClick={() => handleCheckin(detail.id)} // Gọi trực tiếp handleCheckin
+                disabled={isDisabled}
+                className="checkout-cancel-btn"
+              >
+                Checkin
+              </Button>
+            ) : (
+              <>
+                <Button
+                  type="primary"
+                  onClick={() => handleCashPayment(detail)}
+                  disabled={isDisabled}
+                  className="checkout-cancel-btn"
+                >
+                  Cash
+                </Button>
+                <Button
+                  style={{ marginLeft: "10px" }}
+                  type="primary"
+                  onClick={() => handleTransfer(detail)}
+                  disabled={isDisabled}
+                  className="checkout-cancel-btn"
+                >
+                  Pay
+                </Button>
+              </>
+            )}
+          </div>
+        );
+      })
+  ) : (
+    <p>No appointment details available</p>
+  )}
+</Modal>
     </div>
   );
 };
